@@ -1,0 +1,176 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"); /* Google Fonts */
+@import "tailwindcss"; /* Tailwind CSS 불러오기 */
+
+:root {
+  --background: #ffffff; /* 기본 배경색 */
+  --foreground: #171717; /* 기본 글자색 */
+}
+
+@theme inline {
+  --color-background: var(--background); /* bg-background */
+  --color-foreground: var(--foreground); /* text-foreground */
+
+  /* 브랜드 메인 컬러 */
+  --color-primary-50: #fdf6f0;
+  --color-primary-100: #faeada;
+  --color-primary-200: #f4cfb0;
+  --color-primary-300: #ecaf7f;
+  --color-primary-400: #e38a4c;
+  --color-primary-500: #da6d2a;
+  --color-primary-600: #cc5a20;
+  --color-primary-700: #a9451b;
+  --color-primary-800: #87391d;
+  --color-primary-900: #6e301a;
+
+  /* 웨딩 감성 보조 컬러 */
+  --color-blush: #f9e8e8; /* 연한 핑크 */
+  --color-champagne: #f5e6c8; /* 샴페인 베이지 */
+  --color-sage: #c8d8c8; /* 세이지 그린 */
+  --color-ivory: #fffff0; /* 아이보리 */
+
+  /* 폰트 설정 */
+  --font-sans: "Noto Sans KR", Arial, sans-serif; /* 기본 한글 폰트 */
+  --font-serif: "Noto Serif KR", serif; /* 고급스러운 본문 폰트 */
+  --font-display: "Playfair Display", serif; /* 영문 타이틀 폰트 */
+
+  /* 애니메이션 */
+  --animate-fade-in: fade-in 0.5s ease-in-out;
+  --animate-slide-up: slide-up 0.4s ease-out;
+}
+
+/* 전체 요소 기본 여백 제거 */
+@layer base {
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* 전체 페이지 기본 스타일 */
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* 모바일 최적화 */
+html {
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+/* 링크 기본 스타일 제거 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 버튼 커서 설정 */
+button {
+  cursor: pointer;
+}
+
+/* 폼 요소 폰트 상속 */
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+/* 모바일 청첩장 전용 컨테이너 */
+.invitation-container {
+  @apply max-w-[430px] mx-auto min-h-screen bg-white;
+}
+
+/* 편집기 레이아웃 */
+.editor-container {
+  @apply max-w-screen-lg mx-auto;
+}
+
+/* 공통 섹션 패딩 */
+.section-padding {
+  @apply px-6 py-12;
+}
+
+/* 카드 스타일 */
+.card-base {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100;
+}
+
+/* 입력 필드 기본 스타일 */
+.input-base {
+  @apply w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent transition-all duration-200 placeholder:text-gray-400;
+}
+
+/* 주요 버튼 스타일 */
+.btn-primary {
+  @apply bg-primary-500 text-white px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-primary-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* 보조 버튼 스타일 */
+.btn-secondary {
+  @apply bg-white text-primary-500 border border-primary-300 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-primary-50 active:scale-95;
+}
+
+/* 고스트 버튼 스타일 */
+.btn-ghost {
+  @apply text-gray-500 px-4 py-2 rounded-lg text-sm transition-all duration-200 hover:bg-gray-100 active:scale-95;
+}
+
+/* 두 줄 말줄임 */
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 모바일 하단 safe area */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 모바일 상단 safe area */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 서서히 나타나는 애니메이션 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 아래에서 위로 올라오는 애니메이션 */
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
