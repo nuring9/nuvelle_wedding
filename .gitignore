@@ -92,3 +92,8 @@ backend/src/main/resources/application-dev.yml
 backend/src/main/resources/application-local.yml
 backend/src/main/resources/application-secret.yml
 backend/src/main/resources/application-prod.yml
+
+
+# Docker local override
+docker-compose.override.yml
+docker-compose.local.yml

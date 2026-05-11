@@ -1,28 +1,29 @@
 spring:
   application:
-    name: nuvelle-wedding-backend   # 애플리케이션 이름
+    name: nuvelle-wedding-backend # 애플리케이션 이름
 
   profiles:
-    active: dev                     # 기본 실행 프로필 dev 사용
+    active: dev # 기본 실행 프로필 dev 사용
 
   jpa:
     hibernate:
-      ddl-auto: update              # 엔티티 기준으로 DB 테이블 자동 업데이트(테이블과 데이터를 최대한 유지)
-    show-sql: true                  # 실행되는 SQL 로그 출력
+      ddl-auto: update # 엔티티 기준으로 DB 테이블 자동 업데이트(테이블과 데이터를 최대한 유지)
+    show-sql: true # 실행되는 SQL 로그 출력
     properties:
       hibernate:
-        format_sql: true            # SQL 로그를 보기 좋게 줄바꿈
+        format_sql: true # SQL 로그를 보기 좋게 줄바꿈
         dialect: org.hibernate.dialect.MySQLDialect # MySQL 문법 사용
 
   servlet:
     multipart:
-      max-file-size: 10MB           # 업로드 파일 1개 최대 크기
-      max-request-size: 50MB        # 요청 전체 최대 크기
+      max-file-size: 10MB # 업로드 파일 1개 최대 크기
+      max-request-size: 50MB # 요청 전체 최대 크기
 
 jwt:
-  secret: ${JWT_SECRET}             # JWT 서명에 사용할 비밀키
-  access-token-expiration: 1800000  # Access Token 만료 시간, 30분
+  secret: ${JWT_SECRET} # JWT 서명에 사용할 비밀키
+  access-token-expiration: 1800000 # Access Token 만료 시간, 30분
   refresh-token-expiration: 604800000 # Refresh Token 만료 시간, 7일
+
 
 #cloud:
 #  aws:
