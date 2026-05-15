@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { LoginRequest, SignupRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signup, login, logout } from "@/lib/auth";
+import { signup, login, logout } from "@/lib/api/auth";
 
 export function useAuth() {
   const router = useRouter();
