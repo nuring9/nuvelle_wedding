@@ -23,6 +23,7 @@ export interface GalleryImageResponse {
   imageUrl: string;
   sortOrder: number;
 }
+
 export interface UpdateInvitationRequest {
   title?: string;
   mainImageUrl?: string;
@@ -115,40 +116,25 @@ export interface InvitationSummaryResponse {
   updatedAt: string;
 }
 
-export interface InvitationSummaryResponse {
-  id: number;
-  templateName: string;
-  slug: string;
-  status: "DRAFT" | "PRIVATE" | "PUBLISHED";
-  title: string | null;
-  mainImageUrl: string | null;
-  groomName: string | null;
-  brideName: string | null;
-  weddingDate: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
 // 청첩장 생성
 export async function createInvitation(
   data: CreateInvitationRequest,
   accessToken: string,
 ): Promise<InvitationResponse> {
   const api = getAuthApi(accessToken);
-  const res = await api.post<ApiResponse<InvitationResponse>>("/", data);
+  const res = await api.post<ApiResponse<InvitationResponse>>("", data);
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "청첩장 생성에 실패했습니다.");
   }
   return res.data.data;
 }
 
-// 내 청청잡 목록
+// 내 청첩장 목록
 export async function getMyInvitations(
   accessToken: string,
 ): Promise<InvitationSummaryResponse[]> {
   const api = getAuthApi(accessToken);
-  const res =
-    await api.get<ApiResponse<InvitationSummaryResponse[]>>("/invitations");
+  const res = await api.get<ApiResponse<InvitationSummaryResponse[]>>("");
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "청첩장 목록을 불러오지 못했습니다.");
   }
@@ -162,7 +148,7 @@ export async function getInvitation(
 ): Promise<InvitationResponse> {
   const api = getAuthApi(accessToken);
   const res = await api.get<ApiResponse<InvitationResponse>>(
-    `/invitations/${invitationId}`,
+    `/${invitationId}`,
   );
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "청첩장을 불러오지 못했습니다.");
@@ -178,7 +164,7 @@ export async function updateInvitation(
 ): Promise<InvitationResponse> {
   const api = getAuthApi(accessToken);
   const res = await api.patch<ApiResponse<InvitationResponse>>(
-    `/invitations/${invitationId}`,
+    `/${invitationId}`,
     data,
   );
   if (!res.data.success || !res.data.data) {
@@ -194,7 +180,7 @@ export async function publishInvitation(
 ): Promise<InvitationResponse> {
   const api = getAuthApi(accessToken);
   const res = await api.post<ApiResponse<InvitationResponse>>(
-    `/invitations/${invitationId}/publish`,
+    `/${invitationId}/publish`,
   );
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "발행에 실패했습니다.");
@@ -209,7 +195,7 @@ export async function makePrivateInvitation(
 ): Promise<InvitationResponse> {
   const api = getAuthApi(accessToken);
   const res = await api.post<ApiResponse<InvitationResponse>>(
-    `/invitations/${invitationId}/private`,
+    `/${invitationId}/private`,
   );
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "비공개 전환에 실패했습니다.");
@@ -223,7 +209,7 @@ export async function deleteInvitation(
   accessToken: string,
 ): Promise<void> {
   const api = getAuthApi(accessToken);
-  await api.delete(`/invitations/${invitationId}`);
+  await api.delete(`/${invitationId}`);
 }
 
 // 갤러리 이미지 추가
@@ -234,7 +220,7 @@ export async function addGalleryImage(
 ): Promise<GalleryImageResponse> {
   const api = getAuthApi(accessToken);
   const res = await api.post<ApiResponse<GalleryImageResponse>>(
-    `/invitations/${invitationId}/gallery`,
+    `/${invitationId}/gallery`,
     { imageUrl },
   );
   if (!res.data.success || !res.data.data) {
@@ -250,5 +236,5 @@ export async function deleteGalleryImage(
   accessToken: string,
 ): Promise<void> {
   const api = getAuthApi(accessToken);
-  await api.delete(`/invitations/${invitationId}/gallery/${imageId}`);
+  await api.delete(`/${invitationId}/gallery/${imageId}`);
 }
