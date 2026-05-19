@@ -13,6 +13,8 @@ spring:
       hibernate:
         format_sql: true # SQL 로그를 보기 좋게 줄바꿈
         dialect: org.hibernate.dialect.MySQLDialect # MySQL 문법 사용
+        jdbc:
+          time_zone: Asia/Seoul # Hibernate가 DB에 날짜/시간을 저장하고 조회할 때 사용할 시간대
 
   servlet:
     multipart:

@@ -8,10 +8,12 @@ interface AuthState {
   refreshToken: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
+  hasHydrated: boolean;
 
   setAuth: (accessToken: string, refreshToken: string, user: AuthUser) => void; // 로그인 상태 저장 함수
   clearAuth: () => void; // 로그아웃 상태 초기화 함수
   setAccessToken: (accessToken: string) => void; // access token만 갱신하는 함수
+  setHasHydrated: (value: boolean) => void;
 }
 
 // 인증 전역 store 생성
@@ -22,6 +24,7 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       user: null,
       isAuthenticated: false,
+      hasHydrated: false,
 
       setAuth: (accessToken, refreshToken, user) =>
         set({
@@ -40,6 +43,7 @@ export const useAuthStore = create<AuthState>()(
         }),
 
       setAccessToken: (accessToken) => set({ accessToken }),
+      setHasHydrated: (value) => set({ hasHydrated: value }),
     }),
 
     {
@@ -49,6 +53,9 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );

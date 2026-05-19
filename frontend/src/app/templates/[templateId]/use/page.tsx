@@ -9,15 +9,19 @@ export default function TemplateUsePage() {
   const router = useRouter();
   const params = useParams();
   const templateId = Number(params.templateId);
-  const { isAuthenticated, accessToken } = useAuthStore();
+  const { hasHydrated, isAuthenticated, accessToken } = useAuthStore();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!hasHydrated) return;
+
     // 비로그인 시 로그인 페이지로
-    if (!isAuthenticated || !accessToken) {
+    if (!isAuthenticated) {
       router.replace(`/login?redirect=/templates/${templateId}/use`);
       return;
     }
+
+    if (!accessToken) return;
 
     const create = async () => {
       try {
@@ -33,7 +37,7 @@ export default function TemplateUsePage() {
     };
 
     create();
-  }, [isAuthenticated, accessToken, templateId, router]);
+  }, [hasHydrated, isAuthenticated, accessToken, templateId, router]);
 
   if (error) {
     return (

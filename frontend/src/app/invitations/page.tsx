@@ -14,7 +14,7 @@ import {
 
 export default function InvitationsPage() {
   const router = useRouter();
-  const { isAuthenticated, accessToken } = useAuthStore();
+  const { hasHydrated, isAuthenticated, accessToken } = useAuthStore();
   const [invitations, setInvitations] = useState<InvitationSummaryResponse[]>(
     [],
   );
@@ -22,10 +22,15 @@ export default function InvitationsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isAuthenticated || !accessToken) {
+    if (!hasHydrated) return;
+
+    if (!isAuthenticated) {
       router.replace("/login");
       return;
     }
+
+    if (!accessToken) return;
+
     const fetchInvitations = async () => {
       try {
         const data = await getMyInvitations(accessToken);
@@ -37,7 +42,7 @@ export default function InvitationsPage() {
       }
     };
     fetchInvitations();
-  }, [isAuthenticated, accessToken, router]);
+  }, [hasHydrated, isAuthenticated, accessToken, router]);
 
   const handleDelete = async (id: number) => {
     if (!accessToken) return;

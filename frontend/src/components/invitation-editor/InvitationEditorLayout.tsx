@@ -109,10 +109,17 @@ export default function InvitationEditorLayout({
 
   // 자동저장 타이머
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFirstRender = useRef(true);
 
   // 서버에서 받아온 청첩장 데이터를 수정 폼에서 사용.
   const handleSave = useCallback(async () => {
     if (!accessToken) return;
+
+    if (autoSaveTimer.current) {
+      clearTimeout(autoSaveTimer.current);
+      autoSaveTimer.current = null;
+    }
+
     setIsSaving(true);
     setError(null);
     try {
@@ -133,13 +140,50 @@ export default function InvitationEditorLayout({
   //  일부 필드만 들어올 수 있기 때문에 타입 Partial
   const handleChange = useCallback((data: Partial<UpdateInvitationRequest>) => {
     setFormData((prev) => ({ ...prev, ...data }));
-
-    // 자동저장: 입력 후 2초 뒤 저장
-    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
-    autoSaveTimer.current = setTimeout(() => {
-      handleSave();
-    }, 2000);
   }, []);
+
+  // 자동저장: 입력 후 2초 뒤 저장
+  // 자동저장: 입력 후 2초 뒤 저장
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (!accessToken) return;
+
+    if (autoSaveTimer.current) {
+      clearTimeout(autoSaveTimer.current);
+    }
+
+    autoSaveTimer.current = setTimeout(async () => {
+      setIsSaving(true);
+      setError(null);
+
+      try {
+        const updated = await updateInvitation(
+          invitation.id,
+          formData,
+          accessToken,
+        );
+
+        setInvitation(updated);
+        setLastSaved(new Date());
+      } catch (err: unknown) {
+        if (err instanceof Error) setError(err.message);
+      } finally {
+        setIsSaving(false);
+        autoSaveTimer.current = null;
+      }
+    }, 2000);
+
+    return () => {
+      if (autoSaveTimer.current) {
+        clearTimeout(autoSaveTimer.current);
+        autoSaveTimer.current = null;
+      }
+    };
+  }, [formData, accessToken, invitation.id]);
 
   // 컴포넌트 언마운트 시 타이머 정리
   useEffect(() => {
@@ -369,12 +413,8 @@ export default function InvitationEditorLayout({
         </button>
       </div>
 
-      {/* 저장 바 */}
-      <InvitationSaveBar
-        isSaving={isSaving}
-        lastSaved={lastSaved}
-        onSave={handleSave}
-      />
+      {/* 저장 상태바 */}
+      <InvitationSaveBar isSaving={isSaving} lastSaved={lastSaved} />
 
       {/* 에러 메시지 */}
       {error && (
@@ -404,7 +444,22 @@ export default function InvitationEditorLayout({
 
       {/* 폼 영역 */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-lg mx-auto px-4 py-6">{renderForm()}</div>
+        <div className="max-w-lg mx-auto px-4 py-6">
+          {renderForm()}
+
+          {activeTab !== "publish" && (
+            <div className="pt-10 pb-8 flex justify-center">
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={isSaving || isUploading}
+                className="min-w-40 rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSaving ? "저장 중..." : "저장하기"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

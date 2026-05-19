@@ -10,14 +10,16 @@ export default function InvitationEditPage() {
   const params = useParams();
   const router = useRouter();
   const invitationId = Number(params.invitationId);
-  const { isAuthenticated, accessToken } = useAuthStore();
+  const { hasHydrated, isAuthenticated, accessToken } = useAuthStore();
 
   const [invitation, setInvitation] = useState<InvitationResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isAuthenticated || !accessToken) {
+    if (!hasHydrated) return;
+
+    if (!isAuthenticated) {
       router.replace("/login");
       return;
     }
@@ -26,6 +28,8 @@ export default function InvitationEditPage() {
       router.replace("/invitations");
       return;
     }
+
+    if (!accessToken) return;
 
     const fetch = async () => {
       try {
@@ -40,7 +44,7 @@ export default function InvitationEditPage() {
     };
 
     fetch();
-  }, [isAuthenticated, accessToken, invitationId, router]);
+  }, [hasHydrated, isAuthenticated, accessToken, invitationId, router]);
 
   if (isLoading) {
     return (

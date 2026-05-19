@@ -3,13 +3,11 @@
 interface InvitationSaveBarProps {
   isSaving: boolean;
   lastSaved: Date | null;
-  onSave: () => void;
 }
 
 export default function InvitationSaveBar({
   isSaving,
   lastSaved,
-  onSave,
 }: InvitationSaveBarProps) {
   const formatLastSaved = (date: Date) => {
     return date.toLocaleTimeString("ko-KR", {
@@ -20,7 +18,7 @@ export default function InvitationSaveBar({
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-100">
+    <div className="flex items-center px-4 py-2.5 bg-gray-50 border-b border-gray-100">
       <div className="flex items-center gap-2">
         {isSaving ? (
           <>
@@ -69,15 +67,6 @@ export default function InvitationSaveBar({
           <span className="text-xs text-gray-400">저장되지 않음</span>
         )}
       </div>
-
-      <button
-        type="button"
-        onClick={onSave}
-        disabled={isSaving}
-        className="text-xs text-primary-500 font-medium hover:text-primary-600 transition-colors disabled:opacity-50"
-      >
-        저장
-      </button>
     </div>
   );
 }

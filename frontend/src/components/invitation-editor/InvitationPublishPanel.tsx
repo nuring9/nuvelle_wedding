@@ -79,12 +79,6 @@ export default function InvitationPublishPanel({
             비공개로 전환
           </SecondaryButton>
         )}
-
-        {isPrivate && (
-          <PrimaryButton onClick={onPublish} isLoading={isLoading} fullWidth>
-            다시 발행하기
-          </PrimaryButton>
-        )}
       </div>
 
       {!isPublished && (

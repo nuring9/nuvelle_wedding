@@ -97,7 +97,7 @@ select {
 
 /* 모바일 청첩장 전용 컨테이너 */
 .invitation-container {
-  @apply max-w-[430px] mx-auto min-h-screen bg-white;
+  @apply max-w-[430px] mx-auto min-h-screen bg-white shadow-sm;
 }
 
 /* 편집기 레이아웃 */
