@@ -18,10 +18,9 @@ import {
   updateInvitation,
   publishInvitation,
   makePrivateInvitation,
-  addGalleryImage,
-  deleteGalleryImage,
   type InvitationResponse,
   type UpdateInvitationRequest,
+  type GalleryImageResponse,
 } from "@/lib/api/invitations";
 
 interface InvitationEditorLayoutProps {
@@ -100,26 +99,19 @@ export default function InvitationEditorLayout({
   const [formData, setFormData] = useState<UpdateInvitationRequest>(
     toFormData(initialInvitation),
   );
+  const [galleries, setGalleries] = useState<GalleryImageResponse[]>(
+    initialInvitation.galleries,
+  );
   const [activeTab, setActiveTab] = useState<TabKey>("basic");
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishLoading, setIsPublishLoading] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // 자동저장 타이머
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isFirstRender = useRef(true);
 
-  // 서버에서 받아온 청첩장 데이터를 수정 폼에서 사용.
   const handleSave = useCallback(async () => {
     if (!accessToken) return;
-
-    if (autoSaveTimer.current) {
-      clearTimeout(autoSaveTimer.current);
-      autoSaveTimer.current = null;
-    }
-
     setIsSaving(true);
     setError(null);
     try {
@@ -137,140 +129,24 @@ export default function InvitationEditorLayout({
     }
   }, [accessToken, invitation.id, formData]);
 
-  //  일부 필드만 들어올 수 있기 때문에 타입 Partial
-  const handleChange = useCallback((data: Partial<UpdateInvitationRequest>) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-  }, []);
+  const handleChange = useCallback(
+    (data: Partial<UpdateInvitationRequest>) => {
+      setFormData((prev) => ({ ...prev, ...data }));
 
-  // 자동저장: 입력 후 2초 뒤 저장
-  // 자동저장: 입력 후 2초 뒤 저장
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+      autoSaveTimer.current = setTimeout(() => {
+        handleSave();
+      }, 2000);
+    },
+    [handleSave],
+  );
 
-    if (!accessToken) return;
-
-    if (autoSaveTimer.current) {
-      clearTimeout(autoSaveTimer.current);
-    }
-
-    autoSaveTimer.current = setTimeout(async () => {
-      setIsSaving(true);
-      setError(null);
-
-      try {
-        const updated = await updateInvitation(
-          invitation.id,
-          formData,
-          accessToken,
-        );
-
-        setInvitation(updated);
-        setLastSaved(new Date());
-      } catch (err: unknown) {
-        if (err instanceof Error) setError(err.message);
-      } finally {
-        setIsSaving(false);
-        autoSaveTimer.current = null;
-      }
-    }, 2000);
-
-    return () => {
-      if (autoSaveTimer.current) {
-        clearTimeout(autoSaveTimer.current);
-        autoSaveTimer.current = null;
-      }
-    };
-  }, [formData, accessToken, invitation.id]);
-
-  // 컴포넌트 언마운트 시 타이머 정리
   useEffect(() => {
     return () => {
       if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     };
   }, []);
 
-  // 이미지 업로드 (메인 사진)
-  const handleMainImageUpload = async (file: File, field: "mainImageUrl") => {
-    if (!accessToken) return;
-    setIsUploading(true);
-    try {
-      const formDataUpload = new FormData();
-      formDataUpload.append("file", file);
-      formDataUpload.append("directory", "invitations/main");
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/files/upload`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${accessToken}` },
-          body: formDataUpload,
-        },
-      );
-      const json = await res.json();
-      if (json.success && json.data?.url) {
-        handleChange({ [field]: json.data.url });
-      }
-    } catch {
-      setError("이미지 업로드에 실패했습니다.");
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  // 갤러리 이미지 업로드
-  const handleGalleryUpload = async (file: File) => {
-    if (!accessToken) return;
-    setIsUploading(true);
-    try {
-      const formDataUpload = new FormData();
-      formDataUpload.append("file", file);
-      formDataUpload.append("directory", "invitations/gallery");
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/files/upload`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${accessToken}` },
-          body: formDataUpload,
-        },
-      );
-      const json = await res.json();
-      if (json.success && json.data?.url) {
-        const gallery = await addGalleryImage(
-          invitation.id,
-          json.data.url,
-          accessToken,
-        );
-        setInvitation((prev) => ({
-          ...prev,
-          galleries: [...prev.galleries, gallery],
-        }));
-      }
-    } catch {
-      setError("이미지 업로드에 실패했습니다.");
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  // 갤러리 이미지 삭제
-  const handleGalleryDelete = async (imageId: number) => {
-    if (!accessToken) return;
-    try {
-      await deleteGalleryImage(invitation.id, imageId, accessToken);
-      setInvitation((prev) => ({
-        ...prev,
-        galleries: prev.galleries.filter((g) => g.id !== imageId),
-      }));
-    } catch {
-      setError("이미지 삭제에 실패했습니다.");
-    }
-  };
-
-  // 발행
   const handlePublish = async () => {
     if (!accessToken) return;
     setIsPublishLoading(true);
@@ -285,7 +161,6 @@ export default function InvitationEditorLayout({
     }
   };
 
-  // 비공개
   const handleMakePrivate = async () => {
     if (!accessToken) return;
     setIsPublishLoading(true);
@@ -303,12 +178,7 @@ export default function InvitationEditorLayout({
     switch (activeTab) {
       case "basic":
         return (
-          <InvitationBasicInfoForm
-            data={formData}
-            onChange={handleChange}
-            onImageUpload={handleMainImageUpload}
-            isUploading={isUploading}
-          />
+          <InvitationBasicInfoForm data={formData} onChange={handleChange} />
         );
       case "couple":
         return (
@@ -331,10 +201,9 @@ export default function InvitationEditorLayout({
       case "gallery":
         return (
           <InvitationGalleryForm
-            galleries={invitation.galleries}
-            onUpload={handleGalleryUpload}
-            onDelete={handleGalleryDelete}
-            isUploading={isUploading}
+            invitationId={invitation.id}
+            galleries={galleries}
+            onGalleriesChange={setGalleries}
           />
         );
       case "account":
@@ -365,6 +234,7 @@ export default function InvitationEditorLayout({
       {/* 상단 헤더 */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white">
         <button
+          type="button"
           onClick={() => router.push("/invitations")}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
@@ -406,6 +276,7 @@ export default function InvitationEditorLayout({
         </div>
 
         <button
+          type="button"
           onClick={() => window.open(`/invite/${invitation.slug}`, "_blank")}
           className="text-sm text-primary-500 hover:text-primary-600 transition-colors"
         >
@@ -413,8 +284,12 @@ export default function InvitationEditorLayout({
         </button>
       </div>
 
-      {/* 저장 상태바 */}
-      <InvitationSaveBar isSaving={isSaving} lastSaved={lastSaved} />
+      {/* 저장 바 */}
+      <InvitationSaveBar
+        isSaving={isSaving}
+        lastSaved={lastSaved}
+        onSave={handleSave}
+      />
 
       {/* 에러 메시지 */}
       {error && (
@@ -429,6 +304,7 @@ export default function InvitationEditorLayout({
           {TABS.map((tab) => (
             <button
               key={tab.key}
+              type="button"
               onClick={() => setActiveTab(tab.key)}
               className={`px-4 py-3 text-xs font-medium whitespace-nowrap transition-colors border-b-2 ${
                 activeTab === tab.key
@@ -444,22 +320,7 @@ export default function InvitationEditorLayout({
 
       {/* 폼 영역 */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-lg mx-auto px-4 py-6">
-          {renderForm()}
-
-          {activeTab !== "publish" && (
-            <div className="pt-10 pb-8 flex justify-center">
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={isSaving || isUploading}
-                className="min-w-40 rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isSaving ? "저장 중..." : "저장하기"}
-              </button>
-            </div>
-          )}
-        </div>
+        <div className="max-w-lg mx-auto px-4 py-6">{renderForm()}</div>
       </div>
     </div>
   );

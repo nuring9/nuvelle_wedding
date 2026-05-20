@@ -1,4 +1,4 @@
-"use Client";
+"use client";
 
 interface SecondaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
@@ -15,7 +15,7 @@ export default function SecondaryButton({
 }: SecondaryButtonProps) {
   return (
     <button
-      className={`btn-primary ${fullWidth ? "w-full" : ""} ${className}`}
+      className={`btn-secondary ${fullWidth ? "w-full" : ""} ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >
