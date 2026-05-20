@@ -78,7 +78,7 @@ export default async function TemplatePreviewPage({
                   "모바일 최적화 디자인",
                   "사진 및 갤러리 업로드",
                   "지도 및 오시는 길 안내",
-                  "RSVP 및 방명록 기능",
+                  "참석 여부 응답 및 방명록 기능",
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-2.5">
                     <div className="w-4 h-4 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">

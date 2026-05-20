@@ -14,6 +14,7 @@ import InvitationGalleryForm from "./InvitationGalleryForm";
 import InvitationAccountForm from "./InvitationAccountForm";
 import InvitationSectionToggleForm from "./InvitationSectionToggleForm";
 import InvitationPublishPanel from "./InvitationPublishPanel";
+import InvitationThemeForm from "./InvitationThemeForm";
 import {
   updateInvitation,
   publishInvitation,
@@ -37,6 +38,7 @@ type TabKey =
   | "gallery"
   | "account"
   | "section"
+  | "theme"
   | "publish";
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -49,6 +51,7 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "gallery", label: "갤러리" },
   { key: "account", label: "계좌번호" },
   { key: "section", label: "섹션 설정" },
+  { key: "theme", label: "테마/폰트" },
   { key: "publish", label: "발행" },
 ];
 
@@ -217,6 +220,8 @@ export default function InvitationEditorLayout({
             onChange={handleChange}
           />
         );
+      case "theme":
+        return <InvitationThemeForm data={formData} onChange={handleChange} />;
       case "publish":
         return (
           <InvitationPublishPanel
@@ -232,29 +237,31 @@ export default function InvitationEditorLayout({
   return (
     <div className="flex flex-col h-screen bg-white">
       {/* 상단 헤더 */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white">
-        <button
-          type="button"
-          onClick={() => router.push("/invitations")}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center px-4 py-3 border-b border-gray-100 bg-white">
+        <div className="flex justify-start">
+          <button
+            type="button"
+            onClick={() => router.push("/invitations")}
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          내 청첩장
-        </button>
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            내 청첩장
+          </button>
+        </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center justify-center gap-1.5">
           <span className="text-xs text-gray-400">
             {invitation.templateName}
           </span>
@@ -275,21 +282,20 @@ export default function InvitationEditorLayout({
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => window.open(`/invite/${invitation.slug}`, "_blank")}
-          className="text-sm text-primary-500 hover:text-primary-600 transition-colors"
-        >
-          미리보기
-        </button>
-      </div>
+        <div className="flex items-center justify-end gap-4">
+          <div className="hidden sm:block">
+            <InvitationSaveBar isSaving={isSaving} lastSaved={lastSaved} />
+          </div>
 
-      {/* 저장 바 */}
-      <InvitationSaveBar
-        isSaving={isSaving}
-        lastSaved={lastSaved}
-        onSave={handleSave}
-      />
+          <button
+            type="button"
+            onClick={() => window.open(`/invite/${invitation.slug}`, "_blank")}
+            className="text-sm text-primary-500 hover:text-primary-600 transition-colors"
+          >
+            미리보기
+          </button>
+        </div>
+      </div>
 
       {/* 에러 메시지 */}
       {error && (
@@ -320,7 +326,22 @@ export default function InvitationEditorLayout({
 
       {/* 폼 영역 */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-lg mx-auto px-4 py-6">{renderForm()}</div>
+        <div className="max-w-lg mx-auto px-4 py-6">
+          {renderForm()}
+
+          {activeTab !== "publish" && (
+            <div className="pt-10 pb-8 flex justify-center">
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={isSaving}
+                className="min-w-40 rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSaving ? "저장 중..." : "저장하기"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

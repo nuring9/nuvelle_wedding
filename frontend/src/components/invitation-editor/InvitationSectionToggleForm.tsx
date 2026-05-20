@@ -35,7 +35,7 @@ export default function InvitationSectionToggleForm({
     },
     {
       key: "rsvpEnabled" as const,
-      label: "RSVP",
+      label: "RSVP 참석 여부",
       description: "참석 여부 확인 폼 표시",
     },
     {

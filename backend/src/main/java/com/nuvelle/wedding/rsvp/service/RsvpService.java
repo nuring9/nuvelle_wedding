@@ -50,7 +50,13 @@ public class RsvpService {
 
     // 작성자용 RSVP 목록 조회
     @Transactional(readOnly = true)
-    public List<RsvpResponse> getRsvpList(Long invitationId) {
+    public List<RsvpResponse> getRsvpList(Long invitationId, Long userId) {
+        Invitation invitation = invitationRepository.findById(invitationId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+
+        if(!invitation.isOwnedBy(userId)){
+            throw new CustomException(ErrorCode.INVITATION_ACCESS_DENIED);
+        }
         return rsvpRepository.findAllByInvitationIdOrderByCreatedAtDesc(invitationId)
                 .stream()
                 .map(RsvpResponse::from)

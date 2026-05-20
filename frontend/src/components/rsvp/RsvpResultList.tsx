@@ -20,7 +20,7 @@ export default function RsvpResultList({ rsvps }: RsvpResultListProps) {
   if (rsvps.length === 0) {
     return (
       <p className="text-sm text-gray-400 text-center py-6">
-        아직 RSVP 응답이 없습니다.
+        아직 RSVP 참석 여부 응답이 없습니다.
       </p>
     );
   }

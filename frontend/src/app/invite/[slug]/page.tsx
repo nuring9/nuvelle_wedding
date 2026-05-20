@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import KakaoSdkScript from "@/components/invitation-view/KakaoSdkScript";
 import type { Metadata } from "next";
 import { getPublicInvitation } from "@/lib/api/public";
 import InvitationHeroSection from "@/components/invitation-view/InvitationHeroSection";
@@ -51,43 +52,46 @@ export default async function InvitePage({ params }: InvitePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-stone-100">
-      <div className="invitation-container">
-        {/* 공개 청첩장 노출 순서 (문서 기준) */}
+    <>
+      <KakaoSdkScript />
+      <div className="min-h-screen bg-stone-100">
+        <div className="invitation-container">
+          {/* 공개 청첩장 노출 순서 (문서 기준) */}
 
-        {/* 1. 메인 사진 + 신랑♥신부 이름 */}
-        <InvitationHeroSection invitation={invitation} />
+          {/* 1. 메인 사진 + 신랑♥신부 이름 */}
+          <InvitationHeroSection invitation={invitation} />
 
-        {/* 2. 신랑·신부 / 부모님 */}
-        <InvitationCoupleSection invitation={invitation} />
+          {/* 2. 신랑·신부 / 부모님 */}
+          <InvitationCoupleSection invitation={invitation} />
 
-        {/* 3. 인사말 */}
-        <InvitationGreetingSection invitation={invitation} />
+          {/* 3. 인사말 */}
+          <InvitationGreetingSection invitation={invitation} />
 
-        {/* 4. 예식 날짜 / 시간 / 장소 */}
-        <InvitationWeddingInfoSection invitation={invitation} />
+          {/* 4. 예식 날짜 / 시간 / 장소 */}
+          <InvitationWeddingInfoSection invitation={invitation} />
 
-        {/* 5. D-day */}
-        <InvitationDdaySection invitation={invitation} />
+          {/* 5. D-day */}
+          <InvitationDdaySection invitation={invitation} />
 
-        {/* 6. 갤러리 */}
-        <InvitationGallerySection invitation={invitation} />
+          {/* 6. 갤러리 */}
+          <InvitationGallerySection invitation={invitation} />
 
-        {/* 7. 지도 / 오시는 길 */}
-        <InvitationMapSection invitation={invitation} />
+          {/* 7. 지도 / 오시는 길 */}
+          <InvitationMapSection invitation={invitation} />
 
-        {/* 8. 계좌번호 */}
-        <InvitationAccountSection invitation={invitation} />
+          {/* 8. 계좌번호 */}
+          <InvitationAccountSection invitation={invitation} />
 
-        {/* 9. RSVP */}
-        <InvitationRsvpSection invitation={invitation} />
+          {/* 9. RSVP */}
+          <InvitationRsvpSection invitation={invitation} />
 
-        {/* 10. 방명록 */}
-        <InvitationGuestbookSection invitation={invitation} />
+          {/* 10. 방명록 */}
+          <InvitationGuestbookSection invitation={invitation} />
 
-        {/* 하단 여백 */}
-        <div className="pb-16 pb-safe" />
+          {/* 하단 여백 */}
+          <div className="pb-16 pb-safe" />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

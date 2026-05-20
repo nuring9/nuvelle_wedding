@@ -1,5 +1,6 @@
 package com.nuvelle.wedding.rsvp.controller;
 
+import com.nuvelle.wedding.auth.security.CustomUserDetails;
 import com.nuvelle.wedding.global.response.ApiResponse;
 import com.nuvelle.wedding.rsvp.dto.RsvpRequest;
 import com.nuvelle.wedding.rsvp.dto.RsvpResponse;
@@ -7,6 +8,7 @@ import com.nuvelle.wedding.rsvp.service.RsvpService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,8 +31,9 @@ public class RsvpController {
     // 작성자용 RSVP 목록 조회
     @GetMapping("/api/invitations/{invitationId}/rsvps")
     public ResponseEntity<ApiResponse<List<RsvpResponse>>> getRsvpList(
-            @PathVariable Long invitationId) {
-        List<RsvpResponse> responses = rsvpService.getRsvpList(invitationId);
+            @PathVariable Long invitationId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<RsvpResponse> responses = rsvpService.getRsvpList(invitationId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success(responses));
     }
 }

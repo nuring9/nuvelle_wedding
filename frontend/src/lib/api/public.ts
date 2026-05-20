@@ -38,7 +38,7 @@ export async function submitRsvp(
     data,
   );
   if (!res.data.success || !res.data.data) {
-    throw new Error(res.data.message || "RSVP 등록에 실패했습니다.");
+    throw new Error(res.data.message || "참석 여부 등록에 실패했습니다.");
   }
   return res.data.data;
 }
