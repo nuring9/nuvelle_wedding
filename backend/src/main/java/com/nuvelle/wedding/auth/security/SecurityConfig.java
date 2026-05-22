@@ -51,6 +51,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/public/**").permitAll()
                         // 템플릿 목록/단건 조회
                         .requestMatchers(HttpMethod.GET, "/api/templates/**").permitAll()
+                        // BGM 목록 조회
+                        .requestMatchers(HttpMethod.GET, "/api/bgms").permitAll()
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
                 )

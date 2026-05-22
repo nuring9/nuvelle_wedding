@@ -64,7 +64,11 @@ public class InvitationResponse {
     private String fontFamily;
     private String galleryLayout;
     private String animationType;
+
+    // BGM
+    private Long bgmId;
     private String bgmUrl;
+    private String bgmTitle;
 
     // 갤러리
     private List<GalleryImageResponse> galleries;
@@ -113,7 +117,9 @@ public class InvitationResponse {
                 .fontFamily(invitation.getFontFamily())
                 .galleryLayout(invitation.getGalleryLayout())
                 .animationType(invitation.getAnimationType())
-                .bgmUrl(invitation.getBgmUrl())
+                .bgmId(invitation.getBgm() != null ? invitation.getBgm().getId() : null)
+                .bgmUrl(invitation.getBgm() != null ? invitation.getBgm().getFileUrl() : null)
+                .bgmTitle(invitation.getBgm() != null ? invitation.getBgm().getTitle() : null)
                 .galleries(invitation.getGalleries().stream()
                         .map(GalleryImageResponse::from)
                         .collect(Collectors.toList()))

@@ -43,6 +43,16 @@ export default function InvitationSectionToggleForm({
       label: "방명록",
       description: "하객 방명록 섹션 표시",
     },
+    {
+      key: "interviewEnabled" as const,
+      label: "웨딩 인터뷰",
+      description: "신랑신부 인터뷰 섹션 표시",
+    },
+    {
+      key: "guestPhotoEnabled" as const,
+      label: "게스트 사진",
+      description: "하객 사진 업로드 섹션 표시",
+    },
   ];
 
   return (

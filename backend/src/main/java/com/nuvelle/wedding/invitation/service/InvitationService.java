@@ -1,6 +1,8 @@
 package com.nuvelle.wedding.invitation.service;
 
 import com.nuvelle.wedding.auth.security.CustomUserDetails;
+import com.nuvelle.wedding.bgm.entity.Bgm;
+import com.nuvelle.wedding.bgm.repository.BgmRepository;
 import com.nuvelle.wedding.global.exception.CustomException;
 import com.nuvelle.wedding.global.exception.ErrorCode;
 import com.nuvelle.wedding.invitation.dto.*;
@@ -30,6 +32,7 @@ public class InvitationService {
     private final InvitationGalleryRepository galleryRepository;
     private final TemplateRepository templateRepository;
     private final UserRepository userRepository;
+    private final BgmRepository bgmRepository;
 
     @Value("${app.base-url:http://localhost:3000}")
     private String baseUrl;
@@ -83,6 +86,7 @@ public class InvitationService {
     public InvitationResponse update(Long invitationId,
                                      InvitationUpdateRequest request,
                                      CustomUserDetails userDetails) {
+
         Invitation invitation = invitationRepository.findByIdWithGalleries(invitationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
@@ -119,11 +123,25 @@ public class InvitationService {
                 request.getFontFamily(),
                 request.getGalleryLayout(),
                 request.getAnimationType(),
-                request.getBgmUrl()
+                request.getGroomIntroduction(),
+                request.getBrideIntroduction(),
+                request.getRemittanceLink(),
+                request.getInterviewEnabled() != null ? request.getInterviewEnabled() : invitation.isInterviewEnabled(),
+                request.getGuestPhotoEnabled() != null ? request.getGuestPhotoEnabled() : invitation.isGuestPhotoEnabled()
         );
+
+        Bgm bgm = null;
+        if (request.getBgmId() != null) {
+            bgm = bgmRepository.findByIdAndIsActiveTrue(request.getBgmId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.BGM_NOT_FOUND));
+        }
+        invitation.updateBgm(bgm);
 
         return InvitationResponse.from(invitation, baseUrl);
     }
+
+
+
 
     // 발행
     @Transactional

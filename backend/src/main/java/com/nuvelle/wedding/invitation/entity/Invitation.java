@@ -1,5 +1,6 @@
 package com.nuvelle.wedding.invitation.entity;
 
+import com.nuvelle.wedding.bgm.entity.Bgm;
 import com.nuvelle.wedding.template.entity.Template;
 import com.nuvelle.wedding.user.entity.User;
 import jakarta.persistence.*;
@@ -127,6 +128,12 @@ public class Invitation {
     @Column(name = "dday_enabled", nullable = false)
     private boolean ddayEnabled = false;
 
+    @Column(name = "interview_enabled", nullable = false)
+    private boolean interviewEnabled = false;
+
+    @Column(name = "guest_photo_enabled", nullable = false)
+    private boolean guestPhotoEnabled = false;
+
     // 스타일
     @Column(name = "theme", length = 50)
     private String theme;
@@ -140,8 +147,21 @@ public class Invitation {
     @Column(name = "animation_type", length = 50)
     private String animationType;
 
-    @Column(name = "bgm_url")
-    private String bgmUrl;
+    // BGM
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bgm_id")
+    private Bgm bgm;
+
+    // 프로필형 소개
+    @Column(name = "groom_introduction", columnDefinition = "TEXT")
+    private String groomIntroduction;
+
+    @Column(name = "bride_introduction", columnDefinition = "TEXT")
+    private String brideIntroduction;
+
+    // 송금 링크
+    @Column(name = "remittance_link", length = 500)
+    private String remittanceLink;
 
     // 공유 / 발행
     @Column(name = "published_at")
@@ -175,7 +195,12 @@ public class Invitation {
                        String venueDetail, String transportInfo, Double mapLat, Double mapLng, String accountBank,
                        String accountNumber, String accountHolder, boolean galleryEnabled, boolean rsvpEnabled,
                        boolean guestbookEnabled, boolean accountEnabled, boolean parentsEnabled, boolean ddayEnabled,
-                       String theme, String fontFamily, String galleryLayout, String animationType, String bgmUrl) {
+                       String theme, String fontFamily, String galleryLayout, String animationType,
+                       String groomIntroduction,
+                       String brideIntroduction,
+                       String remittanceLink,
+                       boolean interviewEnabled,
+                       boolean guestPhotoEnabled) {
         this.title = title;
         this.mainImageUrl = mainImageUrl;
         this.groomName = groomName;
@@ -206,10 +231,19 @@ public class Invitation {
         this.fontFamily = fontFamily;
         this.galleryLayout = galleryLayout;
         this.animationType = animationType;
-        this.bgmUrl = bgmUrl;
+        this.groomIntroduction = groomIntroduction;
+        this.brideIntroduction = brideIntroduction;
+        this.remittanceLink = remittanceLink;
+        this.interviewEnabled = interviewEnabled;
+        this.guestPhotoEnabled = guestPhotoEnabled;
     }
 
-    public void publish(){
+
+    public void updateBgm(Bgm bgm) {
+        this.bgm = bgm;
+    }
+
+    public void publish() {
         this.status = InvitationStatus.PUBLISHED;
         this.publishedAt = LocalDateTime.now();
     }

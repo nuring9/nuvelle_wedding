@@ -39,7 +39,14 @@ export interface PublicInvitation {
   fontFamily: string | null;
   galleryLayout: string | null;
   animationType: string | null;
+  bgmId: number | null;
   bgmUrl: string | null;
+  bgmTitle: string | null;
+  groomIntroduction: string | null;
+  brideIntroduction: string | null;
+  remittanceLink: string | null;
+  interviewEnabled: boolean;
+  guestPhotoEnabled: boolean;
   galleries: GalleryImage[];
 }
 

@@ -62,7 +62,25 @@ public class PublicInvitationResponse {
     private String fontFamily;
     private String galleryLayout;
     private String animationType;
+
+    // BGM
+    private Long bgmId;
     private String bgmUrl;
+    private String bgmTitle;
+
+    // 신랑 신부 소개글
+    private String groomIntroduction;
+    private String brideIntroduction;
+
+    // 송금 링크
+    private String remittanceLink;
+
+    // 인터뷰
+    private boolean interviewEnabled;
+
+    // 게스트 사진 업로드
+    private boolean guestPhotoEnabled;
+
 
     // 갤러리
     private List<GalleryImageResponse> galleries;
@@ -102,7 +120,14 @@ public class PublicInvitationResponse {
                 .fontFamily(invitation.getFontFamily())
                 .galleryLayout(invitation.getGalleryLayout())
                 .animationType(invitation.getAnimationType())
-                .bgmUrl(invitation.getBgmUrl())
+                .bgmId(invitation.getBgm() != null ? invitation.getBgm().getId() : null)
+                .bgmUrl(invitation.getBgm() != null ? invitation.getBgm().getFileUrl() : null)
+                .bgmTitle(invitation.getBgm() != null ? invitation.getBgm().getTitle() : null)
+                .groomIntroduction(invitation.getGroomIntroduction())
+                .brideIntroduction(invitation.getBrideIntroduction())
+                .remittanceLink(invitation.getRemittanceLink())
+                .interviewEnabled(invitation.isInterviewEnabled())
+                .guestPhotoEnabled(invitation.isGuestPhotoEnabled())
                 .galleries(invitation.getGalleries().stream()
                         .map(GalleryImageResponse::from)
                         .collect(Collectors.toList()))

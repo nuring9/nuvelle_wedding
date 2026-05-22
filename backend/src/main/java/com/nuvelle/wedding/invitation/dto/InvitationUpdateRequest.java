@@ -51,5 +51,20 @@ public class InvitationUpdateRequest {
     private String fontFamily;
     private String galleryLayout;
     private String animationType;
-    private String bgmUrl;
+
+    // BGM
+    private Long bgmId;
+
+    // 신랑 신부 소개글
+    private String groomIntroduction;
+    private String brideIntroduction;
+
+    // 송금 링크
+    private String remittanceLink;
+
+    // 인터뷰
+    private Boolean interviewEnabled;
+
+    // 게스트 사진 업로드
+    private Boolean guestPhotoEnabled;
 }

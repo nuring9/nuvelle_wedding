@@ -40,7 +40,13 @@ public enum ErrorCode {
 
     // 방명록
     GUESTBOOK_NOT_ALLOWED(HttpStatus.FORBIDDEN, "방명록이 비활성화된 청첩장입니다."),
-    GUESTBOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "방명록 항목을 찾을 수 없습니다.");
+    GUESTBOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "방명록 항목을 찾을 수 없습니다."),
+
+    // BGM
+    BGM_NOT_FOUND(HttpStatus.NOT_FOUND, "BGM을 찾을 수 없습니다."),
+
+    // 게스트 사진 업로드
+    GUEST_PHOTO_NOT_ALLOWED(HttpStatus.FORBIDDEN, "게스트 사진 업로드가 비활성화된 청첩장입니다.");
 
     private final HttpStatus status;
     private final String message;

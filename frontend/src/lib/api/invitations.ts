@@ -55,7 +55,12 @@ export interface UpdateInvitationRequest {
   fontFamily?: string;
   galleryLayout?: string;
   animationType?: string;
-  bgmUrl?: string;
+  bgmId?: number | null;
+  groomIntroduction?: string;
+  brideIntroduction?: string;
+  remittanceLink?: string;
+  interviewEnabled?: boolean;
+  guestPhotoEnabled?: boolean;
 }
 
 export interface InvitationResponse {
@@ -94,7 +99,14 @@ export interface InvitationResponse {
   fontFamily: string | null;
   galleryLayout: string | null;
   animationType: string | null;
+  bgmId: number | null;
   bgmUrl: string | null;
+  bgmTitle: string | null;
+  groomIntroduction: string | null;
+  brideIntroduction: string | null;
+  remittanceLink: string | null;
+  interviewEnabled: boolean;
+  guestPhotoEnabled: boolean;
   galleries: GalleryImageResponse[];
   publicUrl: string | null;
   publishedAt: string | null;

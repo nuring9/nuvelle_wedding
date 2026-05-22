@@ -8,7 +8,13 @@ import InvitationGreetingSection from "@/components/invitation-view/InvitationGr
 import InvitationWeddingInfoSection from "@/components/invitation-view/InvitationWeddingInfoSection";
 import InvitationDdaySection from "@/components/invitation-view/InvitationDdaySection";
 import InvitationGallerySection from "@/components/invitation-view/InvitationGallerySection";
-import InvitationMapSection from "@/components/invitation-view/InvitationMapSection";
+import InvitationProfileSection from "@/components/invitation-view/InvitationProfileSection";
+import InvitationInterviewSection from "@/components/invitation-view/InvitationInterviewSection";
+import InvitationRemittanceSection from "@/components/invitation-view/InvitationRemittanceSection";
+import InvitationBgmPlayer from "@/components/invitation-view/InvitationBgmPlayer";
+import InvitationGuestPhotoSection from "@/components/invitation-view/InvitationGuestPhotoSection";
+import InvitationMapKakaoSection from "@/components/invitation-view/InvitationMapKakaoSection";
+import InvitationQrSection from "@/components/invitation-view/InvitationQrSection";
 import InvitationAccountSection from "@/components/invitation-view/InvitationAccountSection";
 import InvitationRsvpSection from "@/components/invitation-view/InvitationRsvpSection";
 import InvitationGuestbookSection from "@/components/invitation-view/InvitationGuestbookSection";
@@ -54,9 +60,13 @@ export default async function InvitePage({ params }: InvitePageProps) {
   return (
     <>
       <KakaoSdkScript />
+
       <div className="min-h-screen bg-stone-100">
         <div className="invitation-container">
-          {/* 공개 청첩장 노출 순서 (문서 기준) */}
+          {/* BGM 플레이어 */}
+          {invitation.bgmUrl && (
+            <InvitationBgmPlayer bgmUrl={invitation.bgmUrl} />
+          )}
 
           {/* 1. 메인 사진 + 신랑♥신부 이름 */}
           <InvitationHeroSection invitation={invitation} />
@@ -64,29 +74,44 @@ export default async function InvitePage({ params }: InvitePageProps) {
           {/* 2. 신랑·신부 / 부모님 */}
           <InvitationCoupleSection invitation={invitation} />
 
-          {/* 3. 인사말 */}
+          {/* 3. 프로필형 소개 */}
+          <InvitationProfileSection invitation={invitation} />
+
+          {/* 4. 인사말 */}
           <InvitationGreetingSection invitation={invitation} />
 
-          {/* 4. 예식 날짜 / 시간 / 장소 */}
+          {/* 5. 예식 날짜 / 시간 / 장소 */}
           <InvitationWeddingInfoSection invitation={invitation} />
 
-          {/* 5. D-day */}
+          {/* 6. D-day */}
           <InvitationDdaySection invitation={invitation} />
 
-          {/* 6. 갤러리 */}
+          {/* 7. 웨딩 인터뷰 */}
+          <InvitationInterviewSection invitation={invitation} />
+
+          {/* 8. 갤러리 */}
           <InvitationGallerySection invitation={invitation} />
 
-          {/* 7. 지도 / 오시는 길 */}
-          <InvitationMapSection invitation={invitation} />
+          {/* 9. 지도 / 오시는 길 (카카오맵 SDK) */}
+          <InvitationMapKakaoSection invitation={invitation} />
 
-          {/* 8. 계좌번호 */}
+          {/* 10. 계좌번호 */}
           <InvitationAccountSection invitation={invitation} />
 
-          {/* 9. RSVP */}
+          {/* 11. 송금 링크 */}
+          <InvitationRemittanceSection invitation={invitation} />
+
+          {/* 12. RSVP */}
           <InvitationRsvpSection invitation={invitation} />
 
-          {/* 10. 방명록 */}
+          {/* 13. 방명록 */}
           <InvitationGuestbookSection invitation={invitation} />
+
+          {/* 14. 게스트 사진 */}
+          <InvitationGuestPhotoSection invitation={invitation} />
+
+          {/* 15. QR 코드 */}
+          <InvitationQrSection invitation={invitation} />
 
           {/* 하단 여백 */}
           <div className="pb-16 pb-safe" />

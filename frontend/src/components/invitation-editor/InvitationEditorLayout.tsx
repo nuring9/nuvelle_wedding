@@ -15,6 +15,9 @@ import InvitationAccountForm from "./InvitationAccountForm";
 import InvitationSectionToggleForm from "./InvitationSectionToggleForm";
 import InvitationPublishPanel from "./InvitationPublishPanel";
 import InvitationThemeForm from "./InvitationThemeForm";
+import InvitationProfileForm from "./InvitationProfileForm";
+import InvitationInterviewForm from "./InvitationInterviewForm";
+import InvitationAdvancedForm from "./InvitationAdvancedForm";
 import {
   updateInvitation,
   publishInvitation,
@@ -39,7 +42,10 @@ type TabKey =
   | "account"
   | "section"
   | "theme"
-  | "publish";
+  | "publish"
+  | "profile"
+  | "interview"
+  | "advanced";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "basic", label: "메인 사진" },
@@ -50,9 +56,12 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "map", label: "지도" },
   { key: "gallery", label: "갤러리" },
   { key: "account", label: "계좌번호" },
-  { key: "section", label: "섹션 설정" },
   { key: "theme", label: "테마/폰트" },
   { key: "publish", label: "발행" },
+  { key: "profile", label: "소개/송금" },
+  { key: "interview", label: "웨딩 인터뷰" },
+  { key: "advanced", label: "BGM/QR" },
+  { key: "section", label: "섹션 설정" },
 ];
 
 function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
@@ -87,7 +96,12 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     fontFamily: invitation.fontFamily ?? "",
     galleryLayout: invitation.galleryLayout ?? "",
     animationType: invitation.animationType ?? "",
-    bgmUrl: invitation.bgmUrl ?? "",
+    bgmId: invitation.bgmId ?? null,
+    groomIntroduction: invitation.groomIntroduction ?? "",
+    brideIntroduction: invitation.brideIntroduction ?? "",
+    remittanceLink: invitation.remittanceLink ?? "",
+    interviewEnabled: invitation.interviewEnabled,
+    guestPhotoEnabled: invitation.guestPhotoEnabled,
   };
 }
 
@@ -229,6 +243,20 @@ export default function InvitationEditorLayout({
             onPublish={handlePublish}
             onMakePrivate={handleMakePrivate}
             isLoading={isPublishLoading}
+          />
+        );
+      case "profile":
+        return (
+          <InvitationProfileForm data={formData} onChange={handleChange} />
+        );
+      case "interview":
+        return <InvitationInterviewForm invitationId={invitation.id} />;
+      case "advanced":
+        return (
+          <InvitationAdvancedForm
+            data={formData}
+            onChange={handleChange}
+            publicUrl={invitation.publicUrl}
           />
         );
     }
