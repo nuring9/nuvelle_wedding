@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 public class InvitationUpdateRequest {
@@ -37,6 +38,8 @@ public class InvitationUpdateRequest {
     private String accountBank;
     private String accountNumber;
     private String accountHolder;
+
+    private List<InvitationAccountRequest> accounts;
 
     // 섹션 on/off (기본값 처리를 위해 Boolean 래퍼 사용)
     private Boolean galleryEnabled;

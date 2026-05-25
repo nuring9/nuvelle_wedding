@@ -32,6 +32,8 @@ public class WeddingInterviewService {
             throw new CustomException(ErrorCode.INVITATION_ACCESS_DENIED);
         }
 
+        invitation.enableInterview();
+
         WeddingInterview interview = interviewRepository
                 .findByInvitationId(invitationId)
                 .orElse(null);
@@ -50,6 +52,16 @@ public class WeddingInterviewService {
                     .answer4(request.getAnswer4())
                     .question5(request.getQuestion5())
                     .answer5(request.getAnswer5())
+                    .question6(request.getQuestion6())
+                    .answer6(request.getAnswer6())
+                    .question7(request.getQuestion7())
+                    .answer7(request.getAnswer7())
+                    .question8(request.getQuestion8())
+                    .answer8(request.getAnswer8())
+                    .question9(request.getQuestion9())
+                    .answer9(request.getAnswer9())
+                    .question10(request.getQuestion10())
+                    .answer10(request.getAnswer10())
                     .build();
             interviewRepository.save(interview);
         } else {
@@ -58,7 +70,12 @@ public class WeddingInterviewService {
                     request.getQuestion2(), request.getAnswer2(),
                     request.getQuestion3(), request.getAnswer3(),
                     request.getQuestion4(), request.getAnswer4(),
-                    request.getQuestion5(), request.getAnswer5()
+                    request.getQuestion5(), request.getAnswer5(),
+                    request.getQuestion6(), request.getAnswer6(),
+                    request.getQuestion7(), request.getAnswer7(),
+                    request.getQuestion8(), request.getAnswer8(),
+                    request.getQuestion9(), request.getAnswer9(),
+                    request.getQuestion10(), request.getAnswer10()
             );
         }
         return WeddingInterviewResponse.from(interview);

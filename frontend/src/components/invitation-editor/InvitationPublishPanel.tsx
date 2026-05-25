@@ -3,6 +3,7 @@
 import CopyButton from "@/components/common/CopyButton";
 import PrimaryButton from "@/components/common/PrimaryButton";
 import SecondaryButton from "@/components/common/SecondaryButton";
+import InvitationQrPanel from "./InvitationQrPanel";
 import type { InvitationResponse } from "@/lib/api/invitations";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -137,6 +138,9 @@ export default function InvitationPublishPanel({
         </div>
       )}
 
+      {/* QR 코드 */}
+      {isPublished && <InvitationQrPanel publicUrl={invitation.publicUrl} />}
+
       {/* 발행 버튼 */}
       <div className="flex flex-col gap-2">
         {!isPublished ? (
@@ -173,7 +177,7 @@ export default function InvitationPublishPanel({
 
       {/* RSVP 결과 확인 */}
       {isPublished && invitation.rsvpEnabled && (
-        <div className="pt-2 border-t border-gray-100">
+        <div className="mb-8 pt-6 border-t border-gray-100">
           <Link
             href={`/invitations/${invitation.id}/rsvps`}
             className="flex items-center justify-between text-sm text-primary-500 hover:text-primary-600 transition-colors"

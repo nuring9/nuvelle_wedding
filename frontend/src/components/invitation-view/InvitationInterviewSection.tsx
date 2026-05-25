@@ -9,51 +9,100 @@ interface InvitationInterviewSectionProps {
   invitation: PublicInvitation;
 }
 
+interface InterviewItem {
+  question: string;
+  answer: string;
+}
+
 export default function InvitationInterviewSection({
   invitation,
 }: InvitationInterviewSectionProps) {
   const [interview, setInterview] = useState<WeddingInterviewResponse | null>(
     null,
   );
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   useEffect(() => {
     if (!invitation.interviewEnabled) return;
-    const fetch = async () => {
+
+    const fetchInterview = async () => {
       const data = await getInterview(invitation.id);
       setInterview(data);
     };
-    fetch();
+
+    fetchInterview();
   }, [invitation.id, invitation.interviewEnabled]);
 
   if (!invitation.interviewEnabled || !interview) return null;
 
-  // 질문과 답변을 한쌍으로 묶은 배열
-  const qas = [
-    { q: interview.question1, a: interview.answer1 },
-    { q: interview.question2, a: interview.answer2 },
-    { q: interview.question3, a: interview.answer3 },
-    { q: interview.question4, a: interview.answer4 },
-    { q: interview.question5, a: interview.answer5 },
-  ].filter((item) => item.q && item.a);
-  // 질문과 답변이 모두 있는 항복만 남김.
+  const items: InterviewItem[] = [
+    { question: interview.question1 ?? "", answer: interview.answer1 ?? "" },
+    { question: interview.question2 ?? "", answer: interview.answer2 ?? "" },
+    { question: interview.question3 ?? "", answer: interview.answer3 ?? "" },
+    { question: interview.question4 ?? "", answer: interview.answer4 ?? "" },
+    { question: interview.question5 ?? "", answer: interview.answer5 ?? "" },
+    { question: interview.question6 ?? "", answer: interview.answer6 ?? "" },
+    { question: interview.question7 ?? "", answer: interview.answer7 ?? "" },
+    { question: interview.question8 ?? "", answer: interview.answer8 ?? "" },
+    { question: interview.question9 ?? "", answer: interview.answer9 ?? "" },
+    {
+      question: interview.question10 ?? "",
+      answer: interview.answer10 ?? "",
+    },
+  ].filter(
+    (item) => item.question.trim().length > 0 && item.answer.trim().length > 0,
+  );
 
-  if (qas.length === 0) return null;
+  if (items.length === 0) return null;
 
   return (
     <section className="section-padding bg-gray-50">
-      <h2 className="text-xs tracking-widest text-gray-400 mb-8 uppercase text-center">
+      <h2 className="text-xs tracking-widest text-gray-400 mb-3 uppercase text-center">
         Interview
       </h2>
 
-      <div className="flex flex-col gap-5">
-        {qas.map((item, index) => (
-          <div key={index} className="flex flex-col gap-2">
-            <p className="text-xs font-medium text-primary-500">Q. {item.q}</p>
-            <p className="text-sm text-gray-600 leading-relaxed pl-3 border-l-2 border-gray-200">
-              {item.a}
-            </p>
-          </div>
-        ))}
+      <p className="mb-8 text-center text-sm leading-relaxed text-gray-500">
+        서로에게 전하는 작은 이야기
+      </p>
+
+      <div className="card-base divide-y divide-gray-100 overflow-hidden">
+        {items.map((item, index) => {
+          const isOpen = openIndex === index;
+
+          return (
+            <div key={`${item.question}-${index}`}>
+              <button
+                type="button"
+                onClick={() => setOpenIndex(isOpen ? null : index)}
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-gray-50"
+              >
+                <span className="flex min-w-0 items-start gap-3">
+                  <span className="mt-0.5 shrink-0 text-xs font-semibold text-primary-500">
+                    Q{index + 1}
+                  </span>
+                  <span className="text-sm font-medium leading-relaxed text-gray-800">
+                    {item.question}
+                  </span>
+                </span>
+                <span
+                  className={`shrink-0 text-xs text-gray-400 transition-transform ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  ▼
+                </span>
+              </button>
+
+              {isOpen && (
+                <div className="bg-gray-50 px-5 pb-5 pt-1">
+                  <p className="pl-8 text-sm leading-7 text-gray-600">
+                    {item.answer}
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </section>
   );

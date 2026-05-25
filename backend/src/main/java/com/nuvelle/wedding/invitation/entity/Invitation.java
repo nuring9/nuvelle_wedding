@@ -109,6 +109,14 @@ public class Invitation {
     @Column(name = "account_holder", length = 50)
     private String accountHolder;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "invitation_accounts",
+            joinColumns = @JoinColumn(name = "invitation_id")
+    )
+    @OrderColumn(name = "sort_order")
+    private List<InvitationAccount> accounts = new ArrayList<>();
+
     // 섹션 on/off
     @Column(name = "gallery_enabled", nullable = false)
     private boolean galleryEnabled = true;
@@ -193,7 +201,8 @@ public class Invitation {
                        String groomMotherName, String brideFatherName, String brideMotherName, String greetingText,
                        LocalDate weddingDate, LocalTime weddingTime, String venueName, String venueAddress,
                        String venueDetail, String transportInfo, Double mapLat, Double mapLng, String accountBank,
-                       String accountNumber, String accountHolder, boolean galleryEnabled, boolean rsvpEnabled,
+                       String accountNumber, String accountHolder, List<InvitationAccount> accounts,
+                       boolean galleryEnabled, boolean rsvpEnabled,
                        boolean guestbookEnabled, boolean accountEnabled, boolean parentsEnabled, boolean ddayEnabled,
                        String theme, String fontFamily, String galleryLayout, String animationType,
                        String groomIntroduction,
@@ -221,6 +230,11 @@ public class Invitation {
         this.accountBank = accountBank;
         this.accountNumber = accountNumber;
         this.accountHolder = accountHolder;
+        // 계좌 목록은 accounts가 넘어왔을 때만 새 값으로 교체
+        if (accounts != null) {
+            this.accounts.clear();
+            this.accounts.addAll(accounts);
+        }
         this.galleryEnabled = galleryEnabled;
         this.rsvpEnabled = rsvpEnabled;
         this.guestbookEnabled = guestbookEnabled;
@@ -236,11 +250,16 @@ public class Invitation {
         this.remittanceLink = remittanceLink;
         this.interviewEnabled = interviewEnabled;
         this.guestPhotoEnabled = guestPhotoEnabled;
+
     }
 
 
     public void updateBgm(Bgm bgm) {
         this.bgm = bgm;
+    }
+
+    public void enableInterview() {
+        this.interviewEnabled = true;
     }
 
     public void publish() {

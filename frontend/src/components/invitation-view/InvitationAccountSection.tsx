@@ -10,37 +10,69 @@ interface InvitationAccountSectionProps {
 export default function InvitationAccountSection({
   invitation,
 }: InvitationAccountSectionProps) {
-  if (
-    !invitation.accountEnabled ||
-    !invitation.accountBank ||
-    !invitation.accountNumber
-  ) {
-    return null;
-  }
+  const accounts = (invitation.accounts ?? []).filter(
+    (account) => account.bankName && account.accountNumber,
+  );
 
-  const accountText = `${invitation.accountBank} ${invitation.accountNumber} ${invitation.accountHolder || ""}`;
+  if (!invitation.accountEnabled || accounts.length === 0) return null;
 
   return (
     <section className="section-padding">
-      <h2 className="text-xs tracking-widest text-gray-400 mb-8 uppercase text-center">
-        Account
-      </h2>
+      <div className="mb-8 text-center">
+        <p className="text-xs tracking-widest text-gray-400">마음 전하실 곳</p>
+        <p className="mt-3 text-sm leading-7 text-gray-500">
+          축하의 마음을 전하고 싶으신 분들을 위해 계좌 정보를 안내드립니다.
+        </p>
+      </div>
 
-      <div className="card-base p-5">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-1">
-            <p className="text-xs text-gray-400">{invitation.accountBank}</p>
-            <p className="text-sm font-medium text-gray-800">
-              {invitation.accountNumber}
-            </p>
-            {invitation.accountHolder && (
-              <p className="text-xs text-gray-500">
-                예금주: {invitation.accountHolder}
-              </p>
-            )}
-          </div>
-          <CopyButton text={accountText} label="복사" />
-        </div>
+      <div className="flex flex-col gap-3">
+        {accounts.map((account, index) => {
+          const accountText = `${account.bankName} ${account.accountNumber} ${
+            account.accountHolder || ""
+          }`;
+
+          return (
+            <div
+              key={`${account.side}-${account.label}-${index}`}
+              className="card-base p-5"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex min-w-0 flex-col gap-1">
+                  <p className="text-sm font-semibold text-primary-500">
+                    {account.label}
+                  </p>
+                  <p className="text-xs text-gray-400">{account.bankName}</p>
+                  <p className="break-all text-sm font-medium text-gray-800">
+                    {account.accountNumber}
+                  </p>
+                  {account.accountHolder && (
+                    <p className="text-xs text-gray-500">
+                      예금주: {account.accountHolder}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <CopyButton text={accountText} label="복사" />
+
+                  {account.remittanceLink && (
+                    <a
+                      href={account.remittanceLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#ffe500] px-3 py-1.5 text-xs font-semibold text-[#381e1f] transition-colors hover:bg-[#f6dc00]"
+                    >
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#381e1f] text-[9px] font-bold text-[#ffe500]">
+                        K
+                      </span>
+                      카카오뱅크
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

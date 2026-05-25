@@ -48,3 +48,19 @@ export async function getInterview(
     return null;
   }
 }
+
+// 웨딩 인터뷰 조회 (작성자)
+export async function getInterviewForEditor(
+  invitationId: number,
+  accessToken: string,
+): Promise<WeddingInterviewResponse | null> {
+  try {
+    const api = getAuthApi(accessToken);
+    const res = await api.get<ApiResponse<WeddingInterviewResponse>>(
+      `/${invitationId}/interview`,
+    );
+    return res.data.data ?? null;
+  } catch {
+    return null;
+  }
+}

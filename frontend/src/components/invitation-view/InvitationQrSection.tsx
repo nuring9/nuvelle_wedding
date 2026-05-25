@@ -20,7 +20,7 @@ export default function InvitationQrSection({
     if (!canvasRef.current) return;
 
     QRCode.toCanvas(canvasRef.current, publicUrl, {
-      width: 180,
+      width: 90,
       margin: 2,
       color: {
         dark: "#1a1a1a",
@@ -44,7 +44,7 @@ export default function InvitationQrSection({
       <div className="flex justify-center">
         <canvas
           ref={canvasRef}
-          className={generated ? "rounded-xl shadow-sm" : "hidden"}
+          className={generated ? "rounded-lg shadow-sm" : "hidden"}
         />
       </div>
     </section>

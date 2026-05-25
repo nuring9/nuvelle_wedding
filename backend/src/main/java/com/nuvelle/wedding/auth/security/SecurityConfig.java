@@ -47,6 +47,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/reissue").permitAll()
                         // 공개 청첩장 조회
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        // 공개 청첩장에서 웨딩 인터뷰 조회
+                        .requestMatchers(HttpMethod.GET, "/api/invitations/*/interview").permitAll()
                         // 공개 RSVP, 방명록 등록
                         .requestMatchers(HttpMethod.POST, "/api/public/**").permitAll()
                         // 템플릿 목록/단건 조회

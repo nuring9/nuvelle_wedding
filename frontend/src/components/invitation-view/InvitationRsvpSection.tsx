@@ -31,7 +31,7 @@ export default function InvitationRsvpSection({
   };
 
   return (
-    <section className="px-6 py-4">
+    <section className="px-6 pt-4 pb-12">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}

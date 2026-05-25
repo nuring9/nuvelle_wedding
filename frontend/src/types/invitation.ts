@@ -4,6 +4,16 @@ export interface GalleryImage {
   sortOrder: number;
 }
 
+// 계좌
+export interface InvitationAccount {
+  side: "GROOM" | "BRIDE" | string;
+  label: string;
+  bankName: string;
+  accountNumber: string;
+  accountHolder: string;
+  remittanceLink?: string | null;
+}
+
 // 공개 청첩장 상태 타입
 export interface PublicInvitation {
   id: number;
@@ -29,6 +39,7 @@ export interface PublicInvitation {
   accountBank: string | null;
   accountNumber: string | null;
   accountHolder: string | null;
+  accounts: InvitationAccount[];
   galleryEnabled: boolean;
   rsvpEnabled: boolean;
   guestbookEnabled: boolean;

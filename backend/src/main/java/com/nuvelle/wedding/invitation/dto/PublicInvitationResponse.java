@@ -49,6 +49,8 @@ public class PublicInvitationResponse {
     private String accountNumber;
     private String accountHolder;
 
+    private List<InvitationAccountResponse> accounts;
+
     // 섹션 on/off
     private boolean galleryEnabled;
     private boolean rsvpEnabled;
@@ -110,6 +112,7 @@ public class PublicInvitationResponse {
                 .accountBank(invitation.getAccountBank())
                 .accountNumber(invitation.getAccountNumber())
                 .accountHolder(invitation.getAccountHolder())
+                .accounts(toAccountResponses(invitation))
                 .galleryEnabled(invitation.isGalleryEnabled())
                 .rsvpEnabled(invitation.isRsvpEnabled())
                 .guestbookEnabled(invitation.isGuestbookEnabled())
@@ -132,5 +135,26 @@ public class PublicInvitationResponse {
                         .map(GalleryImageResponse::from)
                         .collect(Collectors.toList()))
                 .build();
+    }
+    private static List<InvitationAccountResponse> toAccountResponses(Invitation invitation) {
+        if (!invitation.getAccounts().isEmpty()) {
+            return invitation.getAccounts().stream()
+                    .map(InvitationAccountResponse::from)
+                    .collect(Collectors.toList());
+        }
+
+        // 기존 단일 계좌 데이터가 있으면 새 계좌 목록처럼 내려줌
+        if (invitation.getAccountBank() != null && invitation.getAccountNumber() != null) {
+            return List.of(InvitationAccountResponse.builder()
+                    .side("GROOM")
+                    .label("신랑")
+                    .bankName(invitation.getAccountBank())
+                    .accountNumber(invitation.getAccountNumber())
+                    .accountHolder(invitation.getAccountHolder())
+                    .remittanceLink(invitation.getRemittanceLink())
+                    .build());
+        }
+
+        return List.of();
     }
 }

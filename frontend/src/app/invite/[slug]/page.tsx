@@ -10,7 +10,6 @@ import InvitationDdaySection from "@/components/invitation-view/InvitationDdaySe
 import InvitationGallerySection from "@/components/invitation-view/InvitationGallerySection";
 import InvitationProfileSection from "@/components/invitation-view/InvitationProfileSection";
 import InvitationInterviewSection from "@/components/invitation-view/InvitationInterviewSection";
-import InvitationRemittanceSection from "@/components/invitation-view/InvitationRemittanceSection";
 import InvitationBgmPlayer from "@/components/invitation-view/InvitationBgmPlayer";
 import InvitationGuestPhotoSection from "@/components/invitation-view/InvitationGuestPhotoSection";
 import InvitationMapKakaoSection from "@/components/invitation-view/InvitationMapKakaoSection";
@@ -95,22 +94,19 @@ export default async function InvitePage({ params }: InvitePageProps) {
           {/* 9. 지도 / 오시는 길 (카카오맵 SDK) */}
           <InvitationMapKakaoSection invitation={invitation} />
 
-          {/* 10. 계좌번호 */}
+          {/* 10. 계좌번호 + 카카오뱅크 송금 링크 */}
           <InvitationAccountSection invitation={invitation} />
 
-          {/* 11. 송금 링크 */}
-          <InvitationRemittanceSection invitation={invitation} />
-
-          {/* 12. RSVP */}
+          {/* 11. RSVP */}
           <InvitationRsvpSection invitation={invitation} />
 
-          {/* 13. 방명록 */}
+          {/* 12. 방명록 */}
           <InvitationGuestbookSection invitation={invitation} />
 
-          {/* 14. 게스트 사진 */}
+          {/* 13. 게스트 사진 */}
           <InvitationGuestPhotoSection invitation={invitation} />
 
-          {/* 15. QR 코드 */}
+          {/* 14. QR 코드 */}
           <InvitationQrSection invitation={invitation} />
 
           {/* 하단 여백 */}

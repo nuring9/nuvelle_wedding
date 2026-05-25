@@ -51,6 +51,8 @@ public class InvitationResponse {
     private String accountNumber;
     private String accountHolder;
 
+    private List<InvitationAccountResponse> accounts;
+
     // 섹션 on/off
     private boolean galleryEnabled;
     private boolean rsvpEnabled;
@@ -58,6 +60,8 @@ public class InvitationResponse {
     private boolean accountEnabled;
     private boolean parentsEnabled;
     private boolean ddayEnabled;
+    private boolean interviewEnabled; // 웨딩 인터뷰 섹션 표시 여부
+    private boolean guestPhotoEnabled; // 게스트 사진 섹션 표시 여부
 
     // 스타일
     private String theme;
@@ -107,12 +111,15 @@ public class InvitationResponse {
                 .accountBank(invitation.getAccountBank())
                 .accountNumber(invitation.getAccountNumber())
                 .accountHolder(invitation.getAccountHolder())
+                .accounts(toAccountResponses(invitation))
                 .galleryEnabled(invitation.isGalleryEnabled())
                 .rsvpEnabled(invitation.isRsvpEnabled())
                 .guestbookEnabled(invitation.isGuestbookEnabled())
                 .accountEnabled(invitation.isAccountEnabled())
                 .parentsEnabled(invitation.isParentsEnabled())
                 .ddayEnabled(invitation.isDdayEnabled())
+                .interviewEnabled(invitation.isInterviewEnabled())
+                .guestPhotoEnabled(invitation.isGuestPhotoEnabled())
                 .theme(invitation.getTheme())
                 .fontFamily(invitation.getFontFamily())
                 .galleryLayout(invitation.getGalleryLayout())
@@ -130,5 +137,27 @@ public class InvitationResponse {
                 .createdAt(invitation.getCreatedAt())
                 .updatedAt(invitation.getUpdatedAt())
                 .build();
+    }
+
+    private static List<InvitationAccountResponse> toAccountResponses(Invitation invitation) {
+        if (!invitation.getAccounts().isEmpty()) {
+            return invitation.getAccounts().stream()
+                    .map(InvitationAccountResponse::from)
+                    .collect(Collectors.toList());
+        }
+
+        // 기존 단일 계좌 데이터가 있으면 새 계좌 목록처럼 내려줌
+        if (invitation.getAccountBank() != null && invitation.getAccountNumber() != null) {
+            return List.of(InvitationAccountResponse.builder()
+                    .side("GROOM")
+                    .label("신랑") // 공개 페이지에서 보여줄 기본 라벨은 신랑
+                    .bankName(invitation.getAccountBank())
+                    .accountNumber(invitation.getAccountNumber())
+                    .accountHolder(invitation.getAccountHolder())
+                    .remittanceLink(invitation.getRemittanceLink())
+                    .build());
+        }
+
+        return List.of();
     }
 }

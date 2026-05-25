@@ -7,6 +7,7 @@ import com.nuvelle.wedding.global.exception.CustomException;
 import com.nuvelle.wedding.global.exception.ErrorCode;
 import com.nuvelle.wedding.invitation.dto.*;
 import com.nuvelle.wedding.invitation.entity.Invitation;
+import com.nuvelle.wedding.invitation.entity.InvitationAccount;
 import com.nuvelle.wedding.invitation.entity.InvitationGallery;
 import com.nuvelle.wedding.invitation.entity.InvitationStatus;
 import com.nuvelle.wedding.invitation.repository.InvitationGalleryRepository;
@@ -81,6 +82,9 @@ public class InvitationService {
         return InvitationResponse.from(invitation, baseUrl);
     }
 
+
+
+
     // 청첩장 수정 (임시저장)
     @Transactional
     public InvitationResponse update(Long invitationId,
@@ -91,6 +95,22 @@ public class InvitationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
+
+        // 계좌 목록
+        List<InvitationAccount> accounts = request.getAccounts() == null
+                ? null
+                : request.getAccounts().stream()
+                .filter(account -> account.getBankName() != null && !account.getBankName().isBlank())
+                .filter(account -> account.getAccountNumber() != null && !account.getAccountNumber().isBlank())
+                .map(account -> new InvitationAccount(
+                        account.getSide(),
+                        account.getLabel(),
+                        account.getBankName(),
+                        account.getAccountNumber(),
+                        account.getAccountHolder(),
+                        account.getRemittanceLink()
+                ))
+                .collect(Collectors.toList());
 
         invitation.update(
                 request.getTitle(),
@@ -113,6 +133,7 @@ public class InvitationService {
                 request.getAccountBank(),
                 request.getAccountNumber(),
                 request.getAccountHolder(),
+                accounts,
                 request.getGalleryEnabled() != null ? request.getGalleryEnabled() : invitation.isGalleryEnabled(),
                 request.getRsvpEnabled() != null ? request.getRsvpEnabled() : invitation.isRsvpEnabled(),
                 request.getGuestbookEnabled() != null ? request.getGuestbookEnabled() : invitation.isGuestbookEnabled(),

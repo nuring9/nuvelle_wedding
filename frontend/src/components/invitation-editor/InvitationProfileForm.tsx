@@ -1,7 +1,6 @@
 "use client";
 
 import TextareaField from "@/components/common/TextareaField";
-import InputField from "@/components/common/InputField";
 import type { UpdateInvitationRequest } from "@/lib/api/invitations";
 
 interface InvitationProfileFormProps {
@@ -34,18 +33,6 @@ export default function InvitationProfileForm({
           value={data.brideIntroduction ?? ""}
           onChange={(e) => onChange({ brideIntroduction: e.target.value })}
           rows={4}
-        />
-      </div>
-
-      {/* 송금 링크 */}
-      <div className="flex flex-col gap-4">
-        <h3 className="text-sm font-semibold text-gray-800">송금 링크</h3>
-        <InputField
-          label="카카오페이 / 토스 등 송금 링크"
-          placeholder="https://qr.kakaopay.com/..."
-          value={data.remittanceLink ?? ""}
-          onChange={(e) => onChange({ remittanceLink: e.target.value })}
-          hint="하객이 바로 송금할 수 있는 링크를 입력해주세요."
         />
       </div>
     </div>

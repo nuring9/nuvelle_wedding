@@ -24,6 +24,16 @@ export interface GalleryImageResponse {
   sortOrder: number;
 }
 
+// 계좌
+export interface InvitationAccountInput {
+  side: "GROOM" | "BRIDE" | string;
+  label: string;
+  bankName: string;
+  accountNumber: string;
+  accountHolder: string;
+  remittanceLink?: string | null;
+}
+
 export interface UpdateInvitationRequest {
   title?: string;
   mainImageUrl?: string;
@@ -49,6 +59,7 @@ export interface UpdateInvitationRequest {
   rsvpEnabled?: boolean;
   guestbookEnabled?: boolean;
   accountEnabled?: boolean;
+  accounts?: InvitationAccountInput[];
   parentsEnabled?: boolean;
   ddayEnabled?: boolean;
   theme?: string;
@@ -90,6 +101,7 @@ export interface InvitationResponse {
   accountNumber: string | null;
   accountHolder: string | null;
   galleryEnabled: boolean;
+  accounts: InvitationAccountInput[];
   rsvpEnabled: boolean;
   guestbookEnabled: boolean;
   accountEnabled: boolean;

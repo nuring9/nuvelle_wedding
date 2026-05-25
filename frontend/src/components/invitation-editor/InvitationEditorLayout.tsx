@@ -18,6 +18,7 @@ import InvitationThemeForm from "./InvitationThemeForm";
 import InvitationProfileForm from "./InvitationProfileForm";
 import InvitationInterviewForm from "./InvitationInterviewForm";
 import InvitationAdvancedForm from "./InvitationAdvancedForm";
+import InvitationAnimationForm from "./InvitationAnimationForm";
 import {
   updateInvitation,
   publishInvitation,
@@ -40,28 +41,30 @@ type TabKey =
   | "map"
   | "gallery"
   | "account"
-  | "section"
   | "theme"
-  | "publish"
   | "profile"
   | "interview"
-  | "advanced";
+  | "advanced"
+  | "animation"
+  | "section"
+  | "publish";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "basic", label: "메인 사진" },
   { key: "couple", label: "신랑·신부" },
   { key: "parents", label: "부모님" },
+  { key: "profile", label: "소개" },
   { key: "greeting", label: "인사말" },
   { key: "wedding", label: "예식 정보" },
   { key: "map", label: "지도" },
   { key: "gallery", label: "갤러리" },
   { key: "account", label: "계좌번호" },
-  { key: "theme", label: "테마/폰트" },
-  { key: "publish", label: "발행" },
-  { key: "profile", label: "소개/송금" },
   { key: "interview", label: "웨딩 인터뷰" },
-  { key: "advanced", label: "BGM/QR" },
+  { key: "theme", label: "테마/폰트" },
+  { key: "advanced", label: "BGM" },
+  { key: "animation", label: "애니메이션" },
   { key: "section", label: "섹션 설정" },
+  { key: "publish", label: "발행" },
 ];
 
 function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
@@ -86,6 +89,7 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     accountBank: invitation.accountBank ?? "",
     accountNumber: invitation.accountNumber ?? "",
     accountHolder: invitation.accountHolder ?? "",
+    accounts: invitation.accounts ?? [],
     galleryEnabled: invitation.galleryEnabled,
     rsvpEnabled: invitation.rsvpEnabled,
     guestbookEnabled: invitation.guestbookEnabled,
@@ -100,8 +104,8 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     groomIntroduction: invitation.groomIntroduction ?? "",
     brideIntroduction: invitation.brideIntroduction ?? "",
     remittanceLink: invitation.remittanceLink ?? "",
-    interviewEnabled: invitation.interviewEnabled,
-    guestPhotoEnabled: invitation.guestPhotoEnabled,
+    interviewEnabled: invitation.interviewEnabled ?? false,
+    guestPhotoEnabled: invitation.guestPhotoEnabled ?? false,
   };
 }
 
@@ -227,6 +231,10 @@ export default function InvitationEditorLayout({
         return (
           <InvitationAccountForm data={formData} onChange={handleChange} />
         );
+      case "animation":
+        return (
+          <InvitationAnimationForm data={formData} onChange={handleChange} />
+        );
       case "section":
         return (
           <InvitationSectionToggleForm
@@ -253,11 +261,7 @@ export default function InvitationEditorLayout({
         return <InvitationInterviewForm invitationId={invitation.id} />;
       case "advanced":
         return (
-          <InvitationAdvancedForm
-            data={formData}
-            onChange={handleChange}
-            publicUrl={invitation.publicUrl}
-          />
+          <InvitationAdvancedForm data={formData} onChange={handleChange} />
         );
     }
   };
@@ -357,7 +361,7 @@ export default function InvitationEditorLayout({
         <div className="max-w-lg mx-auto px-4 py-6">
           {renderForm()}
 
-          {activeTab !== "publish" && (
+          {activeTab !== "publish" && activeTab !== "interview" && (
             <div className="pt-10 pb-8 flex justify-center">
               <button
                 type="button"
