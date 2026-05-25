@@ -50,6 +50,9 @@ public class Invitation {
     @Column(name = "main_image_url")
     private String mainImageUrl;
 
+    @Column(name = "main_overlay_text", length = 50)
+    private String mainOverlayText;
+
     // 신랑·신부 정보
     @Column(name = "groom_name", length = 50)
     private String groomName;
@@ -197,7 +200,7 @@ public class Invitation {
         this.title = title;
     }
 
-    public void update(String title, String mainImageUrl, String groomName, String brideName, String groomFatherName,
+    public void update(String title, String mainImageUrl, String mainOverlayText, String groomName, String brideName, String groomFatherName,
                        String groomMotherName, String brideFatherName, String brideMotherName, String greetingText,
                        LocalDate weddingDate, LocalTime weddingTime, String venueName, String venueAddress,
                        String venueDetail, String transportInfo, Double mapLat, Double mapLng, String accountBank,
@@ -212,6 +215,7 @@ public class Invitation {
                        boolean guestPhotoEnabled) {
         this.title = title;
         this.mainImageUrl = mainImageUrl;
+        this.mainOverlayText = mainOverlayText;
         this.groomName = groomName;
         this.brideName = brideName;
         this.groomFatherName = groomFatherName;

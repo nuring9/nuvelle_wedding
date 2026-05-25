@@ -115,6 +115,7 @@ public class InvitationService {
         invitation.update(
                 request.getTitle(),
                 request.getMainImageUrl(),
+                request.getMainOverlayText(),
                 request.getGroomName(),
                 request.getBrideName(),
                 request.getGroomFatherName(),

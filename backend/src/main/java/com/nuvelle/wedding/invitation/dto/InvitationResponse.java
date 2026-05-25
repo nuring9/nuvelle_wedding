@@ -22,6 +22,7 @@ public class InvitationResponse {
     private InvitationStatus status;
     private String title;
     private String mainImageUrl;
+    private String mainOverlayText;
 
     // 신랑·신부
     private String groomName;
@@ -93,6 +94,7 @@ public class InvitationResponse {
                 .status(invitation.getStatus())
                 .title(invitation.getTitle())
                 .mainImageUrl(invitation.getMainImageUrl())
+                .mainOverlayText(invitation.getMainOverlayText())
                 .groomName(invitation.getGroomName())
                 .brideName(invitation.getBrideName())
                 .groomFatherName(invitation.getGroomFatherName())

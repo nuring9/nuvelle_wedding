@@ -3,6 +3,7 @@
 import InputField from "@/components/common/InputField";
 import TextareaField from "@/components/common/TextareaField";
 import type { UpdateInvitationRequest } from "@/lib/api/invitations";
+import InvitationMapForm from "./InvitationMapForm";
 
 interface InvitationWeddingInfoFormProps {
   data: UpdateInvitationRequest;
@@ -62,6 +63,10 @@ export default function InvitationWeddingInfoForm({
         onChange={(e) => onChange({ transportInfo: e.target.value })}
         rows={4}
       />
+
+      <div className="pt-2">
+        <InvitationMapForm data={data} onChange={onChange} />
+      </div>
     </div>
   );
 }

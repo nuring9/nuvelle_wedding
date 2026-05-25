@@ -8,6 +8,8 @@ interface InvitationHeroSectionProps {
 export default function InvitationHeroSection({
   invitation,
 }: InvitationHeroSectionProps) {
+  const overlayText = invitation.mainOverlayText?.trim();
+
   return (
     <section className="relative w-full">
       {/* 메인 사진 */}
@@ -21,23 +23,23 @@ export default function InvitationHeroSection({
             priority
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-b from-champagne to-blush flex items-center justify-center">
-            <span className="text-6xl">💍</span>
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <span className="text-sm text-gray-400">
+              메인 사진을 등록해주세요
+            </span>
           </div>
         )}
 
-        {/* 그라데이션 오버레이 */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-        {/* 이름 오버레이 */}
-        <div className="absolute bottom-0 left-0 right-0 p-8 text-center text-white">
-          <p className="text-sm tracking-widest mb-3 opacity-80">WEDDING</p>
-          <h1 className="text-3xl font-display font-semibold tracking-wide">
-            {invitation.groomName || "신랑"}{" "}
-            <span className="text-primary-300 mx-2">♥</span>{" "}
-            {invitation.brideName || "신부"}
-          </h1>
-        </div>
+        {overlayText && (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 px-8 pb-8 text-center text-white">
+              <p className="main-overlay-script text-5xl leading-none drop-shadow-sm opacity-80">
+                {overlayText}
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

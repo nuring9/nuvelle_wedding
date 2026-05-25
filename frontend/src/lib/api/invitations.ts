@@ -37,6 +37,7 @@ export interface InvitationAccountInput {
 export interface UpdateInvitationRequest {
   title?: string;
   mainImageUrl?: string;
+  mainOverlayText?: string;
   groomName?: string;
   brideName?: string;
   groomFatherName?: string;
@@ -82,6 +83,7 @@ export interface InvitationResponse {
   status: "DRAFT" | "PRIVATE" | "PUBLISHED";
   title: string | null;
   mainImageUrl: string | null;
+  mainOverlayText: string | null;
   groomName: string | null;
   brideName: string | null;
   groomFatherName: string | null;

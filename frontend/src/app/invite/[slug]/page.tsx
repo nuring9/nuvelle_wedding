@@ -17,9 +17,40 @@ import InvitationQrSection from "@/components/invitation-view/InvitationQrSectio
 import InvitationAccountSection from "@/components/invitation-view/InvitationAccountSection";
 import InvitationRsvpSection from "@/components/invitation-view/InvitationRsvpSection";
 import InvitationGuestbookSection from "@/components/invitation-view/InvitationGuestbookSection";
+import InvitationAnimationOverlay from "@/components/invitation-view/InvitationAnimationOverlay";
 
 interface InvitePageProps {
   params: Promise<{ slug: string }>;
+}
+
+const INVITATION_THEMES = [
+  "classic",
+  "minimal",
+  "floral",
+  "nature",
+  "gold",
+  "dark",
+] as const;
+
+const INVITATION_FONTS = ["noto-sans", "noto-serif", "playfair"] as const;
+
+type InvitationTheme = (typeof INVITATION_THEMES)[number];
+type InvitationFont = (typeof INVITATION_FONTS)[number];
+
+function getInvitationTheme(theme: string | null): InvitationTheme {
+  return INVITATION_THEMES.includes(
+    theme as InvitationTheme,
+  )
+    ? (theme as InvitationTheme)
+    : "classic";
+}
+
+function getInvitationFont(fontFamily: string | null): InvitationFont {
+  return INVITATION_FONTS.includes(
+    fontFamily as InvitationFont,
+  )
+    ? (fontFamily as InvitationFont)
+    : "noto-sans";
 }
 
 export async function generateMetadata({
@@ -56,12 +87,24 @@ export default async function InvitePage({ params }: InvitePageProps) {
     notFound();
   }
 
+  const theme = getInvitationTheme(invitation.theme);
+  const font = getInvitationFont(invitation.fontFamily);
+
   return (
     <>
       <KakaoSdkScript />
 
-      <div className="min-h-screen bg-stone-100">
-        <div className="invitation-container">
+      <div
+        className="invitation-shell min-h-screen"
+        data-invitation-theme={theme}
+      >
+        <div
+          className="invitation-container invitation-themed"
+          data-invitation-theme={theme}
+          data-invitation-font={font}
+        >
+          <InvitationAnimationOverlay animationType={invitation.animationType} />
+
           {/* BGM 플레이어 */}
           {invitation.bgmUrl && (
             <InvitationBgmPlayer bgmUrl={invitation.bgmUrl} />

@@ -21,6 +21,7 @@ export interface PublicInvitation {
   templateId: string;
   themeKey: string | null;
   mainImageUrl: string | null;
+  mainOverlayText: string | null;
   groomName: string | null;
   brideName: string | null;
   groomFatherName: string | null;

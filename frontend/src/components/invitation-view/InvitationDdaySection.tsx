@@ -21,7 +21,7 @@ export default function InvitationDdaySection({
 
   return (
     <section className="section-padding text-center">
-      <p className="text-xs tracking-widest text-gray-400 mb-4 uppercase">
+      <p className="text-xs tracking-widest text-gray-400 mb-3 uppercase">
         D-Day
       </p>
       <p className="text-5xl font-display font-semibold text-primary-500">

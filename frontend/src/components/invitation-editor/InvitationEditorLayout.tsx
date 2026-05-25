@@ -9,7 +9,6 @@ import InvitationCoupleInfoForm from "./InvitationCoupleInfoForm";
 import InvitationParentsInfoForm from "./InvitationParentsInfoForm";
 import InvitationGreetingForm from "./InvitationGreetingForm";
 import InvitationWeddingInfoForm from "./InvitationWeddingInfoForm";
-import InvitationMapForm from "./InvitationMapForm";
 import InvitationGalleryForm from "./InvitationGalleryForm";
 import InvitationAccountForm from "./InvitationAccountForm";
 import InvitationSectionToggleForm from "./InvitationSectionToggleForm";
@@ -19,6 +18,7 @@ import InvitationProfileForm from "./InvitationProfileForm";
 import InvitationInterviewForm from "./InvitationInterviewForm";
 import InvitationAdvancedForm from "./InvitationAdvancedForm";
 import InvitationAnimationForm from "./InvitationAnimationForm";
+import InvitationLivePreview from "./InvitationLivePreview";
 import {
   updateInvitation,
   publishInvitation,
@@ -27,6 +27,7 @@ import {
   type UpdateInvitationRequest,
   type GalleryImageResponse,
 } from "@/lib/api/invitations";
+import { THEME_OPTIONS } from "@/constants/invitation";
 
 interface InvitationEditorLayoutProps {
   invitation: InvitationResponse;
@@ -38,7 +39,6 @@ type TabKey =
   | "parents"
   | "greeting"
   | "wedding"
-  | "map"
   | "gallery"
   | "account"
   | "theme"
@@ -56,7 +56,6 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "profile", label: "소개" },
   { key: "greeting", label: "인사말" },
   { key: "wedding", label: "예식 정보" },
-  { key: "map", label: "지도" },
   { key: "gallery", label: "갤러리" },
   { key: "account", label: "계좌번호" },
   { key: "interview", label: "웨딩 인터뷰" },
@@ -71,6 +70,7 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
   return {
     title: invitation.title ?? "",
     mainImageUrl: invitation.mainImageUrl ?? "",
+    mainOverlayText: invitation.mainOverlayText ?? "",
     groomName: invitation.groomName ?? "",
     brideName: invitation.brideName ?? "",
     groomFatherName: invitation.groomFatherName ?? "",
@@ -130,6 +130,9 @@ export default function InvitationEditorLayout({
   const [error, setError] = useState<string | null>(null);
 
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentThemeLabel =
+    THEME_OPTIONS.find((theme) => theme.key === formData.theme)?.label ??
+    invitation.templateName;
 
   const handleSave = useCallback(async () => {
     if (!accessToken) return;
@@ -217,8 +220,6 @@ export default function InvitationEditorLayout({
         return (
           <InvitationWeddingInfoForm data={formData} onChange={handleChange} />
         );
-      case "map":
-        return <InvitationMapForm data={formData} onChange={handleChange} />;
       case "gallery":
         return (
           <InvitationGalleryForm
@@ -294,9 +295,7 @@ export default function InvitationEditorLayout({
         </div>
 
         <div className="flex items-center justify-center gap-1.5">
-          <span className="text-xs text-gray-400">
-            {invitation.templateName}
-          </span>
+          <span className="text-xs text-gray-400">{currentThemeLabel}</span>
           <span
             className={`text-xs px-2 py-0.5 rounded-full font-medium ${
               invitation.status === "PUBLISHED"
@@ -338,7 +337,7 @@ export default function InvitationEditorLayout({
 
       {/* 탭 네비게이션 */}
       <div className="overflow-x-auto border-b border-gray-100 bg-white">
-        <div className="flex min-w-max px-2">
+        <div className="flex w-max mx-auto px-2">
           {TABS.map((tab) => (
             <button
               key={tab.key}
@@ -356,24 +355,32 @@ export default function InvitationEditorLayout({
         </div>
       </div>
 
-      {/* 폼 영역 */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-lg mx-auto px-4 py-6">
-          {renderForm()}
+      {/* 폼 + 실시간 미리보기 영역 */}
+      <div className="flex min-h-0 flex-1">
+        <div className="min-w-0 flex-1 overflow-y-auto">
+          <div className="max-w-lg mx-auto px-4 py-6">
+            {renderForm()}
 
-          {activeTab !== "publish" && activeTab !== "interview" && (
-            <div className="pt-10 pb-8 flex justify-center">
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={isSaving}
-                className="min-w-40 rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isSaving ? "저장 중..." : "저장하기"}
-              </button>
-            </div>
-          )}
+            {activeTab !== "publish" && activeTab !== "interview" && (
+              <div className="pt-10 pb-8 flex justify-center">
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="min-w-40 rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isSaving ? "저장 중..." : "저장하기"}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+
+        <InvitationLivePreview
+          invitation={invitation}
+          formData={formData}
+          galleries={galleries}
+        />
       </div>
     </div>
   );

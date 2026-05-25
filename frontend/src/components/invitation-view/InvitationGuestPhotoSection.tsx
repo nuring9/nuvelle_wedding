@@ -60,7 +60,7 @@ export default function InvitationGuestPhotoSection({
   };
 
   return (
-    <section className="section-padding">
+    <section className="section-padding section-tone-guest-photo">
       <h2 className="text-xs tracking-widest text-gray-400 mb-8 uppercase text-center">
         Guest Photos
       </h2>

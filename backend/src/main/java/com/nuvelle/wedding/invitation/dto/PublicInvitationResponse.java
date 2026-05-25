@@ -20,6 +20,7 @@ public class PublicInvitationResponse {
 
     // 메인 사진
     private String mainImageUrl;
+    private String mainOverlayText;
 
     // 신랑·신부
     private String groomName;
@@ -94,6 +95,7 @@ public class PublicInvitationResponse {
                 .templateId(String.valueOf(invitation.getTemplate().getId()))
                 .themeKey(invitation.getTemplate().getThemeKey())
                 .mainImageUrl(invitation.getMainImageUrl())
+                .mainOverlayText(invitation.getMainOverlayText())
                 .groomName(invitation.getGroomName())
                 .brideName(invitation.getBrideName())
                 .groomFatherName(invitation.getGroomFatherName())

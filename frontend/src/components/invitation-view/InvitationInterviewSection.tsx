@@ -80,7 +80,7 @@ export default function InvitationInterviewSection({
                   <span className="mt-0.5 shrink-0 text-xs font-semibold text-primary-500">
                     Q{index + 1}
                   </span>
-                  <span className="text-sm font-medium leading-relaxed text-gray-800">
+                  <span className="text-xs font-medium leading-relaxed text-gray-800">
                     {item.question}
                   </span>
                 </span>
@@ -94,8 +94,8 @@ export default function InvitationInterviewSection({
               </button>
 
               {isOpen && (
-                <div className="bg-gray-50 px-5 pb-5 pt-1">
-                  <p className="pl-8 text-sm leading-7 text-gray-600">
+                <div className="interview-answer px-5 pb-5 pt-4">
+                  <p className="pl-8 text-xs leading-7 text-gray-600">
                     {item.answer}
                   </p>
                 </div>

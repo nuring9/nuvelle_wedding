@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"); /* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"); /* Google Fonts */
 @import "tailwindcss"; /* Tailwind CSS 불러오기 */
 
 :root {
@@ -98,6 +98,689 @@ select {
 /* 모바일 청첩장 전용 컨테이너 */
 .invitation-container {
   @apply max-w-[430px] mx-auto min-h-screen bg-white shadow-sm;
+}
+
+.editor-phone-frame {
+  background: #0f1115;
+  border: 1px solid #20242b;
+  border-radius: 36px;
+  box-shadow:
+    0 24px 60px rgb(15 23 42 / 18%),
+    inset 0 0 0 2px #050608;
+  height: min(760px, calc(100vh - 190px));
+  min-height: 560px;
+  padding: 9px 7px 7px;
+  position: relative;
+  width: 326px;
+}
+
+.editor-phone-frame::before,
+.editor-phone-frame::after {
+  background: #111318;
+  border-radius: 999px;
+  content: "";
+  position: absolute;
+  right: -3px;
+  width: 2px;
+}
+
+.editor-phone-frame::before {
+  height: 56px;
+  top: 136px;
+}
+
+.editor-phone-frame::after {
+  height: 78px;
+  top: 222px;
+}
+
+.editor-phone-speaker {
+  background: #020304;
+  border-radius: 999px;
+  height: 18px;
+  left: 50%;
+  position: absolute;
+  top: 9px;
+  transform: translateX(-50%);
+  width: 72px;
+  z-index: 30;
+}
+
+.editor-phone-speaker::after {
+  background: #172033;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 10%);
+  content: "";
+  height: 8px;
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  width: 8px;
+}
+
+.editor-phone-screen {
+  -webkit-overflow-scrolling: touch;
+  border-radius: 29px;
+  height: 100%;
+  max-width: none;
+  min-height: 0;
+  overscroll-behavior: contain;
+  overflow-y: auto;
+  scrollbar-width: none;
+  touch-action: pan-y;
+  width: 100%;
+}
+
+.editor-phone-screen::-webkit-scrollbar {
+  display: none;
+}
+
+.editor-phone-screen .invitation-animation-overlay {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: none;
+  width: 100%;
+}
+
+.editor-phone-screen.invitation-themed {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.main-overlay-script,
+.main-overlay-option {
+  font-family: "Great Vibes", "Playfair Display", cursive;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.invitation-shell {
+  background: #ffffff;
+}
+
+.invitation-themed {
+  --invite-bg: #fffdfb;
+  --invite-surface: #ffffff;
+  --invite-soft: #fff7f1;
+  --invite-soft-strong: #f8e8dd;
+  --invite-section-alt: #fff3eb;
+  --invite-section-location: #fff8e9;
+  --invite-section-account: #fff4df;
+  --invite-section-rsvp: #fffdfb;
+  --invite-section-guestbook: #fff6ef;
+  --invite-section-guest-photo: #fff1e8;
+  --invite-primary: #df8650;
+  --invite-emphasis: #e46f44;
+  --invite-primary-soft: #f3d8c8;
+  --invite-accent: #b66f4a;
+  --invite-text: #35251f;
+  --invite-muted: #9a8278;
+  --invite-border: rgb(217 139 93 / 16%);
+  --invite-shadow: 0 18px 48px rgb(124 64 35 / 9%);
+  --invite-hero-overlay: linear-gradient(
+    to top,
+    rgb(42 24 16 / 62%),
+    rgb(42 24 16 / 12%) 48%,
+    transparent
+  );
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 70%), transparent 14rem),
+    var(--invite-bg);
+  color: var(--invite-text);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--invite-shadow);
+}
+
+.invitation-themed[data-invitation-theme="classic"] {
+  --invite-bg: #fffdfb;
+  --invite-surface: #ffffff;
+  --invite-soft: #fff7f1;
+  --invite-soft-strong: #f8e8dd;
+  --invite-section-alt: #fff3eb;
+  --invite-section-location: #fffdf8;
+  --invite-section-account: #fff4df;
+  --invite-section-rsvp: #fffdfb;
+  --invite-section-guestbook: #fff6ef;
+  --invite-section-guest-photo: #fff1e8;
+  --invite-primary: #df8650;
+  --invite-emphasis: #e46f44;
+  --invite-primary-soft: #f3d8c8;
+  --invite-accent: #b66f4a;
+  --invite-text: #33241f;
+  --invite-muted: #8b7469;
+  --invite-border: rgb(217 139 93 / 16%);
+}
+
+.invitation-themed[data-invitation-theme="minimal"] {
+  --invite-bg: #fcfcfd;
+  --invite-surface: #ffffff;
+  --invite-soft: #f4f6f8;
+  --invite-soft-strong: #e7ebf0;
+  --invite-section-alt: #eef2f6;
+  --invite-section-location: #f7f9fb;
+  --invite-section-account: #ffffff;
+  --invite-section-rsvp: #f2f5f8;
+  --invite-section-guestbook: #fbfcfd;
+  --invite-section-guest-photo: #eef2f6;
+  --invite-primary: #6b7280;
+  --invite-emphasis: #4b5563;
+  --invite-primary-soft: #d7dce3;
+  --invite-accent: #4b5563;
+  --invite-text: #172033;
+  --invite-muted: #687386;
+  --invite-border: rgb(107 114 128 / 15%);
+}
+
+.invitation-themed[data-invitation-theme="floral"] {
+  --invite-bg: #fff9fb;
+  --invite-surface: #fffafc;
+  --invite-soft: #fff0f4;
+  --invite-soft-strong: #f9dce5;
+  --invite-section-alt: #ffe8ef;
+  --invite-section-location: #fff7fa;
+  --invite-section-account: #ffffff;
+  --invite-section-rsvp: #fff2f6;
+  --invite-section-guestbook: #fffafc;
+  --invite-section-guest-photo: #ffeaf1;
+  --invite-primary: #d76f8d;
+  --invite-emphasis: #ef5f8b;
+  --invite-primary-soft: #f3c7d4;
+  --invite-accent: #b95773;
+  --invite-text: #3b1824;
+  --invite-muted: #9a6070;
+  --invite-border: rgb(215 111 141 / 16%);
+}
+
+.invitation-themed[data-invitation-theme="nature"] {
+  --invite-bg: #fbfff8;
+  --invite-surface: #ffffff;
+  --invite-soft: #f0f8ed;
+  --invite-soft-strong: #dcefd5;
+  --invite-section-alt: #eaf5e4;
+  --invite-section-location: #fbfff8;
+  --invite-section-account: #ffffff;
+  --invite-section-rsvp: #eef8ea;
+  --invite-section-guestbook: #fbfff8;
+  --invite-section-guest-photo: #e6f3e0;
+  --invite-primary: #6aa875;
+  --invite-emphasis: #4fa663;
+  --invite-primary-soft: #c8e2ca;
+  --invite-accent: #4f8b5d;
+  --invite-text: #17331f;
+  --invite-muted: #627b66;
+  --invite-border: rgb(106 168 117 / 16%);
+}
+
+.invitation-themed[data-invitation-theme="gold"] {
+  --invite-bg: #fffdf4;
+  --invite-surface: #fffdf6;
+  --invite-soft: #fff7df;
+  --invite-soft-strong: #f2dfaa;
+  --invite-section-alt: #fff0c8;
+  --invite-section-location: #fffdf7;
+  --invite-section-account: #fff3d6;
+  --invite-section-rsvp: #fffaf0;
+  --invite-section-guestbook: #fffdf7;
+  --invite-section-guest-photo: #ffefc2;
+  --invite-primary: #d49322;
+  --invite-emphasis: #e29a13;
+  --invite-primary-soft: #ead39e;
+  --invite-accent: #9d7130;
+  --invite-text: #3c2411;
+  --invite-muted: #8a6b45;
+  --invite-border: rgb(196 144 61 / 17%);
+}
+
+.invitation-themed[data-invitation-theme="dark"] {
+  --invite-bg: #f7f8fb;
+  --invite-surface: #ffffff;
+  --invite-soft: #eef1f6;
+  --invite-soft-strong: #dce3ec;
+  --invite-section-alt: #e5ebf3;
+  --invite-section-location: #f8fafc;
+  --invite-section-account: #ffffff;
+  --invite-section-rsvp: #eef2f7;
+  --invite-section-guestbook: #fbfcfe;
+  --invite-section-guest-photo: #e8eef6;
+  --invite-primary: #64748b;
+  --invite-emphasis: #475569;
+  --invite-primary-soft: #cbd5e1;
+  --invite-accent: #334155;
+  --invite-text: #1e293b;
+  --invite-muted: #8a96a8;
+  --invite-border: rgb(100 116 139 / 16%);
+  --invite-shadow: 0 18px 54px rgb(15 23 42 / 12%);
+  --invite-hero-overlay: linear-gradient(
+    to top,
+    rgb(15 23 42 / 68%),
+    rgb(15 23 42 / 16%) 52%,
+    transparent
+  );
+}
+
+.invitation-themed[data-invitation-font="noto-serif"] {
+  font-family: var(--font-serif);
+}
+
+.invitation-themed[data-invitation-font="playfair"] {
+  font-family: var(--font-display);
+}
+
+.invitation-themed .section-padding {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 38%), transparent),
+    var(--invite-bg);
+}
+
+.invitation-themed .section-padding:nth-of-type(even) {
+  background:
+    radial-gradient(circle at top right, rgb(255 255 255 / 42%), transparent 15rem),
+    var(--invite-section-alt);
+}
+
+.invitation-themed .section-tone-location {
+  background:
+    radial-gradient(circle at top right, rgb(255 255 255 / 78%), transparent 14rem),
+    var(--invite-section-location) !important;
+  border-top: 1px solid var(--invite-border);
+}
+
+.invitation-themed .section-tone-account {
+  background:
+    radial-gradient(circle at top, rgb(255 255 255 / 62%), transparent 15rem),
+    var(--invite-section-account) !important;
+  border-top: 1px solid var(--invite-border);
+}
+
+.invitation-themed .section-tone-location .bg-gray-200 {
+  background-color: var(--invite-section-alt) !important;
+  border: 1px solid var(--invite-border);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 50%);
+}
+
+.invitation-themed .section-tone-rsvp {
+  background: var(--invite-section-rsvp);
+  box-shadow: inset 0 16px 0 var(--invite-section-rsvp);
+  padding-top: 40px;
+}
+
+.invitation-themed .section-tone-guestbook {
+  background: var(--invite-section-guestbook);
+  margin-bottom: 16px;
+}
+
+.invitation-themed .collapsible-section-button h2::after {
+  display: none !important;
+}
+
+.invitation-themed .section-tone-guest-photo {
+  background:
+    radial-gradient(circle at top left, rgb(255 255 255 / 58%), transparent 14rem),
+    var(--invite-section-guest-photo) !important;
+}
+
+.invitation-themed .card-base,
+.invitation-themed .bg-white {
+  background-color: #ffffff !important;
+  border-color: var(--invite-border) !important;
+  box-shadow: 0 16px 38px rgb(0 0 0 / 8%);
+}
+
+.invitation-themed .bg-gray-50,
+.invitation-themed .bg-gray-100,
+.invitation-themed .bg-gray-200 {
+  background-color: var(--invite-soft) !important;
+}
+
+.invitation-themed .interview-answer {
+  background:
+    linear-gradient(180deg, #ffffff, rgb(255 255 255 / 88%)),
+    #ffffff;
+  border-top: 1px solid var(--invite-border);
+  box-shadow: inset 0 10px 20px rgb(0 0 0 / 3%);
+}
+
+.invitation-themed .border-gray-100,
+.invitation-themed .border-gray-200,
+.invitation-themed .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--invite-border) !important;
+}
+
+.invitation-themed .text-primary-300,
+.invitation-themed .text-primary-400,
+.invitation-themed .text-primary-500,
+.invitation-themed .text-primary-600 {
+  color: var(--invite-primary) !important;
+}
+
+.invitation-themed .text-primary-300,
+.invitation-themed .text-5xl.text-primary-500 {
+  color: var(--invite-emphasis) !important;
+}
+
+.invitation-themed .bg-primary-500,
+.invitation-themed .btn-primary {
+  background-color: var(--invite-primary) !important;
+  color: var(--invite-bg) !important;
+}
+
+.invitation-themed .btn-secondary {
+  border-color: var(--invite-primary-soft) !important;
+  color: var(--invite-primary) !important;
+}
+
+.invitation-themed .text-gray-800,
+.invitation-themed .text-gray-700,
+.invitation-themed .text-gray-600 {
+  color: var(--invite-text) !important;
+}
+
+.invitation-themed .text-gray-500,
+.invitation-themed .text-gray-400 {
+  color: var(--invite-muted) !important;
+}
+
+.invitation-themed .text-white {
+  color: #ffffff !important;
+}
+
+.invitation-themed .bg-gradient-to-t {
+  background-image: var(--invite-hero-overlay) !important;
+}
+
+.invitation-themed .from-champagne {
+  --tw-gradient-from: var(--invite-soft-strong) !important;
+}
+
+.invitation-themed .to-blush {
+  --tw-gradient-to: var(--invite-soft) !important;
+}
+
+.invitation-themed h1,
+.invitation-themed h2,
+.invitation-themed .font-display,
+.invitation-themed .font-serif {
+  color: var(--invite-text);
+}
+
+.invitation-themed section h2,
+.invitation-themed section > div:first-child > p:first-child {
+  color: var(--invite-primary) !important;
+}
+
+.invitation-themed section h2::after,
+.invitation-themed .section-padding > h2::after {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 1px;
+  margin: 12px auto 0;
+  background: var(--invite-primary);
+  opacity: 0.7;
+}
+
+.invitation-themed a,
+.invitation-themed button {
+  border-color: var(--invite-border);
+}
+
+.invitation-themed[data-invitation-theme="gold"] .card-base,
+.invitation-themed[data-invitation-theme="gold"] .bg-white {
+  box-shadow:
+    0 14px 34px rgb(124 45 18 / 10%),
+    inset 0 0 0 1px rgb(231 200 121 / 35%);
+}
+
+.invitation-themed[data-invitation-theme="dark"] .card-base,
+.invitation-themed[data-invitation-theme="dark"] .bg-white {
+  box-shadow:
+    0 18px 48px rgb(0 0 0 / 26%),
+    inset 0 0 0 1px rgb(255 255 255 / 7%);
+}
+
+.invitation-animation-overlay {
+  height: 100vh;
+  left: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transform: translateX(-50%);
+  width: min(100vw, 430px);
+  z-index: 20;
+}
+
+.invitation-animation-overlay span {
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+}
+
+.invitation-animation-overlay span:nth-child(1) { left: 6%; }
+.invitation-animation-overlay span:nth-child(2) { left: 18%; top: 18%; }
+.invitation-animation-overlay span:nth-child(3) { left: 31%; top: 72%; }
+.invitation-animation-overlay span:nth-child(4) { left: 43%; top: 34%; }
+.invitation-animation-overlay span:nth-child(5) { left: 57%; top: 62%; }
+.invitation-animation-overlay span:nth-child(6) { left: 71%; top: 24%; }
+.invitation-animation-overlay span:nth-child(7) { left: 86%; top: 82%; }
+.invitation-animation-overlay span:nth-child(8) { left: 12%; top: 48%; }
+.invitation-animation-overlay span:nth-child(9) { left: 25%; top: 88%; }
+.invitation-animation-overlay span:nth-child(10) { left: 39%; top: 12%; }
+.invitation-animation-overlay span:nth-child(11) { left: 52%; top: 78%; }
+.invitation-animation-overlay span:nth-child(12) { left: 66%; top: 42%; }
+.invitation-animation-overlay span:nth-child(13) { left: 81%; top: 56%; }
+.invitation-animation-overlay span:nth-child(14) { left: 94%; top: 28%; }
+.invitation-animation-overlay span:nth-child(15) { left: 21%; top: 66%; }
+.invitation-animation-overlay span:nth-child(16) { left: 48%; top: 22%; }
+.invitation-animation-overlay span:nth-child(17) { left: 74%; top: 90%; }
+.invitation-animation-overlay span:nth-child(18) { left: 90%; top: 46%; }
+
+.invitation-animation-sparkle span {
+  animation-delay: calc(var(--effect-index) * -0.46s);
+  animation-duration: 4.4s;
+  animation-name: jewel-twinkle;
+  background: #ffffff;
+  border-radius: 999px;
+  box-shadow:
+    0 0 8px rgb(255 255 255 / 90%),
+    0 0 18px rgb(255 221 147 / 72%);
+  height: 4px;
+  opacity: 0;
+  width: 4px;
+}
+
+.invitation-animation-sparkle span::before,
+.invitation-animation-sparkle span::after {
+  background: rgb(255 255 255 / 86%);
+  border-radius: 999px;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.invitation-animation-sparkle span::before {
+  height: 1px;
+  width: 16px;
+}
+
+.invitation-animation-sparkle span::after {
+  height: 16px;
+  width: 1px;
+}
+
+.invitation-animation-sparkle span:nth-child(3n) {
+  height: 3px;
+  width: 3px;
+}
+
+.invitation-animation-sparkle span:nth-child(4n) {
+  height: 5px;
+  width: 5px;
+}
+
+.invitation-animation-leaves span {
+  animation-delay: calc(var(--effect-index) * -0.58s);
+  animation-duration: 12.5s;
+  animation-name: leaf-drift;
+  background:
+    radial-gradient(circle at 64% 24%, rgb(255 255 255 / 38%) 0 13%, transparent 26%),
+    linear-gradient(135deg, rgb(188 211 139 / 96%) 0%, rgb(122 169 93 / 92%) 48%, rgb(73 126 68 / 82%) 100%);
+  border-radius: 100% 0 100% 0;
+  box-shadow:
+    0 4px 12px rgb(55 92 44 / 12%),
+    inset 0 -3px 5px rgb(40 91 48 / 10%);
+  height: 15px;
+  opacity: 0.9;
+  top: -36px;
+  transform-origin: 70% 70%;
+  width: 9px;
+}
+
+.invitation-animation-leaves span:nth-child(n + 13) {
+  display: none;
+}
+
+.invitation-animation-leaves span::before {
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 34%),
+    rgb(57 103 55 / 18%)
+  );
+  content: "";
+  height: 16px;
+  left: 52%;
+  position: absolute;
+  top: 1px;
+  transform: rotate(-35deg);
+  width: 1px;
+}
+
+.invitation-animation-leaves span::after {
+  background: rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  content: "";
+  height: 5px;
+  left: 5px;
+  position: absolute;
+  top: 4px;
+  transform: rotate(-28deg);
+  width: 1px;
+}
+
+.invitation-animation-leaves span:nth-child(3n) {
+  height: 12px;
+  width: 8px;
+}
+
+.invitation-animation-leaves span:nth-child(4n) {
+  height: 17px;
+  width: 10px;
+}
+
+.invitation-animation-cherry-blossom span {
+  animation-delay: calc(var(--effect-index) * -0.55s);
+  animation-duration: 10.5s;
+  animation-name: petal-drift;
+  background:
+    radial-gradient(circle at 62% 30%, rgb(255 255 255 / 62%) 0 18%, transparent 32%),
+    radial-gradient(ellipse at center, #ffd7e2 0 42%, rgb(255 198 214 / 82%) 58%, rgb(246 169 189 / 24%) 78%, transparent 100%);
+  border-radius: 70% 30% 70% 30%;
+  box-shadow: 0 3px 10px rgb(214 111 141 / 14%);
+  height: 12px;
+  opacity: 0.9;
+  top: -32px;
+  width: 8px;
+}
+
+.invitation-animation-cherry-blossom span:nth-child(3n) {
+  height: 10px;
+  width: 7px;
+}
+
+.invitation-animation-cherry-blossom span:nth-child(4n) {
+  height: 14px;
+  width: 9px;
+}
+
+@keyframes jewel-twinkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.42) rotate(0deg);
+  }
+  24% {
+    opacity: 0.88;
+    transform: scale(1.12) rotate(38deg);
+  }
+  48% {
+    opacity: 0.42;
+    transform: scale(0.82) rotate(86deg);
+  }
+  74% {
+    opacity: 0.84;
+    transform: scale(1.02) rotate(128deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.45) rotate(180deg);
+  }
+}
+
+@keyframes petal-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -42px, 0) rotate(0deg);
+  }
+  12% {
+    opacity: 0.9;
+    transform: translate3d(22px, 10vh, 0) rotate(64deg);
+  }
+  32% {
+    transform: translate3d(-34px, 32vh, 0) rotate(155deg);
+  }
+  54% {
+    transform: translate3d(46px, 56vh, 0) rotate(248deg);
+  }
+  76% {
+    opacity: 0.86;
+    transform: translate3d(-28px, 78vh, 0) rotate(336deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(38px, 112vh, 0) rotate(440deg);
+  }
+}
+
+@keyframes leaf-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -44px, 0) rotate(-28deg);
+  }
+  10% {
+    opacity: 0.9;
+    transform: translate3d(-32px, 8vh, 0) rotate(28deg);
+  }
+  30% {
+    transform: translate3d(50px, 28vh, 0) rotate(118deg);
+  }
+  52% {
+    transform: translate3d(-54px, 52vh, 0) rotate(226deg);
+  }
+  76% {
+    opacity: 0.84;
+    transform: translate3d(42px, 78vh, 0) rotate(318deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-24px, 112vh, 0) rotate(450deg);
+  }
 }
 
 /* 편집기 레이아웃 */

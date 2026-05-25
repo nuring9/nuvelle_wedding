@@ -10,6 +10,7 @@ import java.util.List;
 public class InvitationUpdateRequest {
     private String title;
     private String mainImageUrl;
+    private String mainOverlayText;
 
     // 신랑·신부
     private String groomName;

@@ -33,12 +33,13 @@ export default function InvitationQrSection({
 
   return (
     <section className="section-padding text-center">
-      <h2 className="text-xs tracking-widest text-gray-400 mb-8 uppercase">
+      <h2 className="text-xs tracking-widest text-gray-400 mb-5 uppercase">
         QR Code
       </h2>
 
       <p className="text-xs text-gray-400 mb-6">
-        QR 코드를 스캔하면 이 청첩장을 바로 볼 수 있습니다.
+        QR 코드를 스캔하면
+        <br /> 이 청첩장을 바로 볼 수 있습니다.
       </p>
 
       <div className="flex justify-center">

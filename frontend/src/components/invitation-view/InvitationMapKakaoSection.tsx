@@ -54,7 +54,7 @@ export default function InvitationMapKakaoSection({
   )}`;
 
   return (
-    <section className="section-padding bg-gray-50">
+    <section className="section-padding section-tone-location">
       <h2 className="text-xs tracking-widest text-gray-400 mb-8 uppercase text-center">
         Location
       </h2>
