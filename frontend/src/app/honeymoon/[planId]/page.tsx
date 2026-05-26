@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRef } from "react";
+import HoneymoonDestinationImage from "@/components/honeymoon/HoneymoonDestinationImage";
+import HoneymoonPdfTemplate from "@/components/honeymoon/HoneymoonPdfTemplate";
+import { searchDestinationImages } from "@/lib/api/unsplash";
 import { useAuthStore } from "@/stores/authStore";
 import Header from "@/components/common/Header";
 import HoneymoonPlanDayCard from "@/components/honeymoon/HoneymoonPlanDayCard";
@@ -29,6 +33,14 @@ export default function HoneymoonPlanDetailPage() {
     null,
   );
 
+  // pdf 관련
+  const [destinationImageUrl, setDestinationImageUrl] = useState<string | null>(
+    null,
+  );
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const pdfTemplateRef = useRef<HTMLDivElement>(null);
+
+  // 플랜 조회
   useEffect(() => {
     if (!hasHydrated) return;
     if (!isAuthenticated) {
@@ -51,7 +63,23 @@ export default function HoneymoonPlanDetailPage() {
     fetch();
   }, [hasHydrated, isAuthenticated, accessToken, planId, router]);
 
-  // 플랜 저장 (DRAFT → SAVED)
+  // 플랜 조회 후 여행지 이미지 가져오기
+  useEffect(() => {
+    if (!plan || !accessToken) return;
+    const fetchImage = async () => {
+      const photos = await searchDestinationImages(
+        plan.destination,
+        1,
+        accessToken,
+      );
+      if (photos.length > 0) {
+        setDestinationImageUrl(photos[0].urls.regular);
+      }
+    };
+    fetchImage();
+  }, [plan, accessToken]);
+
+  // 플랜 확정 (DRAFT → SAVED)
   const handleSave = async () => {
     if (!accessToken || !plan) return;
     setIsSaving(true);
@@ -86,6 +114,90 @@ export default function HoneymoonPlanDetailPage() {
       if (err instanceof Error) setError(err.message);
     } finally {
       setIsDaySaving(false);
+    }
+  };
+
+  // PDF 내보내기
+  const handleExportPdf = async () => {
+    if (!plan || isExportingPdf) return;
+    setIsExportingPdf(true);
+
+    try {
+      const [jsPDF, html2canvas] = await Promise.all([
+        import("jspdf").then((m) => m.default),
+        import("html2canvas").then((m) => m.default),
+      ]);
+
+      const template = document.getElementById("honeymoon-pdf-template");
+      if (!template) return;
+      await document.fonts.ready;
+
+      const images = Array.from(template.querySelectorAll("img"));
+      await Promise.all(
+        images.map((image) => {
+          if (image.complete) return Promise.resolve();
+          return new Promise<void>((resolve) => {
+            image.onload = () => resolve();
+            image.onerror = () => resolve();
+          });
+        }),
+      );
+
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 12;
+      const blockGap = 6;
+      const contentWidth = pageWidth - margin * 2;
+      let positionY = margin;
+
+      const blocks = Array.from(
+        template.querySelectorAll<HTMLElement>("[data-pdf-block]"),
+      );
+
+      for (const block of blocks) {
+        const canvas = await html2canvas(block, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+        });
+
+        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+        const blockHeight = (canvas.height * contentWidth) / canvas.width;
+        const availableHeight = pageHeight - margin * 2;
+        const renderHeight = Math.min(blockHeight, availableHeight);
+        const renderWidth =
+          blockHeight > availableHeight
+            ? (canvas.width * renderHeight) / canvas.height
+            : contentWidth;
+
+        if (positionY > margin && positionY + renderHeight > pageHeight - margin) {
+          pdf.addPage();
+          positionY = margin;
+        }
+
+        pdf.addImage(
+          imgData,
+          "JPEG",
+          margin,
+          positionY,
+          renderWidth,
+          renderHeight,
+        );
+        positionY += renderHeight + blockGap;
+      }
+
+      pdf.save(`${plan.destination}-신혼여행-일정.pdf`);
+    } catch (err) {
+      console.error("PDF 내보내기 실패:", err);
+      alert("PDF 내보내기에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsExportingPdf(false);
     }
   };
 
@@ -166,11 +278,34 @@ export default function HoneymoonPlanDetailPage() {
               className={`text-xs font-medium px-2.5 py-1 rounded-full ${
                 plan.status === "SAVED"
                   ? "bg-green-50 text-green-600"
-                  : "bg-gray-100 text-gray-500"
+                  : "bg-amber-50 text-amber-600"
               }`}
             >
-              {plan.status === "SAVED" ? "저장됨" : "임시저장"}
+              {plan.status === "SAVED" ? "확정됨" : "검토중"}
             </span>
+
+            <button
+              type="button"
+              onClick={handleExportPdf}
+              disabled={isExportingPdf}
+              className="btn-ghost text-sm px-3 py-2 flex items-center gap-1.5"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              {isExportingPdf ? "PDF 생성 중..." : "PDF 저장"}
+            </button>
+
             {plan.status === "DRAFT" && (
               <button
                 type="button"
@@ -178,11 +313,17 @@ export default function HoneymoonPlanDetailPage() {
                 disabled={isSaving}
                 className="btn-primary text-sm px-4 py-2"
               >
-                {isSaving ? "저장 중..." : "저장하기"}
+                {isSaving ? "확정 중..." : "내 일정으로 확정"}
               </button>
             )}
           </div>
         </div>
+
+        {/* 여행지 이미지 */}
+        <HoneymoonDestinationImage
+          destination={plan.destination}
+          className="w-full aspect-[16/6] rounded-2xl mb-6"
+        />
 
         {/* 요약 정보 */}
         {plan.travelStyle && (
@@ -199,7 +340,6 @@ export default function HoneymoonPlanDetailPage() {
             </div>
           </div>
         )}
-
         {/* Day별 일정 */}
         {plan.days.length > 0 ? (
           <div className="flex flex-col gap-4">
@@ -225,18 +365,54 @@ export default function HoneymoonPlanDetailPage() {
             </p>
           </div>
         )}
-
         {/* 2차 구현: 챗봇 링크 */}
-        <div className="mt-8 p-5 bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl text-center">
+        <div className="mt-8 p-5 bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl">
           <p className="text-sm font-medium text-gray-700 mb-1">
             일정을 수정하고 싶으신가요?
           </p>
           <p className="text-xs text-gray-500 mb-4">
-            AI 챗봇으로 일정을 보완하는 기능은 곧 추가될 예정입니다.
+            AI 플래너에게 일정 수정을 요청하거나 여행 관련 질문을 해보세요.
           </p>
-          <span className="text-xs text-gray-400">Coming Soon</span>
+          <Link
+            href={`/honeymoon/${plan.id}/chat`}
+            className="btn-primary text-sm px-5 py-2.5 inline-flex items-center gap-2"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+              />
+            </svg>
+            AI 플래너와 대화하기
+          </Link>
         </div>
       </main>
+
+      {/* PDF 템플릿 (숨겨진 상태로 렌더링) */}
+      <div
+        ref={pdfTemplateRef}
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          left: "-10000px",
+          top: 0,
+          width: "794px",
+          pointerEvents: "none",
+          opacity: 0,
+        }}
+      >
+        <HoneymoonPdfTemplate
+          plan={plan}
+          imageUrl={destinationImageUrl ?? undefined}
+        />
+      </div>
 
       {/* Day 수정 모달 */}
       {editingDay && (

@@ -66,3 +66,17 @@ export interface HoneymoonPlanDayUpdateRequest {
   meals?: string[];
   tips?: string;
 }
+
+// 챗봇 관련
+export type MessageRole = "USER" | "ASSISTANT";
+
+export interface HoneymoonChatMessage {
+  id: number;
+  role: MessageRole;
+  content: string;
+  createdAt: string;
+}
+
+export interface HoneymoonChatRequest {
+  message: string;
+}

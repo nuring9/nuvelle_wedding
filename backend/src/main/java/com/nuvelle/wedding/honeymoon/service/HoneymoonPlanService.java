@@ -198,7 +198,7 @@ public class HoneymoonPlanService {
         return HoneymoonPlanResponse.from(plan);
     }
 
-    // 플랜 저장 (DRAFT → SAVED)
+    // 플랜 확정 (DRAFT → SAVED)
     @Transactional
     public HoneymoonPlanResponse savePlan(Long planId, CustomUserDetails userDetails) {
         HoneymoonPlan plan = planRepository.findByIdWithDays(planId)

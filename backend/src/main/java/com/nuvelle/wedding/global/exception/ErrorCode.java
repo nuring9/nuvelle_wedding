@@ -48,9 +48,10 @@ public enum ErrorCode {
     // 게스트 사진 업로드
     GUEST_PHOTO_NOT_ALLOWED(HttpStatus.FORBIDDEN, "게스트 사진 업로드가 비활성화된 청첩장입니다."),
 
-    // GUEST_PHOTO_NOT_ALLOWED 아래에 추가
+    // 신혼 여행 관련
     PLAN_NOT_FOUND(HttpStatus.NOT_FOUND, "신혼여행 플랜을 찾을 수 없습니다."),
-    PLAN_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 플랜에 접근 권한이 없습니다.");
+    PLAN_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 플랜에 접근 권한이 없습니다."),
+    AI_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "AI 서비스가 일시적으로 불안정합니다. 잠시 후 다시 시도해주세요.");
 
     private final HttpStatus status;
     private final String message;

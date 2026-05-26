@@ -7,6 +7,8 @@ import type {
   HoneymoonPlanResponse,
   HoneymoonPlanSummaryResponse,
   HoneymoonPlanDayResponse,
+  HoneymoonChatMessage,
+  HoneymoonChatRequest,
 } from "@/types/honeymoon";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
@@ -21,20 +23,34 @@ function getAuthApi(accessToken: string) {
   });
 }
 
+function getApiErrorMessage(error: unknown, fallbackMessage: string) {
+  if (axios.isAxiosError<ApiResponse<unknown>>(error)) {
+    return error.response?.data?.message || fallbackMessage;
+  }
+
+  if (error instanceof Error) return error.message;
+
+  return fallbackMessage;
+}
+
 // AI 일정 생성
 export async function generatePlan(
   data: HoneymoonPlanGenerateRequest,
   accessToken: string,
 ): Promise<HoneymoonPlanResponse> {
-  const api = getAuthApi(accessToken);
-  const res = await api.post<ApiResponse<HoneymoonPlanResponse>>(
-    "/generate",
-    data,
-  );
-  if (!res.data.success || !res.data.data) {
-    throw new Error(res.data.message || "일정 생성에 실패했습니다.");
+  try {
+    const api = getAuthApi(accessToken);
+    const res = await api.post<ApiResponse<HoneymoonPlanResponse>>(
+      "/generate",
+      data,
+    );
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "일정 생성에 실패했습니다.");
+    }
+    return res.data.data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "일정 생성에 실패했습니다."));
   }
-  return res.data.data;
 }
 
 // 내 플랜 목록 조회
@@ -79,7 +95,7 @@ export async function updatePlan(
   return res.data.data;
 }
 
-// 플랜 저장 (DRAFT → SAVED)
+// 플랜 확정 (DRAFT → SAVED)
 export async function savePlan(
   planId: number,
   accessToken: string,
@@ -89,7 +105,7 @@ export async function savePlan(
     `/${planId}/save`,
   );
   if (!res.data.success || !res.data.data) {
-    throw new Error(res.data.message || "플랜 저장에 실패했습니다.");
+    throw new Error(res.data.message || "플랜 확정에 실패했습니다.");
   }
   return res.data.data;
 }
@@ -117,6 +133,62 @@ export async function updatePlanDay(
   );
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "일정 수정에 실패했습니다.");
+  }
+  return res.data.data;
+}
+
+// 챗봇 메시지 전송
+export async function sendChatMessage(
+  planId: number,
+  data: HoneymoonChatRequest,
+  accessToken: string,
+): Promise<HoneymoonChatMessage> {
+  try {
+    const api = getAuthApi(accessToken);
+    const res = await api.post<ApiResponse<HoneymoonChatMessage>>(
+      `/${planId}/chat`,
+      data,
+    );
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "메시지 전송에 실패했습니다.");
+    }
+    return res.data.data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "메시지 전송에 실패했습니다."));
+  }
+}
+
+// AI 채팅 변경안으로 새 플랜 생성
+export async function createPlanFromChatSuggestion(
+  planId: number,
+  messageId: number,
+  accessToken: string,
+): Promise<HoneymoonPlanResponse> {
+  try {
+    const api = getAuthApi(accessToken);
+    const res = await api.post<ApiResponse<HoneymoonPlanResponse>>(
+      `/${planId}/chat/${messageId}/create-plan`,
+    );
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "새 일정 생성에 실패했습니다.");
+    }
+    return res.data.data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "새 일정 생성에 실패했습니다."));
+  }
+}
+
+// 대화 내역 조회
+export async function getChatHistory(
+  planId: number,
+  accessToken: string,
+): Promise<HoneymoonChatMessage[]> {
+  const api = getAuthApi(accessToken);
+  const res = await api.get<ApiResponse<HoneymoonChatMessage[]>>(
+    `/${planId}/chat`,
+  );
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "대화 내역을 불러오지 못했습니다.");
   }
   return res.data.data;
 }

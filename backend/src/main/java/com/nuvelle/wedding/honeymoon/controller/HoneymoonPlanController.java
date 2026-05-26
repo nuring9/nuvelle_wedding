@@ -57,13 +57,13 @@ public class HoneymoonPlanController {
         return ResponseEntity.ok(ApiResponse.success("플랜이 수정되었습니다.", response));
     }
 
-    // 플랜 저장 (DRAFT → SAVED)
+    // 플랜 확정 (DRAFT → SAVED)
     @PostMapping("/{planId}/save")
     public ResponseEntity<ApiResponse<HoneymoonPlanResponse>> savePlan(
             @PathVariable Long planId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         HoneymoonPlanResponse response = planService.savePlan(planId, userDetails);
-        return ResponseEntity.ok(ApiResponse.success("플랜이 저장되었습니다.", response));
+        return ResponseEntity.ok(ApiResponse.success("플랜이 확정되었습니다.", response));
     }
 
     // 플랜 삭제

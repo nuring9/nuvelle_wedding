@@ -10,11 +10,11 @@ export default function HoneymoonPlanCard({
   plan,
   onDelete,
 }: HoneymoonPlanCardProps) {
-  const statusLabel = plan.status === "SAVED" ? "저장됨" : "임시저장";
+  const statusLabel = plan.status === "SAVED" ? "확정됨" : "검토중";
   const statusColor =
     plan.status === "SAVED"
       ? "bg-green-50 text-green-600"
-      : "bg-gray-100 text-gray-500";
+      : "bg-amber-50 text-amber-600";
 
   return (
     <div className="card-base overflow-hidden">

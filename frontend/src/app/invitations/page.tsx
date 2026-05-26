@@ -72,7 +72,7 @@ export default function InvitationsPage() {
       <Header />
       <main className="pt-14 max-w-screen-lg mx-auto px-4 py-8">
         {/* 페이지 헤더 */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mt-8 mb-8">
           <h1 className="text-xl font-serif text-gray-800">내 청첩장</h1>
           <Link href="/templates" className="btn-primary text-sm px-4 py-2">
             새로 만들기
