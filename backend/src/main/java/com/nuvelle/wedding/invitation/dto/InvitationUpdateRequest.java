@@ -71,4 +71,7 @@ public class InvitationUpdateRequest {
 
     // 게스트 사진 업로드
     private Boolean guestPhotoEnabled;
+
+    // 섹션 순서
+    private List<String> sectionOrder;
 }

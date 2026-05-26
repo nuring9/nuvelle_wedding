@@ -7,25 +7,14 @@ import type {
 } from "@/lib/api/invitations";
 import type { PublicInvitation } from "@/types/invitation";
 import InvitationAnimationOverlay from "@/components/invitation-view/InvitationAnimationOverlay";
-import InvitationHeroSection from "@/components/invitation-view/InvitationHeroSection";
-import InvitationCoupleSection from "@/components/invitation-view/InvitationCoupleSection";
-import InvitationProfileSection from "@/components/invitation-view/InvitationProfileSection";
-import InvitationGreetingSection from "@/components/invitation-view/InvitationGreetingSection";
-import InvitationWeddingInfoSection from "@/components/invitation-view/InvitationWeddingInfoSection";
-import InvitationDdaySection from "@/components/invitation-view/InvitationDdaySection";
-import InvitationInterviewSection from "@/components/invitation-view/InvitationInterviewSection";
-import InvitationGallerySection from "@/components/invitation-view/InvitationGallerySection";
-import InvitationMapKakaoSection from "@/components/invitation-view/InvitationMapKakaoSection";
-import InvitationAccountSection from "@/components/invitation-view/InvitationAccountSection";
-import InvitationRsvpSection from "@/components/invitation-view/InvitationRsvpSection";
-import InvitationGuestbookSection from "@/components/invitation-view/InvitationGuestbookSection";
-import InvitationGuestPhotoSection from "@/components/invitation-view/InvitationGuestPhotoSection";
-import InvitationQrSection from "@/components/invitation-view/InvitationQrSection";
+import InvitationSectionRenderer from "@/components/invitation-view/InvitationSectionRenderer";
+import type { InvitationSectionId } from "@/constants/invitationSections";
 
 interface InvitationLivePreviewProps {
   invitation: InvitationResponse;
   formData: UpdateInvitationRequest;
   galleries: GalleryImageResponse[];
+  onSectionOrderChange?: (sectionOrder: InvitationSectionId[]) => void;
 }
 
 function toPreviewInvitation(
@@ -78,6 +67,7 @@ function toPreviewInvitation(
     interviewEnabled: formData.interviewEnabled ?? false,
     guestPhotoEnabled: formData.guestPhotoEnabled ?? false,
     galleries,
+    sectionOrder: formData.sectionOrder ?? invitation.sectionOrder ?? [],
   };
 }
 
@@ -85,8 +75,13 @@ export default function InvitationLivePreview({
   invitation,
   formData,
   galleries,
+  onSectionOrderChange,
 }: InvitationLivePreviewProps) {
-  const previewInvitation = toPreviewInvitation(invitation, formData, galleries);
+  const previewInvitation = toPreviewInvitation(
+    invitation,
+    formData,
+    galleries,
+  );
   const theme = previewInvitation.theme || "classic";
   const font = previewInvitation.fontFamily || "noto-sans";
 
@@ -102,20 +97,12 @@ export default function InvitationLivePreview({
           <InvitationAnimationOverlay
             animationType={previewInvitation.animationType}
           />
-          <InvitationHeroSection invitation={previewInvitation} />
-          <InvitationCoupleSection invitation={previewInvitation} />
-          <InvitationProfileSection invitation={previewInvitation} />
-          <InvitationGreetingSection invitation={previewInvitation} />
-          <InvitationWeddingInfoSection invitation={previewInvitation} />
-          <InvitationDdaySection invitation={previewInvitation} />
-          <InvitationInterviewSection invitation={previewInvitation} />
-          <InvitationGallerySection invitation={previewInvitation} />
-          <InvitationMapKakaoSection invitation={previewInvitation} />
-          <InvitationAccountSection invitation={previewInvitation} />
-          <InvitationRsvpSection invitation={previewInvitation} />
-          <InvitationGuestbookSection invitation={previewInvitation} />
-          <InvitationGuestPhotoSection invitation={previewInvitation} />
-          <InvitationQrSection invitation={previewInvitation} />
+
+          <InvitationSectionRenderer
+            invitation={previewInvitation}
+            editable
+            onOrderChange={onSectionOrderChange}
+          />
           <div className="pb-12" />
         </div>
       </div>

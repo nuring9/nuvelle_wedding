@@ -2,6 +2,7 @@
 
 import ToggleSwitch from "@/components/common/ToggleSwitch";
 import type { UpdateInvitationRequest } from "@/lib/api/invitations";
+import InvitationSectionOrderForm from "./InvitationSectionOrderForm";
 
 interface InvitationSectionToggleFormProps {
   data: UpdateInvitationRequest;
@@ -70,6 +71,11 @@ export default function InvitationSectionToggleForm({
           </div>
         ))}
       </div>
+
+      <InvitationSectionOrderForm
+        sectionOrder={data.sectionOrder}
+        onChange={(sectionOrder) => onChange({ sectionOrder })}
+      />
     </div>
   );
 }

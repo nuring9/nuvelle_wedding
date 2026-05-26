@@ -41,21 +41,16 @@ public class InvitationService {
     // 청첩장 생성
     @Transactional
     public InvitationResponse create(InvitationCreateRequest request, CustomUserDetails userDetails) {
-        User user = userRepository.findById(userDetails.getUserId())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user =
+                userRepository.findById(userDetails.getUserId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Template template = templateRepository.findByIdAndIsActiveTrue(request.getTemplateId())
-                .orElseThrow(() -> new CustomException(ErrorCode.TEMPLATE_NOT_FOUND));
+        Template template =
+                templateRepository.findByIdAndIsActiveTrue(request.getTemplateId()).orElseThrow(() -> new CustomException(ErrorCode.TEMPLATE_NOT_FOUND));
 
         String slug = generateUniqueSlug();
 
-        Invitation invitation = Invitation.builder()
-                .user(user)
-                .template(template)
-                .slug(slug)
-                .status(InvitationStatus.DRAFT)
-                .title(request.getTitle())
-                .build();
+        Invitation invitation =
+                Invitation.builder().user(user).template(template).slug(slug).status(InvitationStatus.DRAFT).title(request.getTitle()).build();
 
         invitationRepository.save(invitation);
 
@@ -65,17 +60,14 @@ public class InvitationService {
     // 내 청첩장 목록
     @Transactional(readOnly = true)
     public List<InvitationSummaryResponse> getMyInvitations(CustomUserDetails userDetails) {
-        return invitationRepository.findAllByUserIdOrderByCreatedAtDesc(userDetails.getUserId())
-                .stream()
-                .map(InvitationSummaryResponse::from)
-                .collect(Collectors.toList());
+        return invitationRepository.findAllByUserIdOrderByCreatedAtDesc(userDetails.getUserId()).stream().map(InvitationSummaryResponse::from).collect(Collectors.toList());
     }
 
     // 청첩장 단건 조회 (작성자용)
     @Transactional(readOnly = true)
     public InvitationResponse getInvitation(Long invitationId, CustomUserDetails userDetails) {
-        Invitation invitation = invitationRepository.findByIdWithGalleries(invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+        Invitation invitation =
+                invitationRepository.findByIdWithGalleries(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
 
@@ -83,45 +75,37 @@ public class InvitationService {
     }
 
 
-
-
     // 청첩장 수정 (임시저장)
     @Transactional
-    public InvitationResponse update(Long invitationId,
-                                     InvitationUpdateRequest request,
+    public InvitationResponse update(Long invitationId, InvitationUpdateRequest request,
                                      CustomUserDetails userDetails) {
 
-        Invitation invitation = invitationRepository.findByIdWithGalleries(invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+        Invitation invitation =
+                invitationRepository.findByIdWithGalleries(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
 
         // 계좌 목록
-        List<InvitationAccount> accounts = request.getAccounts() == null
-                ? null
-                : request.getAccounts().stream()
-                .filter(account -> account.getBankName() != null && !account.getBankName().isBlank())
-                .filter(account -> account.getAccountNumber() != null && !account.getAccountNumber().isBlank())
-                .map(account -> new InvitationAccount(
-                        account.getSide(),
-                        account.getLabel(),
-                        account.getBankName(),
-                        account.getAccountNumber(),
-                        account.getAccountHolder(),
-                        account.getRemittanceLink()
-                ))
-                .collect(Collectors.toList());
+        List<InvitationAccount> accounts = request.getAccounts() == null ? null :
+                request.getAccounts().stream().filter(account -> account.getBankName() != null && !account.getBankName().isBlank()).filter(account -> account.getAccountNumber() != null && !account.getAccountNumber().isBlank()).map(account -> new InvitationAccount(account.getSide(), account.getLabel(), account.getBankName(), account.getAccountNumber(), account.getAccountHolder(), account.getRemittanceLink())).collect(Collectors.toList());
+
+        // sectionOrder가 요청에 없으면 기존 값을 유지하고,
+        // 요청에 있으면 배열을 콤마 문자열로 변환해서 저장한다.
+        String sectionOrder = request.getSectionOrder() == null ? invitation.getSectionOrder() : String.join(",",
+                request.getSectionOrder());
 
         invitation.update(
                 request.getTitle(),
                 request.getMainImageUrl(),
                 request.getMainOverlayText(),
+
                 request.getGroomName(),
                 request.getBrideName(),
                 request.getGroomFatherName(),
                 request.getGroomMotherName(),
                 request.getBrideFatherName(),
                 request.getBrideMotherName(),
+
                 request.getGreetingText(),
                 request.getWeddingDate(),
                 request.getWeddingTime(),
@@ -131,31 +115,59 @@ public class InvitationService {
                 request.getTransportInfo(),
                 request.getMapLat(),
                 request.getMapLng(),
+
                 request.getAccountBank(),
                 request.getAccountNumber(),
                 request.getAccountHolder(),
                 accounts,
-                request.getGalleryEnabled() != null ? request.getGalleryEnabled() : invitation.isGalleryEnabled(),
-                request.getRsvpEnabled() != null ? request.getRsvpEnabled() : invitation.isRsvpEnabled(),
-                request.getGuestbookEnabled() != null ? request.getGuestbookEnabled() : invitation.isGuestbookEnabled(),
-                request.getAccountEnabled() != null ? request.getAccountEnabled() : invitation.isAccountEnabled(),
-                request.getParentsEnabled() != null ? request.getParentsEnabled() : invitation.isParentsEnabled(),
-                request.getDdayEnabled() != null ? request.getDdayEnabled() : invitation.isDdayEnabled(),
+
+                request.getGalleryEnabled() != null
+                        ? request.getGalleryEnabled()
+                        : invitation.isGalleryEnabled(),
+
+                request.getRsvpEnabled() != null
+                        ? request.getRsvpEnabled()
+                        : invitation.isRsvpEnabled(),
+
+                request.getGuestbookEnabled() != null
+                        ? request.getGuestbookEnabled()
+                        : invitation.isGuestbookEnabled(),
+
+                request.getAccountEnabled() != null
+                        ? request.getAccountEnabled()
+                        : invitation.isAccountEnabled(),
+
+                request.getParentsEnabled() != null
+                        ? request.getParentsEnabled()
+                        : invitation.isParentsEnabled(),
+
+                request.getDdayEnabled() != null
+                        ? request.getDdayEnabled()
+                        : invitation.isDdayEnabled(),
+
                 request.getTheme(),
                 request.getFontFamily(),
                 request.getGalleryLayout(),
                 request.getAnimationType(),
+
                 request.getGroomIntroduction(),
                 request.getBrideIntroduction(),
                 request.getRemittanceLink(),
-                request.getInterviewEnabled() != null ? request.getInterviewEnabled() : invitation.isInterviewEnabled(),
-                request.getGuestPhotoEnabled() != null ? request.getGuestPhotoEnabled() : invitation.isGuestPhotoEnabled()
+
+                request.getInterviewEnabled() != null
+                        ? request.getInterviewEnabled()
+                        : invitation.isInterviewEnabled(),
+
+                request.getGuestPhotoEnabled() != null
+                        ? request.getGuestPhotoEnabled()
+                        : invitation.isGuestPhotoEnabled(),
+
+                sectionOrder
         );
 
         Bgm bgm = null;
         if (request.getBgmId() != null) {
-            bgm = bgmRepository.findByIdAndIsActiveTrue(request.getBgmId())
-                    .orElseThrow(() -> new CustomException(ErrorCode.BGM_NOT_FOUND));
+            bgm = bgmRepository.findByIdAndIsActiveTrue(request.getBgmId()).orElseThrow(() -> new CustomException(ErrorCode.BGM_NOT_FOUND));
         }
         invitation.updateBgm(bgm);
 
@@ -163,13 +175,11 @@ public class InvitationService {
     }
 
 
-
-
     // 발행
     @Transactional
     public InvitationResponse publish(Long invitationId, CustomUserDetails userDetails) {
-        Invitation invitation = invitationRepository.findByIdWithGalleries(invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+        Invitation invitation =
+                invitationRepository.findByIdWithGalleries(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
         invitation.publish();
@@ -180,8 +190,8 @@ public class InvitationService {
     // 비공개
     @Transactional
     public InvitationResponse makePrivate(Long invitationId, CustomUserDetails userDetails) {
-        Invitation invitation = invitationRepository.findByIdWithGalleries(invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+        Invitation invitation =
+                invitationRepository.findByIdWithGalleries(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
         invitation.makePrivate();
@@ -192,8 +202,8 @@ public class InvitationService {
     // 청첩장 삭제
     @Transactional
     public void delete(Long invitationId, CustomUserDetails userDetails) {
-        Invitation invitation = invitationRepository.findById(invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+        Invitation invitation =
+                invitationRepository.findById(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
         invitationRepository.delete(invitation);
@@ -201,21 +211,16 @@ public class InvitationService {
 
     // 갤러리 이미지 추가
     @Transactional
-    public GalleryImageResponse addGalleryImage(Long invitationId,
-                                                String imageUrl,
-                                                CustomUserDetails userDetails) {
-        Invitation invitation = invitationRepository.findById(invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+    public GalleryImageResponse addGalleryImage(Long invitationId, String imageUrl, CustomUserDetails userDetails) {
+        Invitation invitation =
+                invitationRepository.findById(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
 
         int nextOrder = galleryRepository.countByInvitationId(invitationId);
 
-        InvitationGallery gallery = InvitationGallery.builder()
-                .invitation(invitation)
-                .imageUrl(imageUrl)
-                .sortOrder(nextOrder)
-                .build();
+        InvitationGallery gallery =
+                InvitationGallery.builder().invitation(invitation).imageUrl(imageUrl).sortOrder(nextOrder).build();
 
         galleryRepository.save(gallery);
 
@@ -225,13 +230,13 @@ public class InvitationService {
     // 갤러리 이미지 삭제
     @Transactional
     public void deleteGalleryImage(Long invitationId, Long imageId, CustomUserDetails userDetails) {
-        Invitation invitation = invitationRepository.findById(invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+        Invitation invitation =
+                invitationRepository.findById(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
 
         validateOwner(invitation, userDetails.getUserId());
 
-        InvitationGallery gallery = galleryRepository.findByIdAndInvitationId(imageId, invitationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        InvitationGallery gallery =
+                galleryRepository.findByIdAndInvitationId(imageId, invitationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
         galleryRepository.delete(gallery);
     }

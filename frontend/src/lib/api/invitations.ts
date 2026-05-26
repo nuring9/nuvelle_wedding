@@ -73,6 +73,7 @@ export interface UpdateInvitationRequest {
   remittanceLink?: string;
   interviewEnabled?: boolean;
   guestPhotoEnabled?: boolean;
+  sectionOrder?: string[];
 }
 
 export interface InvitationResponse {
@@ -126,6 +127,7 @@ export interface InvitationResponse {
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  sectionOrder: string[];
 }
 
 export interface InvitationSummaryResponse {

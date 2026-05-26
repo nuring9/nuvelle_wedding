@@ -191,6 +191,11 @@ public class Invitation {
     @OrderBy("sortOrder ASC")
     private List<InvitationGallery> galleries = new ArrayList<>();
 
+    // 섹션 노출 순서를 문자열로 저장한다.
+    // 예: "hero,couple,profile,greeting,weddingInfo"
+    @Column(name = "section_order", length = 500)
+    private String sectionOrder;
+
     @Builder
     public Invitation(User user, Template template, String slug, InvitationStatus status, String title) {
         this.user = user;
@@ -200,7 +205,8 @@ public class Invitation {
         this.title = title;
     }
 
-    public void update(String title, String mainImageUrl, String mainOverlayText, String groomName, String brideName, String groomFatherName,
+    public void update(String title, String mainImageUrl, String mainOverlayText, String groomName, String brideName,
+                       String groomFatherName,
                        String groomMotherName, String brideFatherName, String brideMotherName, String greetingText,
                        LocalDate weddingDate, LocalTime weddingTime, String venueName, String venueAddress,
                        String venueDetail, String transportInfo, Double mapLat, Double mapLng, String accountBank,
@@ -212,7 +218,8 @@ public class Invitation {
                        String brideIntroduction,
                        String remittanceLink,
                        boolean interviewEnabled,
-                       boolean guestPhotoEnabled) {
+                       boolean guestPhotoEnabled,
+                       String sectionOrder) {
         this.title = title;
         this.mainImageUrl = mainImageUrl;
         this.mainOverlayText = mainOverlayText;
@@ -254,6 +261,7 @@ public class Invitation {
         this.remittanceLink = remittanceLink;
         this.interviewEnabled = interviewEnabled;
         this.guestPhotoEnabled = guestPhotoEnabled;
+        this.sectionOrder = sectionOrder;
 
     }
 

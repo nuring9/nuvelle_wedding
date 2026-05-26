@@ -60,6 +60,7 @@ export interface PublicInvitation {
   interviewEnabled: boolean;
   guestPhotoEnabled: boolean;
   galleries: GalleryImage[];
+  sectionOrder: string[];
 }
 
 // RSVP 등록 요청

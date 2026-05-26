@@ -106,6 +106,7 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     remittanceLink: invitation.remittanceLink ?? "",
     interviewEnabled: invitation.interviewEnabled ?? false,
     guestPhotoEnabled: invitation.guestPhotoEnabled ?? false,
+    sectionOrder: invitation.sectionOrder ?? [],
   };
 }
 
@@ -134,33 +135,47 @@ export default function InvitationEditorLayout({
     THEME_OPTIONS.find((theme) => theme.key === formData.theme)?.label ??
     invitation.templateName;
 
-  const handleSave = useCallback(async () => {
-    if (!accessToken) return;
-    setIsSaving(true);
-    setError(null);
-    try {
-      const updated = await updateInvitation(
-        invitation.id,
-        formData,
-        accessToken,
-      );
-      setInvitation(updated);
-      setLastSaved(new Date());
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-    } finally {
-      setIsSaving(false);
-    }
-  }, [accessToken, invitation.id, formData]);
+  const handleSave = useCallback(
+    async (nextFormData?: UpdateInvitationRequest) => {
+      if (!accessToken) return;
+
+      const dataToSave = nextFormData ?? formData;
+
+      setIsSaving(true);
+      setError(null);
+
+      try {
+        const updated = await updateInvitation(
+          invitation.id,
+          dataToSave,
+          accessToken,
+        );
+
+        setInvitation(updated);
+        setFormData(dataToSave);
+        setLastSaved(new Date());
+      } catch (err: unknown) {
+        if (err instanceof Error) setError(err.message);
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [accessToken, invitation.id, formData],
+  );
 
   const handleChange = useCallback(
     (data: Partial<UpdateInvitationRequest>) => {
-      setFormData((prev) => ({ ...prev, ...data }));
+      setFormData((prev) => {
+        const nextFormData = { ...prev, ...data };
 
-      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
-      autoSaveTimer.current = setTimeout(() => {
-        handleSave();
-      }, 2000);
+        if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+
+        autoSaveTimer.current = setTimeout(() => {
+          handleSave(nextFormData);
+        }, 2000);
+
+        return nextFormData;
+      });
     },
     [handleSave],
   );
@@ -365,7 +380,7 @@ export default function InvitationEditorLayout({
               <div className="pt-10 pb-8 flex justify-center">
                 <button
                   type="button"
-                  onClick={handleSave}
+                  onClick={() => handleSave()}
                   disabled={isSaving}
                   className="min-w-40 rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
@@ -376,10 +391,14 @@ export default function InvitationEditorLayout({
           </div>
         </div>
 
+        {/* 섹션 순서 변경 이벤트 추가 */}
         <InvitationLivePreview
           invitation={invitation}
           formData={formData}
           galleries={galleries}
+          onSectionOrderChange={(sectionOrder) =>
+            handleChange({ sectionOrder })
+          }
         />
       </div>
     </div>
