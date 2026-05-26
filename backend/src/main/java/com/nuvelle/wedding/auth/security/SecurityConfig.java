@@ -55,6 +55,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/templates/**").permitAll()
                         // BGM 목록 조회
                         .requestMatchers(HttpMethod.GET, "/api/bgms").permitAll()
+                        // honeymoon
+                        .requestMatchers("/api/honeymoon/**").authenticated()
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
                 )

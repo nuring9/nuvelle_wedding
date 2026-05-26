@@ -46,7 +46,11 @@ public enum ErrorCode {
     BGM_NOT_FOUND(HttpStatus.NOT_FOUND, "BGM을 찾을 수 없습니다."),
 
     // 게스트 사진 업로드
-    GUEST_PHOTO_NOT_ALLOWED(HttpStatus.FORBIDDEN, "게스트 사진 업로드가 비활성화된 청첩장입니다.");
+    GUEST_PHOTO_NOT_ALLOWED(HttpStatus.FORBIDDEN, "게스트 사진 업로드가 비활성화된 청첩장입니다."),
+
+    // GUEST_PHOTO_NOT_ALLOWED 아래에 추가
+    PLAN_NOT_FOUND(HttpStatus.NOT_FOUND, "신혼여행 플랜을 찾을 수 없습니다."),
+    PLAN_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 플랜에 접근 권한이 없습니다.");
 
     private final HttpStatus status;
     private final String message;

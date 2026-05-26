@@ -44,6 +44,12 @@ export default function Header({ transparent = false }: HeaderProps) {
               >
                 내청첩장
               </Link>
+              <Link
+                href="/honeymoon"
+                className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                신혼여행 플래너
+              </Link>
               <div className="flex items-center gap-2 ml-1">
                 <span className="text-xs text-gray-400 hidden sm:block">
                   {user?.name}님
