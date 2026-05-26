@@ -141,7 +141,7 @@ public class InvitationResponse {
                 .publishedAt(invitation.getPublishedAt())
                 .createdAt(invitation.getCreatedAt())
                 .updatedAt(invitation.getUpdatedAt())
-                .sectionOrder(toSectionOrder(invitation.getSectionOrder()))
+                .sectionOrder(invitation.getSectionOrder() == null ? List.of() : invitation.getSectionOrder())
                 .build();
     }
 
@@ -167,29 +167,4 @@ public class InvitationResponse {
         return List.of();
     }
 
-    private static List<String> toSectionOrder(String sectionOrder) {
-        // 기존 데이터에 sectionOrder가 없을 수 있으므로 기본 순서를 내려준다.
-        if (sectionOrder == null || sectionOrder.isBlank()) {
-            return List.of(
-                    "hero",
-                    "couple",
-                    "profile",
-                    "greeting",
-                    "weddingInfo",
-                    "dday",
-                    "interview",
-                    "gallery",
-                    "map",
-                    "account",
-                    "rsvp",
-                    "guestbook",
-                    "guestPhoto",
-                    "qr"
-            );
-        }
-
-        // DB 문자열을 배열 형태로 변환한다.
-        // 예: "hero,couple,gallery" -> ["hero", "couple", "gallery"]
-        return List.of(sectionOrder.split(","));
-    }
 }

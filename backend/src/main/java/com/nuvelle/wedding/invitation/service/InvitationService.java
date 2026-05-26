@@ -89,10 +89,11 @@ public class InvitationService {
         List<InvitationAccount> accounts = request.getAccounts() == null ? null :
                 request.getAccounts().stream().filter(account -> account.getBankName() != null && !account.getBankName().isBlank()).filter(account -> account.getAccountNumber() != null && !account.getAccountNumber().isBlank()).map(account -> new InvitationAccount(account.getSide(), account.getLabel(), account.getBankName(), account.getAccountNumber(), account.getAccountHolder(), account.getRemittanceLink())).collect(Collectors.toList());
 
-        // sectionOrder가 요청에 없으면 기존 값을 유지하고,
-        // 요청에 있으면 배열을 콤마 문자열로 변환해서 저장한다.
-        String sectionOrder = request.getSectionOrder() == null ? invitation.getSectionOrder() : String.join(",",
-                request.getSectionOrder());
+        // sectionOrder가 요청에 없으면 기존 값을 유지하고, 요청에 있으면 배열 그대로 저장한다.
+        // 실제 DB 저장 형식은 SectionOrderConverter가 JSON 문자열로 변환한다.
+        List<String> sectionOrder = request.getSectionOrder() == null
+                ? invitation.getSectionOrder()
+                : request.getSectionOrder();
 
         invitation.update(
                 request.getTitle(),

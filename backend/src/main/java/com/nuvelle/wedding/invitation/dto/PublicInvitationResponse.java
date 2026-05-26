@@ -138,7 +138,7 @@ public class PublicInvitationResponse {
                 .galleries(invitation.getGalleries().stream()
                         .map(GalleryImageResponse::from)
                         .collect(Collectors.toList()))
-                .sectionOrder(toSectionOrder(invitation.getSectionOrder()))
+                .sectionOrder(invitation.getSectionOrder() == null ? List.of() : invitation.getSectionOrder())
                 .build();
     }
     private static List<InvitationAccountResponse> toAccountResponses(Invitation invitation) {
@@ -163,28 +163,4 @@ public class PublicInvitationResponse {
         return List.of();
     }
 
-    private static List<String> toSectionOrder(String sectionOrder) {
-        // 저장된 순서가 없으면 기본 순서를 사용한다.
-        if (sectionOrder == null || sectionOrder.isBlank()) {
-            return List.of(
-                    "hero",
-                    "couple",
-                    "profile",
-                    "greeting",
-                    "weddingInfo",
-                    "dday",
-                    "interview",
-                    "gallery",
-                    "map",
-                    "account",
-                    "rsvp",
-                    "guestbook",
-                    "guestPhoto",
-                    "qr"
-            );
-        }
-
-        // 저장된 문자열 순서를 배열로 바꿔 프론트에 내려준다.
-        return List.of(sectionOrder.split(","));
-    }
 }
