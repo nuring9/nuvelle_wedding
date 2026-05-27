@@ -16,4 +16,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     // slug 값으로 템플릿을 단건 조회
     Optional<Template> findBySlug(String slug);
+
+    // 관리자: 비활성 포함 전체 조회
+    List<Template> findAllByOrderBySortOrderAsc();
 }

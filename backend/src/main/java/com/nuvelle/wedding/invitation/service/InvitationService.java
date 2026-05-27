@@ -54,13 +54,31 @@ public class InvitationService {
 
         invitationRepository.save(invitation);
 
+        // 템플릿에 마스터 청첩장이 있으면 디자인 데이터 복사
+        if (template.getMasterInvitation() != null) {
+            Invitation master = invitationRepository
+                    .findByIdWithGalleries(template.getMasterInvitation().getId())
+                    .orElse(null);
+            if (master != null) {
+                invitation.applyMasterTemplate(master);
+                for (InvitationGallery sourceGallery : master.getGalleries()) {
+                    InvitationGallery copied = InvitationGallery.builder()
+                            .invitation(invitation)
+                            .imageUrl(sourceGallery.getImageUrl())
+                            .sortOrder(sourceGallery.getSortOrder())
+                            .build();
+                    galleryRepository.save(copied);
+                }
+            }
+        }
+
         return InvitationResponse.from(invitation, baseUrl);
     }
 
     // 내 청첩장 목록
     @Transactional(readOnly = true)
     public List<InvitationSummaryResponse> getMyInvitations(CustomUserDetails userDetails) {
-        return invitationRepository.findAllByUserIdOrderByCreatedAtDesc(userDetails.getUserId()).stream().map(InvitationSummaryResponse::from).collect(Collectors.toList());
+        return invitationRepository.findAllByUserIdAndTemplateMasterFalseOrderByCreatedAtDesc(userDetails.getUserId()).stream().map(InvitationSummaryResponse::from).collect(Collectors.toList());
     }
 
     // 청첩장 단건 조회 (작성자용)

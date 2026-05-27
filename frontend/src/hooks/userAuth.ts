@@ -28,6 +28,7 @@ export function useAuth() {
         userId: tokenResponse.userId,
         name: tokenResponse.name,
         email: tokenResponse.email,
+        role: tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN",
       });
 
       router.push("/templates");
@@ -55,6 +56,7 @@ export function useAuth() {
         userId: tokenResponse.userId,
         name: tokenResponse.name,
         email: tokenResponse.email,
+        role: tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN",
       });
 
       router.push("/templates");

@@ -12,8 +12,9 @@ public class TokenResponse {
     private Long userId;
     private String name;
     private String email;
+    private String role;
 
-    public static TokenResponse of(String accessToken, String refreshToken, Long userId, String name, String email) {
+    public static TokenResponse of(String accessToken, String refreshToken, Long userId, String name, String email, String role) {
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -21,6 +22,7 @@ public class TokenResponse {
                 .userId(userId)
                 .name(name)
                 .email(email)
+                .role(role)
                 .build();
     }
 }

@@ -197,6 +197,10 @@ public class Invitation {
     @Column(name = "section_order", length = 1000)
     private List<String> sectionOrder = new ArrayList<>();
 
+    // 관리자 템플릿
+    @Column(name = "is_template_master", nullable = false)
+    private boolean templateMaster = false;
+
     @Builder
     public Invitation(User user, Template template, String slug, InvitationStatus status, String title) {
         this.user = user;
@@ -286,6 +290,33 @@ public class Invitation {
 
     public void makeDraft() {
         this.status = InvitationStatus.DRAFT;
+    }
+
+    public void markAsTemplateMaster() {
+        this.templateMaster = true;
+    }
+
+    // 관리자 템플릿 추가
+    public void applyMasterTemplate(Invitation master) {
+        this.theme = master.theme;
+        this.fontFamily = master.fontFamily;
+        this.galleryLayout = master.galleryLayout;
+        this.animationType = master.animationType;
+        this.sectionOrder = master.sectionOrder;
+        this.galleryEnabled = master.galleryEnabled;
+        this.rsvpEnabled = master.rsvpEnabled;
+        this.guestbookEnabled = master.guestbookEnabled;
+        this.accountEnabled = master.accountEnabled;
+        this.parentsEnabled = master.parentsEnabled;
+        this.ddayEnabled = master.ddayEnabled;
+        this.interviewEnabled = master.interviewEnabled;
+        this.guestPhotoEnabled = master.guestPhotoEnabled;
+        this.mainImageUrl = master.mainImageUrl;
+        this.mainOverlayText = master.mainOverlayText;
+        this.greetingText = master.greetingText;
+        this.groomIntroduction = master.groomIntroduction;
+        this.brideIntroduction = master.brideIntroduction;
+        this.bgm = master.bgm;
     }
 
     public boolean isOwnedBy(Long userId) {

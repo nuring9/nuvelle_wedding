@@ -47,7 +47,7 @@ public class AuthService {
 
         refreshTokenService.save(user.getId(), refreshToke, jwtTokenProvider.getRefreshTokenExpiration());
 
-        return TokenResponse.of(accessToken, refreshToke, user.getId(), user.getName(), user.getEmail());
+        return TokenResponse.of(accessToken, refreshToke, user.getId(), user.getName(), user.getEmail(), user.getRole().name());
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +67,7 @@ public class AuthService {
                 jwtTokenProvider.getRefreshTokenExpiration());
 
         return TokenResponse.of(accessToken, refreshToken,
-                user.getId(), user.getName(), user.getEmail());
+                user.getId(), user.getName(), user.getEmail(), user.getRole().name());
     }
 
     @Transactional
@@ -96,7 +96,7 @@ public class AuthService {
                 jwtTokenProvider.getRefreshTokenExpiration());
 
         return TokenResponse.of(newAccessToken, newRefreshToken,
-                user.getId(), user.getName(), user.getEmail());
+                user.getId(), user.getName(), user.getEmail(), user.getRole().name());
     }
 
     public void logout(CustomUserDetails userDetails) {

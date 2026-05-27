@@ -31,6 +31,7 @@ export default function AuthProvider({
           userId: tokenResponse.userId,
           name: tokenResponse.name,
           email: tokenResponse.email,
+          role: tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN",
         });
       } catch {
         // refreshToken 만료 시 로그아웃 처리

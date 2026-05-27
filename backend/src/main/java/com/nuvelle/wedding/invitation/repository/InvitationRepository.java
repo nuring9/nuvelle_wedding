@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
-    // 내 청첩장 목록 (최신순)
-    List<Invitation> findAllByUserIdOrderByCreatedAtDesc(Long userId);
+    // 내 청첩장 목록 (마스터 제외, 최신순)
+    List<Invitation> findAllByUserIdAndTemplateMasterFalseOrderByCreatedAtDesc(Long userId);
 
     // slug로 공개 청첩장 조회
     Optional<Invitation> findBySlugAndStatus(String slug, InvitationStatus status);
@@ -27,4 +27,8 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     // 공개 청첩장 slug 조회 (갤러리 fetch join)
     @Query("SELECT i FROM Invitation i LEFT JOIN FETCH i.galleries WHERE i.slug = :slug AND i.status = 'PUBLISHED'")
     Optional<Invitation> findPublishedBySlugWithGalleries(@Param("slug") String slug);
+
+    // 관리자: 발행된 청첩장 목록 (마스터 제외, user/template fetch join)
+    @Query("SELECT i FROM Invitation i JOIN FETCH i.user JOIN FETCH i.template WHERE i.status = 'PUBLISHED' AND i.templateMaster = false ORDER BY i.publishedAt DESC")
+    List<Invitation> findAllPublishedForAdmin();
 }

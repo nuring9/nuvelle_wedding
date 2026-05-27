@@ -1,6 +1,7 @@
 package com.nuvelle.wedding.template.entity;
 
 import jakarta.persistence.*;
+import com.nuvelle.wedding.invitation.entity.Invitation;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 
 import java.time.LocalDateTime;
 
@@ -47,6 +49,10 @@ public class Template {
     @Column(name = "sort_order", nullable = false)
     private int sortOrder;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "master_invitation_id")
+    private Invitation masterInvitation;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -65,5 +71,21 @@ public class Template {
         this.layoutKey = layoutKey;
         this.isActive = isActive;
         this.sortOrder = sortOrder;
+    }
+
+    public void update(String name, String slug, String thumbnailUrl, String previewImageUrl,
+                       String themeKey, String layoutKey, boolean isActive, int sortOrder) {
+        this.name = name;
+        this.slug = slug;
+        this.thumbnailUrl = thumbnailUrl;
+        this.previewImageUrl = previewImageUrl;
+        this.themeKey = themeKey;
+        this.layoutKey = layoutKey;
+        this.isActive = isActive;
+        this.sortOrder = sortOrder;
+    }
+
+    public void updateMasterInvitation(Invitation masterInvitation) {
+        this.masterInvitation = masterInvitation;
     }
 }

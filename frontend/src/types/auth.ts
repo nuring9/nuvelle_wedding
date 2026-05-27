@@ -24,6 +24,7 @@ export interface TokenResponse {
   userId: number;
   name: string;
   email: string;
+  role: string;
 }
 
 // 프론트에서 관리할 사용자 정보
@@ -32,6 +33,7 @@ export interface AuthUser {
   userId: number;
   name: string;
   email: string;
+  role: "ROLE_USER" | "ROLE_ADMIN";
 }
 
 // 백엔드 공통 응답 타입

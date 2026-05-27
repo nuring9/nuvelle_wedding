@@ -43,6 +43,8 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                        // 관리자는 다 허용
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // 인증 없이 허용
                         .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/reissue").permitAll()
                         // 공개 청첩장 조회

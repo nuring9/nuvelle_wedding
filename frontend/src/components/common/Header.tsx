@@ -30,7 +30,7 @@ export default function Header({ transparent = false }: HeaderProps) {
         {/* 네비게이션 */}
         <nav className="flex items-center gap-2">
           <Link
-            href="templates"
+            href="/templates"
             className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
           >
             청첩장 템플릿
@@ -38,6 +38,14 @@ export default function Header({ transparent = false }: HeaderProps) {
 
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
+              {user?.role === "ROLE_ADMIN" && (
+                <Link
+                  href="/admin"
+                  className="text-sm text-primary-600 hover:text-primary-800 px-3 py-1.5 rounded-lg hover:bg-primary-50 transition-colors"
+                >
+                  관리자
+                </Link>
+              )}
               <Link
                 href="/invitations"
                 className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
