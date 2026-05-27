@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
+    long countByTemplateId(Long templateId);
+
     // 내 청첩장 목록 (마스터 제외, 최신순)
     List<Invitation> findAllByUserIdAndTemplateMasterFalseOrderByCreatedAtDesc(Long userId);
 
@@ -31,4 +33,5 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     // 관리자: 발행된 청첩장 목록 (마스터 제외, user/template fetch join)
     @Query("SELECT i FROM Invitation i JOIN FETCH i.user JOIN FETCH i.template WHERE i.status = 'PUBLISHED' AND i.templateMaster = false ORDER BY i.publishedAt DESC")
     List<Invitation> findAllPublishedForAdmin();
+
 }

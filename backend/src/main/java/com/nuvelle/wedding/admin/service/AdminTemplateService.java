@@ -85,8 +85,16 @@ public class AdminTemplateService {
     public void deleteTemplate(Long templateId) {
         Template template = templateRepository.findById(templateId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEMPLATE_NOT_FOUND));
+
+        long invitationCount = invitationRepository.countByTemplateId(templateId);
+
+        if (invitationCount > 0) {
+            throw new IllegalStateException("이 템플릿을 사용 중인 청첩장이 있어 삭제할 수 없습니다.");
+        }
+
         templateRepository.delete(template);
     }
+
 
     // 마스터 청첩장 생성 또는 기존 반환
     @Transactional

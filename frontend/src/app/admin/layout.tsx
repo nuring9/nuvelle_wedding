@@ -3,7 +3,7 @@
 import { useAuthStore } from "@/stores/authStore";
 import { useAuth } from "@/hooks/userAuth";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function AdminLayout({
@@ -14,6 +14,7 @@ export default function AdminLayout({
   const { user, hasHydrated, isAuthenticated } = useAuthStore();
   const { handleLogout, isLoading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -27,38 +28,62 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/admin/templates" className="font-semibold text-gray-800">
-            Nuvelle 관리자
-          </Link>
-
-          <nav className="flex gap-4 text-sm text-gray-600">
-            <Link href="/admin/templates" className="hover:text-gray-900">
-              템플릿 관리
+    <div className="min-h-screen bg-neutral-50">
+      <div className="sticky top-0 z-40 border-b border-primary-100 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-8">
+            <Link href="/admin/templates" className="leading-none">
+              <span className="font-display text-xl font-semibold tracking-widest text-gray-800">
+                Nuvelle
+              </span>
             </Link>
-            <Link href="/admin/invitations" className="hover:text-gray-900">
-              발행 청첩장
-            </Link>
-          </nav>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-400 hidden sm:block">
-            {user?.name}님
-          </span>
+            <nav className="flex items-center gap-1 text-sm">
+              <Link
+                href="/admin/templates"
+                className={`rounded-lg px-3 py-2 transition-colors ${
+                  pathname.startsWith("/admin/templates")
+                    ? "bg-primary-50 text-neutral-900"
+                    : "text-neutral-500 hover:bg-primary-50 hover:text-neutral-900"
+                }`}
+              >
+                템플릿 관리
+              </Link>
+              <Link
+                href="/admin/invitations"
+                className={`rounded-lg px-3 py-2 transition-colors ${
+                  pathname.startsWith("/admin/invitations")
+                    ? "bg-primary-50 text-neutral-900"
+                    : "text-neutral-500 hover:bg-primary-50 hover:text-neutral-900"
+                }`}
+              >
+                발행 청첩장
+              </Link>
+            </nav>
+          </div>
 
-          <button
-            onClick={handleLogout}
-            disabled={isLoading}
-            className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-          >
-            로그아웃
-          </button>
+          <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-2 text-sm sm:flex">
+              <span className="text-neutral-400">관리자 계정</span>
+              <span className="font-medium text-neutral-800">
+                {user.name}님
+              </span>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              disabled={isLoading}
+              className="rounded-lg border border-primary-100 bg-white px-4 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-primary-50 hover:text-neutral-900 disabled:opacity-50"
+            >
+              로그아웃
+            </button>
+          </div>
         </div>
       </div>
-      <div className="p-6">{children}</div>
+
+      <main className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6">
+        {children}
+      </main>
     </div>
   );
 }
