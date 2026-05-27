@@ -27,23 +27,22 @@ jwt:
   refresh-token-expiration: 604800000 # Refresh Token 만료 시간, 7일
 
 
-#cloud:
-#  aws:
-#    s3:
-#      bucket: ${AWS_S3_BUCKET}      # S3 버킷 이름 nuvelle-wedding
-#    region:
-#      static: ap-northeast-2        # AWS 서울 리전
-#    credentials:
-#      access-key: ${AWS_ACCESS_KEY} # AWS Access Key
-#      secret-key: ${AWS_SECRET_KEY} # AWS Secret Key
-
-
 cloud:
   aws:
     s3:
-      bucket: dummy-bucket
+      bucket: ${AWS_S3_BUCKET}      # S3 버킷 이름 nuvelle-wedding-prod-assets
     region:
-      static: ap-northeast-2
+      static: ap-northeast-2        # AWS 서울 리전
     credentials:
-      access-key: dummy-key
-      secret-key: dummy-secret
+      access-key: ${AWS_ACCESS_KEY_ID} # AWS Access Key
+      secret-key: ${AWS_SECRET_ACCESS_KEY} # AWS Secret Key
+
+#cloud:
+#  aws:
+#    s3:
+#      bucket: dummy-bucket
+#    region:
+#      static: ap-northeast-2
+#    credentials:
+#      access-key: dummy-key
+#      secret-key: dummy-secret

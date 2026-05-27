@@ -73,19 +73,7 @@ export default function InvitationPublishPanel({
         ? `${invitation.groomName} ♥ ${invitation.brideName} 결혼합니다`
         : "청첩장을 전해드립니다";
 
-    //  직접 만들어 넣음. 지금 s3를 사용하지 않아서..
-    const publicOrigin = new URL(invitation.publicUrl).origin;
-
-    // shareImageUrl를 직접 하드코닝해서 이미지 url을 만들어 줌, 지금 s3를 사용하지 않아서..
-    const shareImageUrl =
-      invitation.mainImageUrl ||
-      // `${window.location.origin}/images/tiffany_couple_1.jpeg`;
-      `${publicOrigin}/images/tiffany_couple_1.jpeg`;
-
-    console.log("Kakao share payload", {
-      publicUrl: invitation.publicUrl,
-      imageUrl: shareImageUrl,
-    });
+    const shareImageUrl = invitation.mainImageUrl ?? "";
 
     window.Kakao.Share.sendDefault({
       objectType: "feed",
@@ -93,7 +81,6 @@ export default function InvitationPublishPanel({
         title,
         description: "청첩장 보러가기",
         imageUrl: shareImageUrl,
-        // imageUrl: invitation.mainImageUrl ?? "",
         link: {
           mobileWebUrl: invitation.publicUrl,
           webUrl: invitation.publicUrl,

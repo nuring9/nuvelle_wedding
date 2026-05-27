@@ -11,10 +11,6 @@ const nextConfig: NextConfig = {
         hostname: "**.amazonaws.com",
       },
       {
-        protocol: "https",
-        hostname: "dummy-s3.example.com",
-      },
-      {
         protocol: "http",
         hostname: "localhost",
       },

@@ -59,6 +59,16 @@ export default function AdminLayout({
               >
                 발행 청첩장
               </Link>
+              <Link
+                href="/admin/bgms"
+                className={`rounded-lg px-3 py-2 transition-colors ${
+                  pathname.startsWith("/admin/bgms")
+                    ? "bg-primary-50 text-neutral-900"
+                    : "text-neutral-500 hover:bg-primary-50 hover:text-neutral-900"
+                }`}
+              >
+                BGM 관리
+              </Link>
             </nav>
           </div>
 

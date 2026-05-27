@@ -85,12 +85,3 @@ INSERT IGNORE INTO templates (
  'dark', 'standard',
  true, 6, NOW(), NOW());
 
-
--- BGM 초기 데이터
-INSERT IGNORE INTO bgms (id, title, file_url, mood, is_active, sort_order, created_at)
-VALUES
-(1, '봄날의 왈츠', 'https://dummy-s3.example.com/bgm/spring-waltz.mp3', '잔잔한', true, 1, NOW()),
-(2, '설레는 오후', 'https://dummy-s3.example.com/bgm/lovely-afternoon.mp3', '밝은', true, 2, NOW()),
-(3, '달빛 소나타', 'https://dummy-s3.example.com/bgm/moonlight-sonata.mp3', '감성적인', true, 3, NOW()),
-(4, '사랑의 왈츠', 'https://dummy-s3.example.com/bgm/love-waltz.mp3', '로맨틱한', true, 4, NOW()),
-(5, '하늘빛 선율', 'https://dummy-s3.example.com/bgm/sky-melody.mp3', '청아한', true, 5, NOW());

@@ -24,6 +24,24 @@ export interface AdminTemplateRequest {
   sortOrder?: number;
 }
 
+export interface AdminBgm {
+  id: number;
+  title: string;
+  fileUrl: string;
+  mood: string | null;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface AdminBgmRequest {
+  title: string;
+  fileUrl: string;
+  mood?: string;
+  isActive?: boolean;
+  sortOrder?: number;
+}
+
 export interface AdminInvitationSummary {
   invitationId: number;
   title: string | null;

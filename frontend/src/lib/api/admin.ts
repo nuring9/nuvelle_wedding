@@ -1,4 +1,6 @@
 import {
+  AdminBgm,
+  AdminBgmRequest,
   AdminInvitationSummary,
   AdminTemplate,
   AdminTemplateRequest,
@@ -100,6 +102,38 @@ export async function getOrCreateMasterInvitation(
     throw new Error(res.data.message || "마스터 청첩장을 불러오지 못했습니다.");
   }
   return res.data.data;
+}
+
+// BGM 전체 목록 (비활성 포함)
+export async function getAdminBgms(accessToken: string): Promise<AdminBgm[]> {
+  const api = getAdminApi(accessToken);
+  const res = await api.get<ApiResponse<AdminBgm[]>>("/bgms");
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "BGM 목록을 불러오지 못했습니다.");
+  }
+  return res.data.data;
+}
+
+// BGM 등록
+export async function createAdminBgm(
+  data: AdminBgmRequest,
+  accessToken: string,
+): Promise<AdminBgm> {
+  const api = getAdminApi(accessToken);
+  const res = await api.post<ApiResponse<AdminBgm>>("/bgms", data);
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "BGM 등록에 실패했습니다.");
+  }
+  return res.data.data;
+}
+
+// BGM 삭제
+export async function deleteAdminBgm(
+  bgmId: number,
+  accessToken: string,
+): Promise<void> {
+  const api = getAdminApi(accessToken);
+  await api.delete(`/bgms/${bgmId}`);
 }
 
 // 발행된 청첩장 목록
