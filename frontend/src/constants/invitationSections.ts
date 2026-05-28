@@ -2,7 +2,6 @@
 export type InvitationSectionId =
   | "hero"
   | "couple"
-  | "profile"
   | "greeting"
   | "weddingInfo"
   | "dday"
@@ -37,7 +36,6 @@ export interface InvitationSectionConfig {
 export const INVITATION_SECTIONS: InvitationSectionConfig[] = [
   { id: "hero", label: "메인 사진", fixed: true },
   { id: "couple", label: "신랑·신부" },
-  { id: "profile", label: "소개" },
   { id: "greeting", label: "인사말" },
   { id: "weddingInfo", label: "예식 정보" },
   { id: "dday", label: "D-day", enabledKey: "ddayEnabled" },

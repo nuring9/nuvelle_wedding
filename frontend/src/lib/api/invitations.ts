@@ -41,6 +41,9 @@ export interface UpdateInvitationRequest {
   mainImagePosition?: string;
   groomName?: string;
   brideName?: string;
+  groomPhone?: string;
+  bridePhone?: string;
+  contactEnabled?: boolean;
   groomFatherName?: string;
   groomMotherName?: string;
   brideFatherName?: string;
@@ -69,8 +72,6 @@ export interface UpdateInvitationRequest {
   galleryLayout?: string;
   animationType?: string;
   bgmId?: number | null;
-  groomIntroduction?: string;
-  brideIntroduction?: string;
   remittanceLink?: string;
   interviewEnabled?: boolean;
   guestPhotoEnabled?: boolean;
@@ -89,6 +90,9 @@ export interface InvitationResponse {
   mainImagePosition: string | null;
   groomName: string | null;
   brideName: string | null;
+  groomPhone: string | null;
+  bridePhone: string | null;
+  contactEnabled: boolean;
   groomFatherName: string | null;
   groomMotherName: string | null;
   brideFatherName: string | null;
@@ -119,8 +123,6 @@ export interface InvitationResponse {
   bgmId: number | null;
   bgmUrl: string | null;
   bgmTitle: string | null;
-  groomIntroduction: string | null;
-  brideIntroduction: string | null;
   remittanceLink: string | null;
   interviewEnabled: boolean;
   guestPhotoEnabled: boolean;

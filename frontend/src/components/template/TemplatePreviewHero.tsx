@@ -1,5 +1,11 @@
+"use client";
+
 import { Template } from "@/types/template";
 import Image from "next/image";
+import { useState } from "react";
+import InvitationAnimationOverlay from "@/components/invitation-view/InvitationAnimationOverlay";
+import InvitationBgmPlayer from "@/components/invitation-view/InvitationBgmPlayer";
+import InvitationSectionRenderer from "@/components/invitation-view/InvitationSectionRenderer";
 
 interface TemplatePreviewHeroProps {
   template: Template;
@@ -8,14 +14,49 @@ interface TemplatePreviewHeroProps {
 export default function TemplatePreviewHero({
   template,
 }: TemplatePreviewHeroProps) {
+  const [imageError, setImageError] = useState(false);
+  const fallbackImageUrl = template.previewImageUrl || template.thumbnailUrl;
+  const showImage = Boolean(fallbackImageUrl) && !imageError;
+  const masterInvitation = template.masterInvitation;
+  const entranceAnimation =
+    masterInvitation &&
+    ["fade", "slide", "zoom"].includes(masterInvitation.animationType ?? "")
+      ? masterInvitation.animationType
+      : null;
+
   return (
     <div className="relative w-full max-w-[430px] mx-auto">
       <div className="relative aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden shadow-xl">
-        {template.previewImageUrl ? (
+        {masterInvitation ? (
+          <div
+            className="template-master-preview h-full w-full invitation-themed"
+            data-invitation-theme={masterInvitation.theme || "classic"}
+            data-invitation-font={masterInvitation.fontFamily || "noto-sans"}
+            {...(entranceAnimation ? { "data-anim": entranceAnimation } : {})}
+          >
+            <InvitationAnimationOverlay
+              animationType={masterInvitation.animationType}
+              contained
+            />
+
+            {masterInvitation.bgmUrl && (
+              <InvitationBgmPlayer
+                bgmUrl={masterInvitation.bgmUrl}
+                className="absolute bottom-4 right-4 z-40"
+              />
+            )}
+
+            <InvitationSectionRenderer
+              invitation={masterInvitation}
+              readOnlyInteractions
+            />
+          </div>
+        ) : showImage ? (
           <Image
-            src={template.previewImageUrl}
+            src={fallbackImageUrl as string}
             alt={`${template.name} 미리보기`}
             fill
+            onError={() => setImageError(true)}
             className="object-cover"
             priority
           />

@@ -36,7 +36,6 @@ import InvitationGuestPhotoSection from "./InvitationGuestPhotoSection";
 import InvitationHeroSection from "./InvitationHeroSection";
 import InvitationInterviewSection from "./InvitationInterviewSection";
 import InvitationMapKakaoSection from "./InvitationMapKakaoSection";
-import InvitationProfileSection from "./InvitationProfileSection";
 import InvitationQrSection from "./InvitationQrSection";
 import InvitationRsvpSection from "./InvitationRsvpSection";
 import InvitationWeddingInfoSection from "./InvitationWeddingInfoSection";
@@ -44,6 +43,7 @@ import InvitationWeddingInfoSection from "./InvitationWeddingInfoSection";
 interface InvitationSectionRendererProps {
   invitation: PublicInvitation;
   editable?: boolean;
+  readOnlyInteractions?: boolean;
   disableSectionDrag?: boolean;
   mainImagePositionEditable?: boolean;
   onMainImagePositionChange?: (position: string) => void;
@@ -55,9 +55,7 @@ interface InvitationSectionRendererProps {
 const shouldShowSection: Partial<
   Record<InvitationSectionId, (inv: PublicInvitation) => boolean>
 > = {
-  couple: (inv) => !!inv.parentsEnabled,
   greeting: (inv) => !!inv.greetingText,
-  profile: (inv) => !!(inv.groomIntroduction || inv.brideIntroduction),
   weddingInfo: (inv) => !!(inv.weddingDate || inv.venueName),
   map: (inv) => !!(inv.mapLat && inv.mapLng),
 };
@@ -65,6 +63,7 @@ const shouldShowSection: Partial<
 interface SortablePreviewSectionProps {
   sectionId: InvitationSectionId;
   invitation: PublicInvitation;
+  readOnlyInteractions?: boolean;
   disabled?: boolean;
   mainImagePositionEditable?: boolean;
   onMainImagePositionChange?: (position: string) => void;
@@ -73,7 +72,6 @@ interface SortablePreviewSectionProps {
 const sectionMap = {
   hero: InvitationHeroSection,
   couple: InvitationCoupleSection,
-  profile: InvitationProfileSection,
   greeting: InvitationGreetingSection,
   weddingInfo: InvitationWeddingInfoSection,
   dday: InvitationDdaySection,
@@ -90,6 +88,7 @@ const sectionMap = {
 function SortablePreviewSection({
   sectionId,
   invitation,
+  readOnlyInteractions = false,
   disabled = false,
   mainImagePositionEditable = false,
   onMainImagePositionChange,
@@ -113,12 +112,16 @@ function SortablePreviewSection({
 
   const dragHandleProps = disabled ? {} : { ...attributes, ...listeners };
   const isHeroPositionTarget = sectionId === "hero" && mainImagePositionEditable;
+  const isGuestPhotoReadOnly =
+    sectionId === "guestPhoto" && readOnlyInteractions;
   const renderedSection = isHeroPositionTarget ? (
     <InvitationHeroSection
       invitation={invitation}
       editableMainImagePosition
       onMainImagePositionChange={onMainImagePositionChange}
     />
+  ) : isGuestPhotoReadOnly ? (
+    <InvitationGuestPhotoSection invitation={invitation} readOnly />
   ) : (
     (() => {
       const SectionComponent = sectionMap[sectionId];
@@ -153,6 +156,7 @@ function SortablePreviewSection({
 export default function InvitationSectionRenderer({
   invitation,
   editable = false,
+  readOnlyInteractions = false,
   disableSectionDrag = false,
   mainImagePositionEditable = false,
   onMainImagePositionChange,
@@ -199,6 +203,16 @@ export default function InvitationSectionRenderer({
         {visibleOrder.map((sectionId) => {
           const SectionComponent = sectionMap[sectionId];
 
+          if (sectionId === "guestPhoto" && readOnlyInteractions) {
+            return (
+              <InvitationGuestPhotoSection
+                key={sectionId}
+                invitation={invitation}
+                readOnly
+              />
+            );
+          }
+
           return <SectionComponent key={sectionId} invitation={invitation} />;
         })}
       </>
@@ -220,6 +234,7 @@ export default function InvitationSectionRenderer({
             key={sectionId}
             sectionId={sectionId}
             invitation={invitation}
+            readOnlyInteractions={readOnlyInteractions}
             disabled={disableSectionDrag}
             mainImagePositionEditable={mainImagePositionEditable}
             onMainImagePositionChange={onMainImagePositionChange}

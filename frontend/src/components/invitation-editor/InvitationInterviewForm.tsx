@@ -9,6 +9,7 @@ import type { WeddingInterviewRequest } from "@/types/interview";
 
 interface InvitationInterviewFormProps {
   invitationId: number;
+  onSaved?: () => void;
 }
 
 interface InterviewFormItem {
@@ -74,6 +75,7 @@ function itemsToRequest(items: InterviewFormItem[]): WeddingInterviewRequest {
 
 export default function InvitationInterviewForm({
   invitationId,
+  onSaved,
 }: InvitationInterviewFormProps) {
   const { accessToken } = useAuthStore();
   const [items, setItems] = useState<InterviewFormItem[]>(
@@ -141,6 +143,7 @@ export default function InvitationInterviewForm({
       await saveInterview(invitationId, itemsToRequest(items), accessToken);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
+      onSaved?.();
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
     } finally {

@@ -13,6 +13,8 @@ const ANIMATION_OPTIONS = [
   { key: "slide", label: "슬라이드 업" },
   { key: "zoom", label: "줌 인" },
   { key: "sparkle", label: "반짝이" },
+  { key: "snow", label: "눈송이" },
+  { key: "gold-sparkle", label: "금빛 반짝이" },
   { key: "leaves", label: "나뭇잎 흩날림" },
   { key: "cherry-blossom", label: "벚꽃 흩날림" },
 ];

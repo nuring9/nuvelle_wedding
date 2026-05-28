@@ -16,6 +16,9 @@ public class InvitationUpdateRequest {
     // 신랑·신부
     private String groomName;
     private String brideName;
+    private String groomPhone;
+    private String bridePhone;
+    private Boolean contactEnabled;
 
     // 부모님
     private String groomFatherName;

@@ -85,7 +85,7 @@ export default function InvitationHeroSection({
     <section className="relative w-full">
       {/* 메인 사진 */}
       <div
-        className={`relative w-full aspect-[3/4] bg-gray-100 ${
+        className={`main-image-animation-target relative w-full aspect-[3/4] bg-gray-100 ${
           editableMainImagePosition ? "cursor-grab active:cursor-grabbing" : ""
         }`}
         style={{ touchAction: editableMainImagePosition ? "none" : undefined }}

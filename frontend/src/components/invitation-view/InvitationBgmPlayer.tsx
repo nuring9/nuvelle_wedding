@@ -6,10 +6,12 @@ import { useEffect, useRef, useState } from "react";
 interface InvitationBgmPlayerProps {
   // 재생할 BGM 파일 URL
   bgmUrl: string;
+  className?: string;
 }
 
 export default function InvitationBgmPlayer({
   bgmUrl,
+  className = "fixed bottom-6 right-4 z-40",
 }: InvitationBgmPlayerProps) {
   // audio 태그 DOM에 접근하기 위한 ref
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -49,7 +51,7 @@ export default function InvitationBgmPlayer({
   };
 
   return (
-    <div className="fixed bottom-6 right-4 z-40">
+    <div className={className}>
       <audio ref={audioRef} src={bgmUrl} loop />
 
       <button

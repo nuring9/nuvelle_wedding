@@ -28,7 +28,7 @@ public class TemplateService {
  @Transactional(readOnly = true)
     public TemplateResponse getTemplate(Long templateId) {
      // ID가 일치하고 활성화된 템플릿을 조회.
-     return templateRepository.findByIdAndIsActiveTrue(templateId)
+     return templateRepository.findByIdAndIsActiveTrueWithMasterInvitation(templateId)
              .map(TemplateResponse::from)
              .orElseThrow(() -> new CustomException(ErrorCode.TEMPLATE_NOT_FOUND));
  }

@@ -1,7 +1,11 @@
 package com.nuvelle.wedding.template.repository;
 
 import com.nuvelle.wedding.template.entity.Template;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +18,16 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
     // id가 일치하고 활성화 상태인 템플릿을 단건 조회
     Optional<Template> findByIdAndIsActiveTrue(Long id);
 
+    @Query("SELECT t FROM Template t LEFT JOIN FETCH t.masterInvitation WHERE t.id = :id AND t.isActive = true")
+    Optional<Template> findByIdAndIsActiveTrueWithMasterInvitation(@Param("id") Long id);
+
     // slug 값으로 템플릿을 단건 조회
     Optional<Template> findBySlug(String slug);
 
     // 관리자: 비활성 포함 전체 조회
     List<Template> findAllByOrderBySortOrderAsc();
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT t FROM Template t WHERE t.id = :id")
+    Optional<Template> findByIdForUpdate(@Param("id") Long id);
 }

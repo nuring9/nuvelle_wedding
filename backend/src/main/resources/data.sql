@@ -45,43 +45,43 @@ INSERT IGNORE INTO templates (
 
 -- 1번 템플릿 데이터
 (1, '클래식 화이트', 'classic-white',
- '/images/templates/classic-white-thumb.jpg',
- '/images/templates/classic-white-preview.jpg',
+ NULL,
+ NULL,
  'classic', 'standard',
  true, 1, NOW(), NOW()),
 
 -- 2번 템플릿 데이터
 (2, '모던 미니멀', 'modern-minimal',
- '/images/templates/modern-minimal-thumb.jpg',
- '/images/templates/modern-minimal-preview.jpg',
+ NULL,
+ NULL,
  'minimal', 'standard',
  true, 2, NOW(), NOW()),
 
 -- 3번 템플릿 데이터
 (3, '로맨틱 플로럴', 'romantic-floral',
- '/images/templates/romantic-floral-thumb.jpg',
- '/images/templates/romantic-floral-preview.jpg',
+ NULL,
+ NULL,
  'floral', 'standard',
  true, 3, NOW(), NOW()),
 
 -- 4번 템플릿 데이터
 (4, '내추럴 가든', 'natural-garden',
- '/images/templates/natural-garden-thumb.jpg',
- '/images/templates/natural-garden-preview.jpg',
+ NULL,
+ NULL,
  'nature', 'standard',
  true, 4, NOW(), NOW()),
 
 -- 5번 템플릿 데이터
 (5, '엘레강스 골드', 'elegance-gold',
- '/images/templates/elegance-gold-thumb.jpg',
- '/images/templates/elegance-gold-preview.jpg',
+ NULL,
+ NULL,
  'gold', 'standard',
  true, 5, NOW(), NOW()),
 
 -- 6번 템플릿 데이터
 (6, '심플 블랙', 'simple-black',
- '/images/templates/simple-black-thumb.jpg',
- '/images/templates/simple-black-preview.jpg',
+ NULL,
+ NULL,
  'dark', 'standard',
  true, 6, NOW(), NOW());
 

@@ -17,16 +17,16 @@ export default function GuestbookList({ guestbooks }: GuestbookListProps) {
   return (
     <div className="flex flex-col divide-y divide-gray-100">
       {guestbooks.map((item) => (
-        <div key={item.id} className="py-4 first:pt-0">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-medium text-gray-600">
+        <div key={item.id} className="py-3.5 first:pt-0">
+          <div className="flex items-baseline justify-between gap-2 mb-1">
+            <span className="text-[11px] font-semibold text-gray-700 shrink-0">
               {item.guestName}
             </span>
-            <span className="text-[10px] text-gray-300">
+            <span className="text-[10px] text-gray-300 shrink-0">
               {dayjs(item.createdAt).format("MM.DD")}
             </span>
           </div>
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <p className="text-xs text-gray-500 leading-relaxed">
             {item.message}
           </p>
         </div>

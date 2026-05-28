@@ -95,6 +95,9 @@ export default async function InvitePage({ params }: InvitePageProps) {
           className="invitation-container invitation-themed"
           data-invitation-theme={theme}
           data-invitation-font={font}
+          {...(["fade", "slide", "zoom"].includes(invitation.animationType ?? "")
+            ? { "data-anim": invitation.animationType! }
+            : {})}
         >
           <InvitationAnimationOverlay
             animationType={invitation.animationType}

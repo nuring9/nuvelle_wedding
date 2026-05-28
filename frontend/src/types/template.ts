@@ -1,3 +1,5 @@
+import type { PublicInvitation } from "./invitation";
+
 export interface Template {
   id: number;
   name: string;
@@ -7,6 +9,7 @@ export interface Template {
   themeKey: string | null;
   layoutKey: string | null;
   sortOrder: number;
+  masterInvitation: PublicInvitation | null;
   createdAt: string;
 }
 

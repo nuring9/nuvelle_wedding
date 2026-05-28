@@ -63,6 +63,15 @@ public class Invitation {
     @Column(name = "bride_name", length = 50)
     private String brideName;
 
+    @Column(name = "groom_phone", length = 30)
+    private String groomPhone;
+
+    @Column(name = "bride_phone", length = 30)
+    private String bridePhone;
+
+    @Column(name = "contact_enabled", nullable = false)
+    private boolean contactEnabled = false;
+
     // 부모님 정보
     @Column(name = "groom_father_name", length = 50)
     private String groomFatherName;
@@ -195,7 +204,7 @@ public class Invitation {
     private List<InvitationGallery> galleries = new ArrayList<>();
 
     // 섹션 노출 순서를 JSON 문자열로 저장한다.
-    // 예: ["hero","couple","profile","greeting","weddingInfo"]
+    // 예: ["hero","couple","greeting","weddingInfo"]
     @Convert(converter = SectionOrderConverter.class)
     @Column(name = "section_order", length = 1000)
     private List<String> sectionOrder = new ArrayList<>();
@@ -214,6 +223,7 @@ public class Invitation {
     }
 
     public void update(String title, String mainImageUrl, String mainOverlayText, String mainImagePosition, String groomName, String brideName,
+                       String groomPhone, String bridePhone, boolean contactEnabled,
                        String groomFatherName,
                        String groomMotherName, String brideFatherName, String brideMotherName, String greetingText,
                        LocalDate weddingDate, LocalTime weddingTime, String venueName, String venueAddress,
@@ -234,6 +244,9 @@ public class Invitation {
         this.mainImagePosition = mainImagePosition;
         this.groomName = groomName;
         this.brideName = brideName;
+        this.groomPhone = groomPhone;
+        this.bridePhone = bridePhone;
+        this.contactEnabled = contactEnabled;
         this.groomFatherName = groomFatherName;
         this.groomMotherName = groomMotherName;
         this.brideFatherName = brideFatherName;
@@ -315,6 +328,9 @@ public class Invitation {
         this.ddayEnabled = master.ddayEnabled;
         this.interviewEnabled = master.interviewEnabled;
         this.guestPhotoEnabled = master.guestPhotoEnabled;
+        this.groomPhone = master.groomPhone;
+        this.bridePhone = master.bridePhone;
+        this.contactEnabled = master.contactEnabled;
         this.mainImageUrl = master.mainImageUrl;
         this.mainOverlayText = master.mainOverlayText;
         this.mainImagePosition = master.mainImagePosition;

@@ -25,6 +25,9 @@ export interface PublicInvitation {
   mainImagePosition: string | null;
   groomName: string | null;
   brideName: string | null;
+  groomPhone: string | null;
+  bridePhone: string | null;
+  contactEnabled: boolean;
   groomFatherName: string | null;
   groomMotherName: string | null;
   brideFatherName: string | null;
@@ -55,8 +58,6 @@ export interface PublicInvitation {
   bgmId: number | null;
   bgmUrl: string | null;
   bgmTitle: string | null;
-  groomIntroduction: string | null;
-  brideIntroduction: string | null;
   remittanceLink: string | null;
   interviewEnabled: boolean;
   guestPhotoEnabled: boolean;

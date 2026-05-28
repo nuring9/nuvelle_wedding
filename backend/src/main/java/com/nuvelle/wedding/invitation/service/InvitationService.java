@@ -121,6 +121,11 @@ public class InvitationService {
 
                 request.getGroomName(),
                 request.getBrideName(),
+                request.getGroomPhone(),
+                request.getBridePhone(),
+                request.getContactEnabled() != null
+                        ? request.getContactEnabled()
+                        : invitation.isContactEnabled(),
                 request.getGroomFatherName(),
                 request.getGroomMotherName(),
                 request.getBrideFatherName(),

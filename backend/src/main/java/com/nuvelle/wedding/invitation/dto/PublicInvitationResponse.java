@@ -26,6 +26,9 @@ public class PublicInvitationResponse {
     // 신랑·신부
     private String groomName;
     private String brideName;
+    private String groomPhone;
+    private String bridePhone;
+    private boolean contactEnabled;
 
     // 부모님
     private String groomFatherName;
@@ -102,6 +105,9 @@ public class PublicInvitationResponse {
                 .mainImagePosition(invitation.getMainImagePosition())
                 .groomName(invitation.getGroomName())
                 .brideName(invitation.getBrideName())
+                .groomPhone(invitation.getGroomPhone())
+                .bridePhone(invitation.getBridePhone())
+                .contactEnabled(invitation.isContactEnabled())
                 .groomFatherName(invitation.getGroomFatherName())
                 .groomMotherName(invitation.getGroomMotherName())
                 .brideFatherName(invitation.getBrideFatherName())

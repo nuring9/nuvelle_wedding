@@ -1,28 +1,35 @@
+"use client";
+
 import { Template } from "@/types/template";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface TemplateCardProps {
   template: Template;
 }
 
 export default function TemplateCard({ template }: TemplateCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const showImage = Boolean(template.thumbnailUrl) && !imageError;
+
   return (
     <div className="card-base overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-200">
       {/* 썸네일 */}
       <Link href={`/templates/${template.id}/preview`}>
         <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
-          {template.thumbnailUrl ? (
+          {showImage ? (
             <Image
-              src={template.thumbnailUrl}
+              src={template.thumbnailUrl as string}
               alt={template.name}
               fill
+              onError={() => setImageError(true)}
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
             // 썸네일 없을 때 플레이스홀더
-            <div className="">
+            <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-champagne via-blush to-white px-4 text-center">
               <span className="text-4xl mb-2">💍</span>
               <span className="text-xs text-gray-500 font-serif">
                 {template.name}

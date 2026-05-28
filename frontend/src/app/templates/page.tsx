@@ -1,5 +1,7 @@
 import { Suspense } from "react";
+import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
+import AdminTemplateRedirect from "@/components/template/AdminTemplateRedirect";
 import TemplateGrid from "@/components/template/TemplateGrid";
 import { getTemplates } from "@/lib/api/templates";
 import type { Template } from "@/types/template";
@@ -28,6 +30,7 @@ async function TemplateListContent() {
 export default function TemplatesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <AdminTemplateRedirect />
       <Header />
 
       <main className="pt-14">
@@ -65,6 +68,7 @@ export default function TemplatesPage() {
           </Suspense>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

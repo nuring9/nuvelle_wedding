@@ -99,7 +99,7 @@ public class AdminTemplateService {
     // 마스터 청첩장 생성 또는 기존 반환
     @Transactional
     public InvitationResponse getOrCreateMasterInvitation(Long templateId, CustomUserDetails userDetails) {
-        Template template = templateRepository.findById(templateId)
+        Template template = templateRepository.findByIdForUpdate(templateId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEMPLATE_NOT_FOUND));
 
         if (template.getMasterInvitation() != null) {

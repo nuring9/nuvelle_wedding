@@ -20,6 +20,11 @@ export default function InvitationSectionToggleForm({
       description: "신랑·신부 부모님 성함 표시",
     },
     {
+      key: "contactEnabled" as const,
+      label: "연락처",
+      description: "신랑·신부 전화 아이콘 표시",
+    },
+    {
       key: "galleryEnabled" as const,
       label: "갤러리",
       description: "사진 갤러리 섹션 표시",

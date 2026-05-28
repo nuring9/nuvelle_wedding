@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/stores/authStore";
+import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
 import HoneymoonPlanCard from "@/components/honeymoon/HoneymoonPlanCard";
 import { getMyPlans, deletePlan } from "@/lib/api/honeymoon";
@@ -127,6 +128,7 @@ export default function HoneymoonPage() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

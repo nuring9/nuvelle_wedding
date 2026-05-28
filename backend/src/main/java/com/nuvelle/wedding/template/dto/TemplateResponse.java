@@ -1,6 +1,7 @@
 package com.nuvelle.wedding.template.dto;
 
 import com.nuvelle.wedding.template.entity.Template;
+import com.nuvelle.wedding.invitation.dto.PublicInvitationResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,6 +19,7 @@ public class TemplateResponse {
     private String themeKey;
     private String layoutKey;
     private int sortOrder;
+    private PublicInvitationResponse masterInvitation;
     private LocalDateTime createdAt;
 
     public static TemplateResponse from(Template template) {
@@ -30,6 +32,9 @@ public class TemplateResponse {
                 .themeKey(template.getThemeKey())
                 .layoutKey(template.getLayoutKey())
                 .sortOrder(template.getSortOrder())
+                .masterInvitation(template.getMasterInvitation() != null
+                        ? PublicInvitationResponse.from(template.getMasterInvitation())
+                        : null)
                 .createdAt(template.getCreatedAt())
                 .build();
     }

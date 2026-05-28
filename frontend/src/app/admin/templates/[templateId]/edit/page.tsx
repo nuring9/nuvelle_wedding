@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import { getOrCreateMasterInvitation } from "@/lib/api/admin";
@@ -16,6 +16,7 @@ export default function AdminTemplateEditPage() {
   const [invitation, setInvitation] = useState<InvitationResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const requestedTemplateIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -34,11 +35,18 @@ export default function AdminTemplateEditPage() {
       return;
     }
 
+    if (requestedTemplateIdRef.current === templateId) {
+      return;
+    }
+
+    requestedTemplateIdRef.current = templateId;
+
     const fetch = async () => {
       try {
         const data = await getOrCreateMasterInvitation(templateId, accessToken);
         setInvitation(data);
       } catch (err: unknown) {
+        requestedTemplateIdRef.current = null;
         if (err instanceof Error) setError(err.message);
         else setError("마스터 청첩장을 불러오지 못했습니다.");
       } finally {
@@ -92,5 +100,10 @@ export default function AdminTemplateEditPage() {
     );
   }
 
-  return <InvitationEditorLayout invitation={invitation} />;
+  return (
+    <InvitationEditorLayout
+      invitation={invitation}
+      isTemplateMasterEditor
+    />
+  );
 }

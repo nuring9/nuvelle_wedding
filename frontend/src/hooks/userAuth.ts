@@ -15,6 +15,10 @@ export function useAuth() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const getDefaultRedirectPath = (role: "ROLE_USER" | "ROLE_ADMIN") => {
+    return role === "ROLE_ADMIN" ? "/admin/templates" : "/templates";
+  };
+
   // 회원가입
   const handleSignup = async (data: SignupRequest) => {
     setIsLoading(true);
@@ -31,7 +35,9 @@ export function useAuth() {
         role: tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN",
       });
 
-      router.push("/templates");
+      router.push(
+        getDefaultRedirectPath(tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN"),
+      );
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -59,7 +65,9 @@ export function useAuth() {
         role: tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN",
       });
 
-      router.push("/templates");
+      router.push(
+        getDefaultRedirectPath(tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN"),
+      );
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

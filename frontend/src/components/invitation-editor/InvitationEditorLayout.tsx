@@ -14,7 +14,6 @@ import InvitationAccountForm from "./InvitationAccountForm";
 import InvitationSectionToggleForm from "./InvitationSectionToggleForm";
 import InvitationPublishPanel from "./InvitationPublishPanel";
 import InvitationThemeForm from "./InvitationThemeForm";
-import InvitationProfileForm from "./InvitationProfileForm";
 import InvitationInterviewForm from "./InvitationInterviewForm";
 import InvitationAdvancedForm from "./InvitationAdvancedForm";
 import InvitationAnimationForm from "./InvitationAnimationForm";
@@ -31,6 +30,7 @@ import { THEME_OPTIONS } from "@/constants/invitation";
 
 interface InvitationEditorLayoutProps {
   invitation: InvitationResponse;
+  isTemplateMasterEditor?: boolean;
 }
 
 type TabKey =
@@ -42,7 +42,6 @@ type TabKey =
   | "gallery"
   | "account"
   | "theme"
-  | "profile"
   | "interview"
   | "advanced"
   | "animation"
@@ -53,7 +52,6 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "basic", label: "메인 사진" },
   { key: "couple", label: "신랑·신부" },
   { key: "parents", label: "부모님" },
-  { key: "profile", label: "소개" },
   { key: "greeting", label: "인사말" },
   { key: "wedding", label: "예식 정보" },
   { key: "gallery", label: "갤러리" },
@@ -74,6 +72,9 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     mainImagePosition: invitation.mainImagePosition ?? "50% 50%",
     groomName: invitation.groomName ?? "",
     brideName: invitation.brideName ?? "",
+    groomPhone: invitation.groomPhone ?? "",
+    bridePhone: invitation.bridePhone ?? "",
+    contactEnabled: invitation.contactEnabled ?? false,
     groomFatherName: invitation.groomFatherName ?? "",
     groomMotherName: invitation.groomMotherName ?? "",
     brideFatherName: invitation.brideFatherName ?? "",
@@ -102,8 +103,6 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     galleryLayout: invitation.galleryLayout ?? "",
     animationType: invitation.animationType ?? "",
     bgmId: invitation.bgmId ?? null,
-    groomIntroduction: invitation.groomIntroduction ?? "",
-    brideIntroduction: invitation.brideIntroduction ?? "",
     remittanceLink: invitation.remittanceLink ?? "",
     interviewEnabled: invitation.interviewEnabled ?? false,
     guestPhotoEnabled: invitation.guestPhotoEnabled ?? false,
@@ -113,6 +112,7 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
 
 export default function InvitationEditorLayout({
   invitation: initialInvitation,
+  isTemplateMasterEditor = false,
 }: InvitationEditorLayoutProps) {
   const router = useRouter();
   const { accessToken, clearAuth } = useAuthStore();
@@ -142,6 +142,9 @@ export default function InvitationEditorLayout({
   const currentThemeLabel =
     THEME_OPTIONS.find((theme) => theme.key === formData.theme)?.label ??
     invitation.templateName;
+  const visibleTabs = isTemplateMasterEditor
+    ? TABS.filter((tab) => tab.key !== "publish")
+    : TABS;
 
   const handleSave = useCallback(
     async (nextFormData?: UpdateInvitationRequest) => {
@@ -282,12 +285,13 @@ export default function InvitationEditorLayout({
             isLoading={isPublishLoading}
           />
         );
-      case "profile":
-        return (
-          <InvitationProfileForm data={formData} onChange={handleChange} />
-        );
       case "interview":
-        return <InvitationInterviewForm invitationId={invitation.id} />;
+        return (
+          <InvitationInterviewForm
+            invitationId={invitation.id}
+            onSaved={() => handleChange({ interviewEnabled: true })}
+          />
+        );
       case "advanced":
         return (
           <InvitationAdvancedForm data={formData} onChange={handleChange} />
@@ -302,7 +306,11 @@ export default function InvitationEditorLayout({
         <div className="flex justify-start">
           <button
             type="button"
-            onClick={() => router.push("/invitations")}
+            onClick={() =>
+              router.push(
+                isTemplateMasterEditor ? "/admin/templates" : "/invitations",
+              )
+            }
             className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
             <svg
@@ -318,27 +326,29 @@ export default function InvitationEditorLayout({
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            내 청첩장
+            {isTemplateMasterEditor ? "템플릿 관리" : "내 청첩장"}
           </button>
         </div>
 
         <div className="flex items-center justify-center gap-1.5">
           <span className="text-xs text-gray-400">{currentThemeLabel}</span>
-          <span
-            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-              invitation.status === "PUBLISHED"
-                ? "bg-green-50 text-green-600"
+          {!isTemplateMasterEditor && (
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                invitation.status === "PUBLISHED"
+                  ? "bg-green-50 text-green-600"
+                  : invitation.status === "PRIVATE"
+                    ? "bg-yellow-50 text-yellow-600"
+                    : "bg-gray-100 text-gray-500"
+              }`}
+            >
+              {invitation.status === "PUBLISHED"
+                ? "발행됨"
                 : invitation.status === "PRIVATE"
-                  ? "bg-yellow-50 text-yellow-600"
-                  : "bg-gray-100 text-gray-500"
-            }`}
-          >
-            {invitation.status === "PUBLISHED"
-              ? "발행됨"
-              : invitation.status === "PRIVATE"
-                ? "비공개"
-                : "임시저장"}
-          </span>
+                  ? "비공개"
+                  : "임시저장"}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-4">
@@ -346,13 +356,15 @@ export default function InvitationEditorLayout({
             <InvitationSaveBar isSaving={isSaving} lastSaved={lastSaved} />
           </div>
 
-          <button
-            type="button"
-            onClick={() => window.open(`/invite/${invitation.slug}`, "_blank")}
-            className="text-sm text-primary-500 hover:text-primary-600 transition-colors"
-          >
-            미리보기
-          </button>
+          {!isTemplateMasterEditor && (
+            <button
+              type="button"
+              onClick={() => window.open(`/invite/${invitation.slug}`, "_blank")}
+              className="text-sm text-primary-500 hover:text-primary-600 transition-colors"
+            >
+              미리보기
+            </button>
+          )}
 
           <button
             type="button"
@@ -388,7 +400,7 @@ export default function InvitationEditorLayout({
       {/* 탭 네비게이션 */}
       <div className="overflow-x-auto border-b border-gray-100 bg-white">
         <div className="flex w-max mx-auto px-2">
-          {TABS.map((tab) => (
+          {visibleTabs.map((tab) => (
             <button
               key={tab.key}
               type="button"

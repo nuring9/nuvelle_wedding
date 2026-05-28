@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import {
@@ -9,6 +9,7 @@ import {
   updateAdminTemplate,
   deleteAdminTemplate,
 } from "@/lib/api/admin";
+import { uploadFile } from "@/lib/api/file";
 import type { AdminTemplate, AdminTemplateRequest } from "@/types/admin";
 
 // 새 템플릿 생성 폼의 초기값
@@ -32,6 +33,8 @@ export default function AdminTemplatesPage() {
   const [form, setForm] = useState<AdminTemplateRequest>(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const activeCount = templates.filter((template) => template.active).length;
   const masterCount = templates.filter(
     (template) => template.masterInvitationId,
@@ -80,6 +83,30 @@ export default function AdminTemplatesPage() {
       isMounted = false;
     };
   }, [accessToken]);
+
+  const handleImageUpload = async (
+    file: File,
+    directory: string,
+  ) => {
+    if (!accessToken) return;
+
+    try {
+      setError(null);
+
+      setIsUploadingThumbnail(true);
+
+      const uploaded = await uploadFile(file, directory, accessToken);
+
+      setForm((prev) => ({
+        ...prev,
+        thumbnailUrl: uploaded.url,
+      }));
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+    } finally {
+      setIsUploadingThumbnail(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!accessToken) return;
@@ -202,14 +229,52 @@ export default function AdminTemplatesPage() {
               onChange={(e) => setForm({ ...form, slug: e.target.value })}
               className="input-base"
             />
-            <input
-              placeholder="썸네일 URL"
-              value={form.thumbnailUrl ?? ""}
-              onChange={(e) =>
-                setForm({ ...form, thumbnailUrl: e.target.value })
-              }
-              className="input-base"
-            />
+            <div className="space-y-2">
+              <input
+                placeholder="썸네일 URL"
+                value={form.thumbnailUrl ?? ""}
+                onChange={(e) =>
+                  setForm({ ...form, thumbnailUrl: e.target.value })
+                }
+                className="input-base"
+              />
+              <input
+                ref={thumbnailInputRef}
+                type="file"
+                accept="image/*"
+                disabled={isUploadingThumbnail}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  handleImageUpload(file, "templates/thumbnail");
+                  e.target.value = "";
+                }}
+                className="hidden"
+              />
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  disabled={isUploadingThumbnail}
+                  onClick={() => thumbnailInputRef.current?.click()}
+                  className="rounded-lg bg-primary-50 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  파일 선택
+                </button>
+                <span
+                  className={`text-sm ${
+                    form.thumbnailUrl
+                      ? "text-sky-700"
+                      : "text-neutral-400"
+                  }`}
+                >
+                  {isUploadingThumbnail
+                    ? "업로드 중..."
+                    : form.thumbnailUrl
+                      ? "이미지 등록됨"
+                      : "이미지 없음"}
+                </span>
+              </div>
+            </div>
             <input
               placeholder="테마 키"
               value={form.themeKey ?? ""}
