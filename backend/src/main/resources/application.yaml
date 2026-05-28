@@ -26,6 +26,11 @@ jwt:
   access-token-expiration: 1800000 # Access Token 만료 시간, 30분
   refresh-token-expiration: 604800000 # Refresh Token 만료 시간, 7일
 
+kakao:
+  client-id: ${KAKAO_CLIENT_ID:kakao-client-id-not-set}
+  client-secret: ${KAKAO_CLIENT_SECRET:kakao-client-secret-not-set}
+  redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:3000/auth/kakao/callback}
+
 
 cloud:
   aws:

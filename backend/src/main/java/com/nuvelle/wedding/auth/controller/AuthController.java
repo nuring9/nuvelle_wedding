@@ -6,15 +6,13 @@ import com.nuvelle.wedding.auth.dto.SignupRequest;
 import com.nuvelle.wedding.auth.dto.TokenResponse;
 import com.nuvelle.wedding.auth.security.CustomUserDetails;
 import com.nuvelle.wedding.auth.service.AuthService;
+import com.nuvelle.wedding.auth.service.KakaoAuthService;
 import com.nuvelle.wedding.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final KakaoAuthService kakaoAuthService;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<TokenResponse>> signup(
@@ -49,5 +48,12 @@ public class AuthController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         authService.logout(userDetails);
         return ResponseEntity.ok(ApiResponse.success("로그아웃이 완료되었습니다."));
+    }
+
+    @PostMapping("/kakao")
+    public ResponseEntity<ApiResponse<TokenResponse>> kakaoLogin(
+            @RequestParam String code) {
+        TokenResponse response = kakaoAuthService.kakaoLogin(code);
+        return ResponseEntity.ok(ApiResponse.success("카카오 로그인이 완료되었습니다.", response));
     }
 }

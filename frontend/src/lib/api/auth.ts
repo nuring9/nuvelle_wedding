@@ -7,6 +7,16 @@ import {
 } from "@/types/auth";
 import axios from "axios";
 
+export class LoginFieldError extends Error {
+  constructor(
+    public readonly field: "email" | "password",
+    message: string,
+  ) {
+    super(message);
+    this.name = "LoginFieldError";
+  }
+}
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 // 인증 API 요청에 공통으로 사용할 axios 인스턴스 생성.
@@ -32,14 +42,29 @@ export async function signup(data: SignupRequest): Promise<TokenResponse> {
 
 // 로그인 API
 export async function login(data: LoginRequest): Promise<TokenResponse> {
-  // POST /api/auth/login 요청
-  const res = await authApi.post<ApiResponse<TokenResponse>>("/login", data);
+  try {
+    const res = await authApi.post<ApiResponse<TokenResponse>>("/login", data);
 
-  if (!res.data.success || !res.data.data) {
-    throw new Error(res.data.message || "로그인에 실패했습니다.");
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "로그인에 실패했습니다.");
+    }
+
+    return res.data.data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      const status = err.response.status;
+      if (status === 404) {
+        throw new LoginFieldError("email", "등록되지 않은 이메일입니다.");
+      }
+      if (status === 401) {
+        throw new LoginFieldError(
+          "password",
+          "비밀번호가 틀렸습니다. 다시 입력해주세요.",
+        );
+      }
+    }
+    throw err;
   }
-
-  return res.data.data;
 }
 
 // 토큰 재발급 API
@@ -49,6 +74,19 @@ export async function reissue(data: ReissueRequest): Promise<TokenResponse> {
 
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "로그인에 실패했습니다.");
+  }
+
+  return res.data.data;
+}
+
+// 카카오 로그인 API (Authorization Code → 백엔드에서 토큰 교환)
+export async function kakaoLogin(code: string): Promise<TokenResponse> {
+  const res = await authApi.post<ApiResponse<TokenResponse>>(
+    `/kakao?code=${encodeURIComponent(code)}`,
+  );
+
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "카카오 로그인에 실패했습니다.");
   }
 
   return res.data.data;

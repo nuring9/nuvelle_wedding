@@ -46,7 +46,7 @@ public class SecurityConfig {
                         // 관리자는 다 허용
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // 인증 없이 허용
-                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/reissue").permitAll()
+                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/reissue", "/api/auth/kakao").permitAll()
                         // 공개 청첩장 조회
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
                         // 공개 청첩장에서 웨딩 인터뷰 조회

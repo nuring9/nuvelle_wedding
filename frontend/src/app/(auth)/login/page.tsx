@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function LoginPage() {
-  const { handleLogin, isLoading, error, clearError } = useAuth();
+  const { handleLogin, startKakaoLogin, isLoading, error, clearError } = useAuth();
 
   const [form, setForm] = useState({
     email: "",
@@ -56,9 +56,11 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!validate()) return;
-    // 검증 실패하면 로그인 요청을 보내지 않고 중단
 
-    await handleLogin(form);
+    const fieldError = await handleLogin(form);
+    if (fieldError) {
+      setFieldErrors((prev) => ({ ...prev, [fieldError.field]: fieldError.message }));
+    }
   };
 
   return (
@@ -107,6 +109,29 @@ export default function LoginPage() {
           로그인
         </PrimaryButton>
       </form>
+
+      <div className="mt-4 flex items-center gap-3">
+        <hr className="flex-1 border-gray-200" />
+        <span className="text-xs text-gray-400">또는</span>
+        <hr className="flex-1 border-gray-200" />
+      </div>
+
+      <button
+        type="button"
+        onClick={startKakaoLogin}
+        className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium text-sm"
+        style={{ backgroundColor: "#FEE500", color: "#191919" }}
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M9 1C4.582 1 1 3.896 1 7.455c0 2.258 1.468 4.236 3.674 5.364L3.8 16.2a.25.25 0 0 0 .37.27L8.4 13.87c.195.014.393.022.6.022 4.418 0 8-2.896 8-6.437C17 3.896 13.418 1 9 1z"
+            fill="#191919"
+          />
+        </svg>
+        카카오로 로그인
+      </button>
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-500">

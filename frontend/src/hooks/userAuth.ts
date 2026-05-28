@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { LoginRequest, SignupRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signup, login, logout } from "@/lib/api/auth";
+import { signup, login, logout, kakaoLogin, LoginFieldError } from "@/lib/api/auth";
 
 export function useAuth() {
   const router = useRouter();
@@ -50,7 +50,9 @@ export function useAuth() {
   };
 
   // 로그인
-  const handleLogin = async (data: LoginRequest) => {
+  const handleLogin = async (
+    data: LoginRequest,
+  ): Promise<{ field: "email" | "password"; message: string } | null> => {
     setIsLoading(true);
     setError(null);
 
@@ -68,11 +70,58 @@ export function useAuth() {
       router.push(
         getDefaultRedirectPath(tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN"),
       );
+      return null;
     } catch (err: unknown) {
+      if (err instanceof LoginFieldError) {
+        return { field: err.field, message: err.message };
+      }
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError("로그인에 실패했습니다.");
+      }
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 카카오 로그인 페이지로 이동
+  const startKakaoLogin = () => {
+    const clientId = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY!;
+    const redirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI!;
+    const kakaoAuthUrl =
+      `https://kauth.kakao.com/oauth/authorize` +
+      `?client_id=${clientId}` +
+      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+      `&response_type=code`;
+    window.location.href = kakaoAuthUrl;
+  };
+
+  // 카카오 콜백 처리 (code → JWT 발급)
+  const handleKakaoCallback = async (code: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const tokenResponse = await kakaoLogin(code);
+
+      setAuth(tokenResponse.accessToken, tokenResponse.refreshToken, {
+        userId: tokenResponse.userId,
+        name: tokenResponse.name,
+        email: tokenResponse.email,
+        role: tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN",
+      });
+
+      // replace로 콜백 페이지를 히스토리에서 제거 → 뒤로 가기 시 로그인 페이지로 이동
+      router.replace(
+        getDefaultRedirectPath(tokenResponse.role as "ROLE_USER" | "ROLE_ADMIN"),
+      );
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("카카오 로그인에 실패했습니다.");
       }
     } finally {
       setIsLoading(false);
@@ -104,6 +153,8 @@ export function useAuth() {
     handleSignup,
     handleLogin,
     handleLogout,
-    clearError: () => setError(null), // 에러 초기화 함수.
+    startKakaoLogin,
+    handleKakaoCallback,
+    clearError: () => setError(null),
   };
 }

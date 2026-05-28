@@ -25,7 +25,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Column(nullable = false, length = 50)
@@ -34,6 +34,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private UserRole role;
+
+    @Column(unique = true)
+    private Long kakaoId;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -44,10 +47,11 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(String email, String password, String name, UserRole role) {
+    public User(String email, String password, String name, UserRole role, Long kakaoId) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
+        this.kakaoId = kakaoId;
     }
 }
