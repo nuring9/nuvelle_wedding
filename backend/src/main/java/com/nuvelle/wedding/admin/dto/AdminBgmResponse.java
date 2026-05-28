@@ -3,6 +3,7 @@ package com.nuvelle.wedding.admin.dto;
 import com.nuvelle.wedding.bgm.entity.Bgm;
 import lombok.Builder;
 import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +15,10 @@ public class AdminBgmResponse {
     private String title;
     private String fileUrl;
     private String mood;
+
+    @JsonProperty("isActive")
     private boolean isActive;
+
     private int sortOrder;
     private LocalDateTime createdAt;
 

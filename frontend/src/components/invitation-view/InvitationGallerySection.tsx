@@ -35,6 +35,7 @@ export default function InvitationGallerySection({
               src={image.imageUrl}
               alt="갤러리 사진"
               fill
+              sizes="33vw"
               className="object-cover hover:scale-105 transition-transform duration-300"
             />
           </button>
@@ -52,6 +53,7 @@ export default function InvitationGallerySection({
               src={selectedImage}
               alt="갤러리 사진 확대"
               fill
+              sizes="(max-width: 640px) 100vw, 384px"
               className="object-contain"
             />
           </div>

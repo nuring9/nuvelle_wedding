@@ -42,6 +42,22 @@ public class AdminBgmService {
     }
 
     @Transactional
+    public AdminBgmResponse updateBgm(Long bgmId, AdminBgmRequest request) {
+        Bgm bgm = bgmRepository.findById(bgmId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BGM_NOT_FOUND));
+
+        bgm.update(
+                request.getTitle() != null ? request.getTitle() : bgm.getTitle(),
+                request.getFileUrl() != null ? request.getFileUrl() : bgm.getFileUrl(),
+                request.getMood() != null ? request.getMood() : bgm.getMood(),
+                request.getIsActive() != null ? request.getIsActive() : bgm.isActive(),
+                request.getSortOrder() != null ? request.getSortOrder() : bgm.getSortOrder()
+        );
+
+        return AdminBgmResponse.from(bgm);
+    }
+
+    @Transactional
     public void deleteBgm(Long bgmId) {
         if (!bgmRepository.existsById(bgmId)) {
             throw new CustomException(ErrorCode.BGM_NOT_FOUND);

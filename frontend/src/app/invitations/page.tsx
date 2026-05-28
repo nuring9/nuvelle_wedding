@@ -137,6 +137,7 @@ export default function InvitationsPage() {
                       src={invitation.mainImageUrl}
                       alt="청첩장 메인 사진"
                       fill
+                      sizes="(max-width: 640px) 100vw, 280px"
                       className="object-cover"
                     />
                   ) : (

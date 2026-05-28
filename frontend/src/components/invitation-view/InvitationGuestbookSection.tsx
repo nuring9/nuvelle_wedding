@@ -51,7 +51,7 @@ export default function InvitationGuestbookSection({
   };
 
   return (
-    <section className="section-tone-guestbook px-6 pt-6 pb-14">
+    <section className="section-padding section-tone-guestbook">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}

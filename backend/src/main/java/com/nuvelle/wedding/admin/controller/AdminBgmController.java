@@ -29,6 +29,16 @@ public class AdminBgmController {
         return ResponseEntity.ok(ApiResponse.success(adminBgmService.createBgm(request)));
     }
 
+
+    // PATCH /api/admin/bgms
+    @PatchMapping("/{bgmId}")
+    public ResponseEntity<ApiResponse<AdminBgmResponse>> updateBgm(
+            @PathVariable Long bgmId,
+            @RequestBody AdminBgmRequest request
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(adminBgmService.updateBgm(bgmId, request)));
+    }
+
     // DELETE /api/admin/bgms/{bgmId}
     @DeleteMapping("/{bgmId}")
     public ResponseEntity<ApiResponse<Void>> deleteBgm(@PathVariable Long bgmId) {

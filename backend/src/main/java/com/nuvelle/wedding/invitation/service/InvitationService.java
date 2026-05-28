@@ -117,6 +117,7 @@ public class InvitationService {
                 request.getTitle(),
                 request.getMainImageUrl(),
                 request.getMainOverlayText(),
+                request.getMainImagePosition(),
 
                 request.getGroomName(),
                 request.getBrideName(),

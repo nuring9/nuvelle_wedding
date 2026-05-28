@@ -46,4 +46,14 @@ public class Bgm {
         this.isActive = isActive;
         this.sortOrder = sortOrder;
     }
+
+    public void update(String title, String fileUrl, String mood,
+                       boolean isActive, int sortOrder) {
+        this.title = title;
+        this.fileUrl = fileUrl;
+        this.mood = mood;
+        this.isActive = isActive;
+        this.sortOrder = sortOrder;
+    }
+
 }

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { uploadFile } from "@/lib/api/file";
+import { uploadFile, deleteFile } from "@/lib/api/file";
 import { useAuthStore } from "@/stores/authStore";
 
 interface ImageUploaderProps {
@@ -27,6 +27,7 @@ export default function ImageUploader({
   const { accessToken } = useAuthStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const aspectClass = {
@@ -39,13 +40,11 @@ export default function ImageUploader({
     const file = e.target.files?.[0];
     if (!file || !accessToken) return;
 
-    // 클라이언트 사이드 크기 검증
     if (file.size > maxSizeMB * 1024 * 1024) {
       setError(`파일 크기는 ${maxSizeMB}MB 이하여야 합니다.`);
       return;
     }
 
-    // 확장자 검증
     const ext = file.name.split(".").pop()?.toLowerCase();
     if (!["jpg", "jpeg", "png", "webp", "gif"].includes(ext ?? "")) {
       setError("JPG, PNG, WEBP, GIF 형식만 업로드 가능합니다.");
@@ -63,14 +62,29 @@ export default function ImageUploader({
       else setError("업로드에 실패했습니다.");
     } finally {
       setIsUploading(false);
-      // input 초기화 (같은 파일 재업로드 허용)
       if (inputRef.current) inputRef.current.value = "";
     }
   };
 
-  const handleDelete = () => {
-    onDelete?.();
-    if (inputRef.current) inputRef.current.value = "";
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    if (!value || !accessToken || isDeleting) return;
+
+    setError(null);
+    setIsDeleting(true);
+
+    try {
+      await deleteFile(value, accessToken);
+      onDelete?.();
+
+      if (inputRef.current) inputRef.current.value = "";
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("이미지 삭제에 실패했습니다.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -84,34 +98,39 @@ export default function ImageUploader({
               src={value}
               alt="업로드된 이미지"
               fill
+              sizes="(max-width: 768px) 100vw, 200px"
               className="object-cover"
             />
-            {/* 삭제 버튼 */}
+
             <button
               type="button"
               onClick={handleDelete}
-              className="absolute top-2 right-2 w-7 h-7 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+              disabled={isDeleting}
+              className="absolute top-2 right-2 z-20 w-7 h-7 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              {isDeleting ? (
+                <span className="text-[10px]">...</span>
+              ) : (
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              )}
             </button>
 
-            {/* 재업로드 오버레이 */}
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-end justify-center pb-3 opacity-0 hover:opacity-100"
+              className="absolute inset-0 z-10 bg-black/0 hover:bg-black/20 transition-colors flex items-end justify-center pb-3 opacity-0 hover:opacity-100"
             >
               <span className="text-white text-xs bg-black/40 px-3 py-1 rounded-full">
                 변경
@@ -171,10 +190,8 @@ export default function ImageUploader({
         )}
       </div>
 
-      {/* 에러 메시지 */}
       {error && <p className="text-xs text-red-500">{error}</p>}
 
-      {/* 숨겨진 파일 입력 */}
       <input
         ref={inputRef}
         type="file"

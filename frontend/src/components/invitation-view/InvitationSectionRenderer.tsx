@@ -44,12 +44,30 @@ import InvitationWeddingInfoSection from "./InvitationWeddingInfoSection";
 interface InvitationSectionRendererProps {
   invitation: PublicInvitation;
   editable?: boolean;
+  disableSectionDrag?: boolean;
+  mainImagePositionEditable?: boolean;
+  onMainImagePositionChange?: (position: string) => void;
   onOrderChange?: (sectionOrder: InvitationSectionId[]) => void;
 }
+
+// Mirrors the null-return conditions inside each section component.
+// Used to skip empty sections in the editable preview so it matches the public page.
+const shouldShowSection: Partial<
+  Record<InvitationSectionId, (inv: PublicInvitation) => boolean>
+> = {
+  couple: (inv) => !!inv.parentsEnabled,
+  greeting: (inv) => !!inv.greetingText,
+  profile: (inv) => !!(inv.groomIntroduction || inv.brideIntroduction),
+  weddingInfo: (inv) => !!(inv.weddingDate || inv.venueName),
+  map: (inv) => !!(inv.mapLat && inv.mapLng),
+};
 
 interface SortablePreviewSectionProps {
   sectionId: InvitationSectionId;
   invitation: PublicInvitation;
+  disabled?: boolean;
+  mainImagePositionEditable?: boolean;
+  onMainImagePositionChange?: (position: string) => void;
 }
 
 const sectionMap = {
@@ -72,9 +90,10 @@ const sectionMap = {
 function SortablePreviewSection({
   sectionId,
   invitation,
+  disabled = false,
+  mainImagePositionEditable = false,
+  onMainImagePositionChange,
 }: SortablePreviewSectionProps) {
-  const SectionComponent = sectionMap[sectionId];
-
   const {
     attributes,
     listeners,
@@ -84,6 +103,7 @@ function SortablePreviewSection({
     isDragging,
   } = useSortable({
     id: sectionId,
+    disabled,
   });
 
   const style = {
@@ -91,25 +111,41 @@ function SortablePreviewSection({
     transition,
   };
 
+  const dragHandleProps = disabled ? {} : { ...attributes, ...listeners };
+  const isHeroPositionTarget = sectionId === "hero" && mainImagePositionEditable;
+  const renderedSection = isHeroPositionTarget ? (
+    <InvitationHeroSection
+      invitation={invitation}
+      editableMainImagePosition
+      onMainImagePositionChange={onMainImagePositionChange}
+    />
+  ) : (
+    (() => {
+      const SectionComponent = sectionMap[sectionId];
+      return <SectionComponent invitation={invitation} />;
+    })()
+  );
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative rounded-lg outline outline-1 outline-transparent hover:outline-primary-200 ${
+      className={`relative outline outline-1 outline-transparent hover:outline-primary-200 ${
         isDragging ? "z-20 opacity-70" : ""
       }`}
     >
-      <button
-        type="button"
-        aria-label="섹션 순서 변경"
-        className="absolute right-2 top-2 z-20 cursor-grab rounded-full bg-white/90 px-2 py-1 text-[10px] font-medium text-gray-500 shadow-sm active:cursor-grabbing"
-        {...attributes}
-        {...listeners}
-      >
-        드래그
-      </button>
+      {!disabled && (
+        <button
+          type="button"
+          aria-label="섹션 순서 변경"
+          className="absolute right-2 top-2 z-20 cursor-grab rounded-full bg-white/90 px-2 py-1 text-[10px] font-medium text-gray-500 shadow-sm active:cursor-grabbing"
+          {...dragHandleProps}
+        >
+          드래그
+        </button>
+      )}
 
-      <SectionComponent invitation={invitation} />
+      {renderedSection}
     </div>
   );
 }
@@ -117,6 +153,9 @@ function SortablePreviewSection({
 export default function InvitationSectionRenderer({
   invitation,
   editable = false,
+  disableSectionDrag = false,
+  mainImagePositionEditable = false,
+  onMainImagePositionChange,
   onOrderChange,
 }: InvitationSectionRendererProps) {
   const order = normalizeInvitationSectionOrder(invitation.sectionOrder);
@@ -127,7 +166,8 @@ export default function InvitationSectionRenderer({
     );
 
     if (!sectionConfig?.enabledKey) {
-      return true;
+      const check = shouldShowSection[sectionId];
+      return check ? check(invitation) : true;
     }
 
     return Boolean(invitation[sectionConfig.enabledKey]);
@@ -180,6 +220,9 @@ export default function InvitationSectionRenderer({
             key={sectionId}
             sectionId={sectionId}
             invitation={invitation}
+            disabled={disableSectionDrag}
+            mainImagePositionEditable={mainImagePositionEditable}
+            onMainImagePositionChange={onMainImagePositionChange}
           />
         ))}
       </SortableContext>

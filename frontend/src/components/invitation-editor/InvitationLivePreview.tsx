@@ -14,6 +14,8 @@ interface InvitationLivePreviewProps {
   invitation: InvitationResponse;
   formData: UpdateInvitationRequest;
   galleries: GalleryImageResponse[];
+  isMainImagePositionMode?: boolean;
+  onMainImagePositionChange?: (position: string) => void;
   onSectionOrderChange?: (sectionOrder: InvitationSectionId[]) => void;
 }
 
@@ -29,6 +31,7 @@ function toPreviewInvitation(
     themeKey: invitation.theme ?? null,
     mainImageUrl: formData.mainImageUrl ?? null,
     mainOverlayText: formData.mainOverlayText ?? null,
+    mainImagePosition: formData.mainImagePosition ?? "50% 50%",
     groomName: formData.groomName ?? null,
     brideName: formData.brideName ?? null,
     groomFatherName: formData.groomFatherName ?? null,
@@ -75,6 +78,8 @@ export default function InvitationLivePreview({
   invitation,
   formData,
   galleries,
+  isMainImagePositionMode = false,
+  onMainImagePositionChange,
   onSectionOrderChange,
 }: InvitationLivePreviewProps) {
   const previewInvitation = toPreviewInvitation(
@@ -101,9 +106,11 @@ export default function InvitationLivePreview({
           <InvitationSectionRenderer
             invitation={previewInvitation}
             editable
+            disableSectionDrag={isMainImagePositionMode}
+            mainImagePositionEditable={isMainImagePositionMode}
+            onMainImagePositionChange={onMainImagePositionChange}
             onOrderChange={onSectionOrderChange}
           />
-          <div className="pb-12" />
         </div>
       </div>
     </aside>

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { useAuthStore } from "@/stores/authStore";
-import { uploadFile } from "@/lib/api/file";
+import { uploadFile, deleteFile } from "@/lib/api/file";
 import {
   addGalleryImage,
   deleteGalleryImage,
@@ -58,8 +58,14 @@ export default function InvitationGalleryForm({
 
   const handleDelete = async (imageId: number) => {
     if (!accessToken) return;
+
+    const image = galleries.find((g) => g.id === imageId);
+    if (!image) return;
+
     try {
       await deleteGalleryImage(invitationId, imageId, accessToken);
+      await deleteFile(image.imageUrl, accessToken);
+
       onGalleriesChange(galleries.filter((g) => g.id !== imageId));
     } catch {
       setError("이미지 삭제에 실패했습니다.");
@@ -83,6 +89,7 @@ export default function InvitationGalleryForm({
               src={image.imageUrl}
               alt="갤러리 이미지"
               fill
+              sizes="(max-width: 768px) 33vw, 140px"
               className="object-cover"
             />
             <button

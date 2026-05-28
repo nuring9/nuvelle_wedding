@@ -53,8 +53,8 @@ export default function RsvpForm({
 
       {/* 참석 여부 선택 */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-gray-700">참석 여부</label>
-        <div className="grid grid-cols-3 gap-2">
+        <label className="text-xs text-gray-400 tracking-wide">참석 여부</label>
+        <div className="flex gap-1.5">
           {[
             { value: "ATTENDING", label: "참석" },
             { value: "NOT_ATTENDING", label: "불참" },
@@ -70,10 +70,10 @@ export default function RsvpForm({
                     option.value as RsvpRequest["attendanceStatus"],
                 }))
               }
-              className={`py-2.5 rounded-xl text-sm font-medium border transition-colors ${
+              className={`flex-1 py-1.5 rounded-full text-xs border transition-colors ${
                 form.attendanceStatus === option.value
                   ? "bg-primary-500 text-white border-primary-500"
-                  : "bg-white text-gray-500 border-gray-200 hover:border-primary-300"
+                  : "bg-white/60 text-gray-400 border-gray-200 hover:border-gray-300 hover:text-gray-500"
               }`}
             >
               {option.label}
@@ -85,22 +85,21 @@ export default function RsvpForm({
       {/* 참석 상태일 때만 인원 선택 영역 보여줌 */}
       {form.attendanceStatus === "ATTENDING" && (
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-700">참석 인원</label>
-          <div className="flex items-center gap-3">
+          <label className="text-xs text-gray-400 tracking-wide">참석 인원</label>
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() =>
                 setForm((prev) => ({
                   ...prev,
-                  // 참석 인원은 최소 1명 아래로 내려가지 않도록 제한.
                   guestCount: Math.max(1, prev.guestCount - 1),
                 }))
               }
-              className="w-9 h-9 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center"
+              className="w-7 h-7 rounded-full border border-gray-200 text-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center text-sm"
             >
               −
             </button>
-            <span className="text-sm font-medium text-gray-800 w-6 text-center">
+            <span className="text-xs text-gray-600 w-5 text-center">
               {form.guestCount}
             </span>
             <button
@@ -111,7 +110,7 @@ export default function RsvpForm({
                   guestCount: prev.guestCount + 1,
                 }))
               }
-              className="w-9 h-9 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center"
+              className="w-7 h-7 rounded-full border border-gray-200 text-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center text-sm"
             >
               +
             </button>

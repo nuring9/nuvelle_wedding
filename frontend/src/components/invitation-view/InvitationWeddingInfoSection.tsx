@@ -22,7 +22,7 @@ export default function InvitationWeddingInfoSection({
     : null;
 
   return (
-    <section className="section-padding text-center bg-gray-50">
+    <section className="section-padding section-alt-bg text-center">
       <h2 className="text-xs tracking-widest text-gray-400 mb-8 uppercase">
         Wedding Day
       </h2>

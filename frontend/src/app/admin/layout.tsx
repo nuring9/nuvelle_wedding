@@ -83,9 +83,23 @@ export default function AdminLayout({
             <button
               onClick={handleLogout}
               disabled={isLoading}
-              className="rounded-lg border border-primary-100 bg-white px-4 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-primary-50 hover:text-neutral-900 disabled:opacity-50"
+              title="로그아웃"
+              className="flex items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
             >
-              로그아웃
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span className="text-sm">로그아웃</span>
             </button>
           </div>
         </div>

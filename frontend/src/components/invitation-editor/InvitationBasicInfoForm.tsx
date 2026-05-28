@@ -6,6 +6,8 @@ import ImageUploader from "../common/ImageUploader";
 interface InvitationBasicInfoFormProps {
   data: UpdateInvitationRequest;
   onChange: (data: Partial<UpdateInvitationRequest>) => void;
+  isPositionMode: boolean;
+  onPositionModeChange: (enabled: boolean) => void;
 }
 
 const MAIN_OVERLAY_TEXT_OPTIONS = [
@@ -19,6 +21,8 @@ const MAIN_OVERLAY_TEXT_OPTIONS = [
 export default function InvitationBasicInfoForm({
   data,
   onChange,
+  isPositionMode,
+  onPositionModeChange,
 }: InvitationBasicInfoFormProps) {
   return (
     <div className="flex flex-col gap-6">
@@ -27,13 +31,31 @@ export default function InvitationBasicInfoForm({
         <div className="max-w-[200px] mx-auto">
           <ImageUploader
             value={data.mainImageUrl ?? null}
-            onChange={(url) => onChange({ mainImageUrl: url })}
-            onDelete={() => onChange({ mainImageUrl: "" })}
+            onChange={(url) =>
+              onChange({ mainImageUrl: url, mainImagePosition: "50% 50%" })
+            }
+            onDelete={() => {
+              onPositionModeChange(false);
+              onChange({ mainImageUrl: "", mainImagePosition: "50% 50%" });
+            }}
             directory="invitations/main"
             aspect="portrait"
             placeholder="메인 사진 업로드"
           />
         </div>
+        {data.mainImageUrl && (
+          <button
+            type="button"
+            onClick={() => onPositionModeChange(!isPositionMode)}
+            className={`mt-3 w-full rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              isPositionMode
+                ? "bg-primary-500 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            {isPositionMode ? "위치 조정 완료" : "이미지 위치 조정"}
+          </button>
+        )}
         <p className="text-xs text-gray-400 text-center mt-2">
           JPG, PNG 권장 · 최대 10MB
         </p>

@@ -31,9 +31,16 @@ public class S3Uploader {
     public String upload(MultipartFile file, String directory) {
         validateFile(file);
 
+//        String originalFilename = file.getOriginalFilename();
+//        String extension = getExtension(originalFilename).toLowerCase();
+//        String key = directory + "/" + UUID.randomUUID() + "." + extension;
+
         String originalFilename = file.getOriginalFilename();
         String extension = getExtension(originalFilename).toLowerCase();
-        String key = directory + "/" + UUID.randomUUID() + "." + extension;
+
+        String prefix = directory.contains("gallery") ? "gallery" : "main";
+        String shortId = UUID.randomUUID().toString().substring(0, 8);
+        String key = directory + "/" + prefix + "-" + shortId + "." + extension;
 
         try {
             PutObjectRequest request = PutObjectRequest.builder()

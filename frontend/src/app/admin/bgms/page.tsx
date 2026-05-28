@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/authStore";
-import { getAdminBgms, createAdminBgm, deleteAdminBgm } from "@/lib/api/admin";
+import {
+  getAdminBgms,
+  createAdminBgm,
+  deleteAdminBgm,
+  updateAdminBgm,
+} from "@/lib/api/admin";
 import type { AdminBgm, AdminBgmRequest } from "@/types/admin";
 
 const emptyForm: AdminBgmRequest = {
@@ -70,7 +75,7 @@ export default function AdminBgmsPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!accessToken) return;
@@ -80,6 +85,31 @@ export default function AdminBgmsPage() {
 
       setForm(emptyForm);
       setShowForm(false);
+
+      await refreshBgms();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
+    }
+  };
+
+  // bgm 수정
+  const handleToggleActive = async (bgm: AdminBgm) => {
+    if (!accessToken) return;
+
+    try {
+      await updateAdminBgm(
+        bgm.id,
+        {
+          title: bgm.title,
+          fileUrl: bgm.fileUrl,
+          mood: bgm.mood ?? undefined,
+          sortOrder: bgm.sortOrder,
+          isActive: !bgm.isActive,
+        },
+        accessToken,
+      );
 
       await refreshBgms();
     } catch (err: unknown) {
@@ -300,15 +330,17 @@ export default function AdminBgmsPage() {
                     {bgm.mood ?? "-"}
                   </td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    <button
+                      type="button"
+                      onClick={() => handleToggleActive(bgm)}
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
                         bgm.isActive
-                          ? "bg-green-50 text-green-600"
-                          : "bg-neutral-100 text-neutral-400"
+                          ? "bg-green-50 text-green-600 hover:bg-green-100"
+                          : "bg-neutral-100 text-neutral-400 hover:bg-neutral-200"
                       }`}
                     >
                       {bgm.isActive ? "활성" : "비활성"}
-                    </span>
+                    </button>
                   </td>
                   <td className="px-4 py-3">
                     <audio controls src={bgm.fileUrl} className="h-7 w-40" />

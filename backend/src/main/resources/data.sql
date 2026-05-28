@@ -85,3 +85,18 @@ INSERT IGNORE INTO templates (
  'dark', 'standard',
  true, 6, NOW(), NOW());
 
+
+
+INSERT IGNORE INTO bgms (
+    id,
+    title,
+    file_url,
+    mood,
+    is_active,
+    sort_order,
+    created_at
+) VALUES
+(1, '기본 BGM 1', 'https://nuvelle-wedding-prod-assets.s3.ap-northeast-2.amazonaws.com/bgm/its-your-day.mp3', '감성적인 분위기', true, 1, NOW()),
+(2, '기본 BGM 2', 'https://nuvelle-wedding-prod-assets.s3.ap-northeast-2.amazonaws.com/bgm/nevilles-waltz.mp3', '우아한 분위기', true, 2, NOW()),
+(3, '기본 BGM 3', 'https://nuvelle-wedding-prod-assets.s3.ap-northeast-2.amazonaws.com/bgm/proud-of-your-boy.mp3', '따뜻한 분위기', true, 3, NOW()),
+(4, '기본 BGM 4', 'https://nuvelle-wedding-prod-assets.s3.ap-northeast-2.amazonaws.com/bgm/someday-my-prince-will-come.mp3', '화사한 분위기', true, 4, NOW());

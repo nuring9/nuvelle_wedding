@@ -31,7 +31,7 @@ export default function InvitationRsvpSection({
   };
 
   return (
-    <section className="section-tone-rsvp px-6 pt-6 pb-10">
+    <section className="section-padding section-tone-rsvp">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}

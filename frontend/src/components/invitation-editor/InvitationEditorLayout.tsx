@@ -71,6 +71,7 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     title: invitation.title ?? "",
     mainImageUrl: invitation.mainImageUrl ?? "",
     mainOverlayText: invitation.mainOverlayText ?? "",
+    mainImagePosition: invitation.mainImagePosition ?? "50% 50%",
     groomName: invitation.groomName ?? "",
     brideName: invitation.brideName ?? "",
     groomFatherName: invitation.groomFatherName ?? "",
@@ -114,7 +115,12 @@ export default function InvitationEditorLayout({
   invitation: initialInvitation,
 }: InvitationEditorLayoutProps) {
   const router = useRouter();
-  const { accessToken } = useAuthStore();
+  const { accessToken, clearAuth } = useAuthStore();
+
+  const handleLogout = () => {
+    clearAuth();
+    router.push("/login");
+  };
 
   const [invitation, setInvitation] =
     useState<InvitationResponse>(initialInvitation);
@@ -125,6 +131,8 @@ export default function InvitationEditorLayout({
     initialInvitation.galleries,
   );
   const [activeTab, setActiveTab] = useState<TabKey>("basic");
+  const [isMainImagePositionMode, setIsMainImagePositionMode] =
+    useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishLoading, setIsPublishLoading] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -217,7 +225,12 @@ export default function InvitationEditorLayout({
     switch (activeTab) {
       case "basic":
         return (
-          <InvitationBasicInfoForm data={formData} onChange={handleChange} />
+          <InvitationBasicInfoForm
+            data={formData}
+            onChange={handleChange}
+            isPositionMode={isMainImagePositionMode}
+            onPositionModeChange={setIsMainImagePositionMode}
+          />
         );
       case "couple":
         return (
@@ -340,6 +353,28 @@ export default function InvitationEditorLayout({
           >
             미리보기
           </button>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            title="로그아웃"
+            className="flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span className="hidden sm:inline text-xs">로그아웃</span>
+          </button>
         </div>
       </div>
 
@@ -396,6 +431,10 @@ export default function InvitationEditorLayout({
           invitation={invitation}
           formData={formData}
           galleries={galleries}
+          isMainImagePositionMode={isMainImagePositionMode}
+          onMainImagePositionChange={(mainImagePosition) =>
+            handleChange({ mainImagePosition })
+          }
           onSectionOrderChange={(sectionOrder) =>
             handleChange({ sectionOrder })
           }

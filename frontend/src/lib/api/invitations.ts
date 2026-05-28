@@ -38,6 +38,7 @@ export interface UpdateInvitationRequest {
   title?: string;
   mainImageUrl?: string;
   mainOverlayText?: string;
+  mainImagePosition?: string;
   groomName?: string;
   brideName?: string;
   groomFatherName?: string;
@@ -85,6 +86,7 @@ export interface InvitationResponse {
   title: string | null;
   mainImageUrl: string | null;
   mainOverlayText: string | null;
+  mainImagePosition: string | null;
   groomName: string | null;
   brideName: string | null;
   groomFatherName: string | null;

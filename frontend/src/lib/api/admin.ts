@@ -127,6 +127,22 @@ export async function createAdminBgm(
   return res.data.data;
 }
 
+// BGM 수정
+export async function updateAdminBgm(
+  bgmId: number,
+  data: Partial<AdminBgmRequest>,
+  accessToken: string,
+): Promise<AdminBgm> {
+  const api = getAdminApi(accessToken);
+  const res = await api.patch<ApiResponse<AdminBgm>>(`/bgms/${bgmId}`, data);
+
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "BGM 수정에 실패했습니다.");
+  }
+
+  return res.data.data;
+}
+
 // BGM 삭제
 export async function deleteAdminBgm(
   bgmId: number,

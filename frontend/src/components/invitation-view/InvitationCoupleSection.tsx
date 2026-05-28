@@ -10,7 +10,7 @@ export default function InvitationCoupleSection({
   if (!invitation.parentsEnabled) return null;
 
   return (
-    <section className="section-padding text-center">
+    <section className="section-padding section-alt-bg text-center">
       <div className="flex justify-center items-center gap-12">
         {/* 신랑 측 */}
         <div className="flex flex-col items-center gap-1">

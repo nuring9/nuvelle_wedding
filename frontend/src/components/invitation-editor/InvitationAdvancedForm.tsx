@@ -66,28 +66,37 @@ export default function InvitationAdvancedForm({
                 : "border-gray-200 hover:border-gray-300"
             }`}
           >
-            <button
-              type="button"
-              onClick={() => onChange({ bgmId: bgm.id })}
-              className="w-full text-left"
-            >
-              <p className="text-sm font-medium text-gray-800">{bgm.title}</p>
-              {bgm.mood && (
-                <p className="mt-0.5 text-xs text-gray-400">{bgm.mood}</p>
-              )}
-            </button>
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => onChange({ bgmId: bgm.id })}
+                className="flex-1 text-left min-w-0"
+              >
+                <p className="text-sm font-medium text-gray-800">{bgm.title}</p>
+                {bgm.mood && (
+                  <p className="mt-0.5 text-xs text-gray-400">{bgm.mood}</p>
+                )}
+              </button>
 
-            <button
-              type="button"
-              onClick={() =>
-                setPreviewUrl((prev) =>
-                  prev === bgm.fileUrl ? null : bgm.fileUrl,
-                )
-              }
-              className="mt-2 text-xs text-primary-500 hover:text-primary-600 transition-colors"
-            >
-              {previewUrl === bgm.fileUrl ? "미리듣기 닫기" : "미리듣기"}
-            </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setPreviewUrl((prev) =>
+                    prev === bgm.fileUrl ? null : bgm.fileUrl,
+                  )
+                }
+                className="flex items-center gap-1 shrink-0 text-xs text-primary-500 hover:text-primary-600 transition-colors"
+              >
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M9 3v11.586A3 3 0 1 0 11 17V7h6V3H9z" />
+                </svg>
+                {previewUrl === bgm.fileUrl ? "닫기" : "미리듣기"}
+              </button>
+            </div>
           </div>
         ))}
       </div>

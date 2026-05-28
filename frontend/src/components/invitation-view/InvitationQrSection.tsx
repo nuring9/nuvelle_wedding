@@ -32,7 +32,7 @@ export default function InvitationQrSection({
   }, [publicUrl]);
 
   return (
-    <section className="section-padding text-center">
+    <section className="section-padding text-center" style={{ paddingBottom: "4rem" }}>
       <h2 className="text-xs tracking-widest text-gray-400 mb-5 uppercase">
         QR Code
       </h2>
