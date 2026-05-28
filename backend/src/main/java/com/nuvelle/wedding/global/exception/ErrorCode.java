@@ -22,6 +22,13 @@ public enum ErrorCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "Refresh Token을 찾을 수 없습니다."),
     REFRESH_TOKEN_MISMATCH(HttpStatus.UNAUTHORIZED, "Refresh Token이 일치하지 않습니다."),
+    USER_WITHDRAWN(HttpStatus.FORBIDDEN, "탈퇴한 회원입니다."),
+    USER_SUSPENDED(HttpStatus.FORBIDDEN, "정지된 회원입니다."),
+    INVALID_WITHDRAW_CONFIRM_TEXT(HttpStatus.BAD_REQUEST, "탈퇴 확인 문구가 올바르지 않습니다."),
+    PASSWORD_RESET_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "비밀번호 재설정을 사용할 수 없는 회원입니다."),
+    PASSWORD_RESET_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "비밀번호 재설정 토큰이 유효하지 않거나 만료되었습니다."),
+    CANNOT_CHANGE_OWN_ROLE(HttpStatus.BAD_REQUEST, "자신의 관리자 권한은 변경할 수 없습니다."),
+    CANNOT_WITHDRAW_ADMIN(HttpStatus.BAD_REQUEST, "관리자 계정은 탈퇴 처리할 수 없습니다."),
 
     // 템플릿
     TEMPLATE_NOT_FOUND(HttpStatus.NOT_FOUND, "템플릿을 찾을 수 없습니다."),

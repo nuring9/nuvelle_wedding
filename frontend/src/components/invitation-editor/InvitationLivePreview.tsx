@@ -37,6 +37,8 @@ function toPreviewInvitation(
     groomPhone: formData.groomPhone ?? null,
     bridePhone: formData.bridePhone ?? null,
     contactEnabled: formData.contactEnabled ?? false,
+    groomIntroduction: formData.groomIntroduction ?? null,
+    brideIntroduction: formData.brideIntroduction ?? null,
     groomFatherName: formData.groomFatherName ?? null,
     groomMotherName: formData.groomMotherName ?? null,
     brideFatherName: formData.brideFatherName ?? null,

@@ -13,6 +13,8 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     long countByTemplateId(Long templateId);
 
+    long countByUserId(Long userId);
+
     // 내 청첩장 목록 (마스터 제외, 최신순)
     List<Invitation> findAllByUserIdAndTemplateMasterFalseOrderByCreatedAtDesc(Long userId);
 

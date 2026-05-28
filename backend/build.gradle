@@ -27,6 +27,7 @@ dependencies {
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	// Spring Boot 기본
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

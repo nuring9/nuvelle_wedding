@@ -16,6 +16,15 @@ export interface ReissueRequest {
   refreshToken: string;
 }
 
+export interface PasswordResetRequest {
+  email: string;
+}
+
+export interface PasswordResetConfirmRequest {
+  token: string;
+  newPassword: string;
+}
+
 // 토큰 응답
 export interface TokenResponse {
   accessToken: string;

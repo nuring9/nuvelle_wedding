@@ -35,8 +35,18 @@ public class User {
     @Column(nullable = false, length = 20)
     private UserRole role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20, columnDefinition = "varchar(20) default 'ACTIVE'")
+    private UserStatus status = UserStatus.ACTIVE;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20, columnDefinition = "varchar(20) default 'LOCAL'")
+    private AuthProvider provider = AuthProvider.LOCAL;
+
     @Column(unique = true)
     private Long kakaoId;
+
+    private LocalDateTime deletedAt;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -47,11 +57,43 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(String email, String password, String name, UserRole role, Long kakaoId) {
+    public User(String email, String password, String name, UserRole role, Long kakaoId, AuthProvider provider) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
         this.kakaoId = kakaoId;
+        this.provider = provider != null ? provider : AuthProvider.LOCAL;
+        this.status = UserStatus.ACTIVE;
+    }
+
+    public boolean isActive() {
+        return this.status == UserStatus.ACTIVE;
+    }
+
+    public boolean isWithdrawn() {
+        return this.status == UserStatus.WITHDRAWN;
+    }
+
+    public boolean isLocalUser() {
+        return this.provider == AuthProvider.LOCAL;
+    }
+
+    public void withdraw() {
+        this.status = UserStatus.WITHDRAWN;
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public void changeStatus(UserStatus status) {
+        this.status = status;
+        this.deletedAt = status == UserStatus.WITHDRAWN ? LocalDateTime.now() : null;
+    }
+
+    public void changeRole(UserRole role) {
+        this.role = role;
+    }
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

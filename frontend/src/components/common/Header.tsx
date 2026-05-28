@@ -11,6 +11,11 @@ interface HeaderProps {
 export default function Header({ transparent = false }: HeaderProps) {
   const { isAuthenticated, user } = useAuthStore();
   const { handleLogout, isLoading } = useAuth();
+  const logoHref = isAuthenticated
+    ? user?.role === "ROLE_ADMIN"
+      ? "/admin/templates"
+      : "/templates"
+    : "/";
 
   return (
     <header
@@ -21,7 +26,7 @@ export default function Header({ transparent = false }: HeaderProps) {
       <div className="max-w-screen-lg mx-auto px-4 h-14 flex items-center justify-between">
         {/* 로고 */}
         <Link
-          href="/"
+          href={logoHref}
           className="text-xl font-display font-semibold text-gray-800 tracking-widest"
         >
           Nuvelle
@@ -51,6 +56,12 @@ export default function Header({ transparent = false }: HeaderProps) {
                 className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 내청첩장
+              </Link>
+              <Link
+                href="/mypage"
+                className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                마이페이지
               </Link>
               <Link
                 href="/honeymoon"

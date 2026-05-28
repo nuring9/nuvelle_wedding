@@ -69,6 +69,16 @@ export default function AdminLayout({
               >
                 BGM 관리
               </Link>
+              <Link
+                href="/admin/users"
+                className={`rounded-lg px-3 py-2 transition-colors ${
+                  pathname.startsWith("/admin/users")
+                    ? "bg-primary-50 text-neutral-900"
+                    : "text-neutral-500 hover:bg-primary-50 hover:text-neutral-900"
+                }`}
+              >
+                회원 관리
+              </Link>
             </nav>
           </div>
 

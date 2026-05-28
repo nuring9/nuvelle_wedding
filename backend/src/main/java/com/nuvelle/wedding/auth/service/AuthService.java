@@ -55,6 +55,12 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        validateLoginAllowed(user);
+
+        if (user.getPassword() == null) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
@@ -88,6 +94,8 @@ public class AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        validateLoginAllowed(user);
+
         String newAccessToken = jwtTokenProvider.createAccessToken(
                 user.getId(), user.getEmail(), user.getRole().name());
         String newRefreshToken = jwtTokenProvider.createRefreshToken(user.getId());
@@ -101,6 +109,15 @@ public class AuthService {
 
     public void logout(CustomUserDetails userDetails) {
         refreshTokenService.delete(userDetails.getUserId());
+    }
+
+    private void validateLoginAllowed(User user) {
+        if (user.isWithdrawn()) {
+            throw new CustomException(ErrorCode.USER_WITHDRAWN);
+        }
+        if (!user.isActive()) {
+            throw new CustomException(ErrorCode.USER_SUSPENDED);
+        }
     }
 
 }

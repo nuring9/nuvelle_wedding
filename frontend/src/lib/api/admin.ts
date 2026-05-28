@@ -4,6 +4,9 @@ import {
   AdminInvitationSummary,
   AdminTemplate,
   AdminTemplateRequest,
+  AdminUser,
+  UserRole,
+  UserStatus,
 } from "@/types/admin";
 import { ApiResponse } from "@/types/auth";
 import axios from "axios";
@@ -161,6 +164,72 @@ export async function getAdminInvitations(
     await api.get<ApiResponse<AdminInvitationSummary[]>>("/invitations");
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "청첩장 목록을 불러오지 못했습니다.");
+  }
+  return res.data.data;
+}
+
+export async function getAdminUsers(
+  accessToken: string,
+  params?: { keyword?: string; status?: UserStatus | "" },
+): Promise<AdminUser[]> {
+  const api = getAdminApi(accessToken);
+  const res = await api.get<ApiResponse<AdminUser[]>>("/users", { params });
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "회원 목록을 불러오지 못했습니다.");
+  }
+  return res.data.data;
+}
+
+export async function getAdminUser(
+  userId: number,
+  accessToken: string,
+): Promise<AdminUser> {
+  const api = getAdminApi(accessToken);
+  const res = await api.get<ApiResponse<AdminUser>>(`/users/${userId}`);
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "회원 정보를 불러오지 못했습니다.");
+  }
+  return res.data.data;
+}
+
+export async function updateAdminUserStatus(
+  userId: number,
+  status: UserStatus,
+  accessToken: string,
+): Promise<AdminUser> {
+  const api = getAdminApi(accessToken);
+  const res = await api.patch<ApiResponse<AdminUser>>(`/users/${userId}/status`, {
+    status,
+  });
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "회원 상태 변경에 실패했습니다.");
+  }
+  return res.data.data;
+}
+
+export async function updateAdminUserRole(
+  userId: number,
+  role: UserRole,
+  accessToken: string,
+): Promise<AdminUser> {
+  const api = getAdminApi(accessToken);
+  const res = await api.patch<ApiResponse<AdminUser>>(`/users/${userId}/role`, {
+    role,
+  });
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "회원 권한 변경에 실패했습니다.");
+  }
+  return res.data.data;
+}
+
+export async function withdrawAdminUser(
+  userId: number,
+  accessToken: string,
+): Promise<AdminUser> {
+  const api = getAdminApi(accessToken);
+  const res = await api.patch<ApiResponse<AdminUser>>(`/users/${userId}/withdraw`);
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "회원 탈퇴 처리에 실패했습니다.");
   }
   return res.data.data;
 }

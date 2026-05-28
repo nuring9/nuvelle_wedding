@@ -5,7 +5,10 @@ import { useAuthStore } from "@/stores/authStore";
 import InputField from "@/components/common/InputField";
 import TextareaField from "@/components/common/TextareaField";
 import { saveInterview, getInterviewForEditor } from "@/lib/api/interview";
-import type { WeddingInterviewRequest } from "@/types/interview";
+import type {
+  WeddingInterviewRequest,
+  WeddingInterviewResponse,
+} from "@/types/interview";
 
 interface InvitationInterviewFormProps {
   invitationId: number;
@@ -32,7 +35,9 @@ function createEmptyItem(index: number): InterviewFormItem {
   };
 }
 
-function requestToItems(data: WeddingInterviewRequest | null) {
+function requestToItems(
+  data: WeddingInterviewRequest | WeddingInterviewResponse | null,
+) {
   if (!data) {
     return DEFAULT_QUESTIONS.map((question) => ({ question, answer: "" }));
   }
@@ -58,18 +63,20 @@ function requestToItems(data: WeddingInterviewRequest | null) {
 }
 
 function itemsToRequest(items: InterviewFormItem[]): WeddingInterviewRequest {
-  return Array.from({ length: MAX_INTERVIEW_COUNT }).reduce(
+  return Array.from({ length: MAX_INTERVIEW_COUNT }).reduce<WeddingInterviewRequest>(
     (payload, _, index) => {
       const number = index + 1;
+      const questionKey = `question${number}` as keyof WeddingInterviewRequest;
+      const answerKey = `answer${number}` as keyof WeddingInterviewRequest;
       const item = items[index];
 
       return {
         ...payload,
-        [`question${number}`]: item?.question ?? "",
-        [`answer${number}`]: item?.answer ?? "",
+        [questionKey]: item?.question ?? "",
+        [answerKey]: item?.answer ?? "",
       };
     },
-    {} as WeddingInterviewRequest,
+    {},
   );
 }
 

@@ -60,3 +60,20 @@ export interface AdminInvitationSummary {
   createdAt: string;
   updatedAt: string;
 }
+
+export type UserRole = "ROLE_USER" | "ROLE_ADMIN";
+export type UserStatus = "ACTIVE" | "WITHDRAWN" | "SUSPENDED";
+export type AuthProvider = "LOCAL" | "KAKAO";
+
+export interface AdminUser {
+  id: number;
+  email: string;
+  name: string;
+  role: UserRole;
+  status: UserStatus;
+  provider: AuthProvider;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  invitationCount: number | null;
+}

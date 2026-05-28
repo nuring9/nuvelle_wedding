@@ -2,9 +2,9 @@
 
 import { useAuth } from "@/hooks/userAuth";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 
-export default function KakaoCallbackPage() {
+function KakaoCallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { handleKakaoCallback, error } = useAuth();
@@ -47,5 +47,19 @@ export default function KakaoCallbackPage() {
     <div className="text-center py-8">
       <p className="text-sm text-gray-500">카카오 로그인 처리 중...</p>
     </div>
+  );
+}
+
+export default function KakaoCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="text-center py-8">
+          <p className="text-sm text-gray-500">카카오 로그인 처리 중...</p>
+        </div>
+      }
+    >
+      <KakaoCallbackContent />
+    </Suspense>
   );
 }

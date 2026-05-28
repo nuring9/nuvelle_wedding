@@ -6,6 +6,7 @@ import com.nuvelle.wedding.auth.dto.TokenResponse;
 import com.nuvelle.wedding.auth.jwt.JwtTokenProvider;
 import com.nuvelle.wedding.global.exception.CustomException;
 import com.nuvelle.wedding.global.exception.ErrorCode;
+import com.nuvelle.wedding.user.entity.AuthProvider;
 import com.nuvelle.wedding.user.entity.User;
 import com.nuvelle.wedding.user.entity.UserRole;
 import com.nuvelle.wedding.user.repository.UserRepository;
@@ -54,6 +55,8 @@ public class KakaoAuthService {
 
         User user = userRepository.findByKakaoId(userInfo.getId())
                 .orElseGet(() -> createKakaoUser(userInfo));
+
+        validateLoginAllowed(user);
 
         String accessToken = jwtTokenProvider.createAccessToken(
                 user.getId(), user.getEmail(), user.getRole().name());
@@ -132,7 +135,17 @@ public class KakaoAuthService {
                                 .name(userInfo.getNickname())
                                 .role(UserRole.ROLE_USER)
                                 .kakaoId(userInfo.getId())
+                                .provider(AuthProvider.KAKAO)
                                 .build()
                 ));
+    }
+
+    private void validateLoginAllowed(User user) {
+        if (user.isWithdrawn()) {
+            throw new CustomException(ErrorCode.USER_WITHDRAWN);
+        }
+        if (!user.isActive()) {
+            throw new CustomException(ErrorCode.USER_SUSPENDED);
+        }
     }
 }

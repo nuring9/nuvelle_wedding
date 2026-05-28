@@ -1,12 +1,15 @@
 package com.nuvelle.wedding.auth.controller;
 
 import com.nuvelle.wedding.auth.dto.LoginRequest;
+import com.nuvelle.wedding.auth.dto.PasswordResetConfirmRequest;
+import com.nuvelle.wedding.auth.dto.PasswordResetRequest;
 import com.nuvelle.wedding.auth.dto.ReissueRequest;
 import com.nuvelle.wedding.auth.dto.SignupRequest;
 import com.nuvelle.wedding.auth.dto.TokenResponse;
 import com.nuvelle.wedding.auth.security.CustomUserDetails;
 import com.nuvelle.wedding.auth.service.AuthService;
 import com.nuvelle.wedding.auth.service.KakaoAuthService;
+import com.nuvelle.wedding.auth.service.PasswordResetService;
 import com.nuvelle.wedding.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final KakaoAuthService kakaoAuthService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<TokenResponse>> signup(
@@ -55,5 +59,19 @@ public class AuthController {
             @RequestParam String code) {
         TokenResponse response = kakaoAuthService.kakaoLogin(code);
         return ResponseEntity.ok(ApiResponse.success("카카오 로그인이 완료되었습니다.", response));
+    }
+
+    @PostMapping("/password-reset/request")
+    public ResponseEntity<ApiResponse<Void>> requestPasswordReset(
+            @Valid @RequestBody PasswordResetRequest request) {
+        passwordResetService.requestReset(request);
+        return ResponseEntity.ok(ApiResponse.success("비밀번호 재설정 링크가 발송되었습니다."));
+    }
+
+    @PostMapping("/password-reset/confirm")
+    public ResponseEntity<ApiResponse<Void>> confirmPasswordReset(
+            @Valid @RequestBody PasswordResetConfirmRequest request) {
+        passwordResetService.confirmReset(request);
+        return ResponseEntity.ok(ApiResponse.success("비밀번호가 재설정되었습니다."));
     }
 }

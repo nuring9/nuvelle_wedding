@@ -1,6 +1,7 @@
 package com.nuvelle.wedding.auth.security;
 
 import com.nuvelle.wedding.user.entity.User;
+import com.nuvelle.wedding.user.entity.UserStatus;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,12 +16,14 @@ public class CustomUserDetails implements UserDetails {
     private final Long userId;
     private final String email;
     private final String password;
+    private final UserStatus status;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
         this.userId = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
+        this.status = user.getStatus();
         this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
@@ -46,7 +49,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return status != UserStatus.SUSPENDED;
     }
 
     @Override
@@ -56,6 +59,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return status == UserStatus.ACTIVE;
     }
 }

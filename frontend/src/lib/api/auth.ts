@@ -1,6 +1,8 @@
 import {
   ApiResponse,
   LoginRequest,
+  PasswordResetConfirmRequest,
+  PasswordResetRequest,
   ReissueRequest,
   SignupRequest,
   TokenResponse,
@@ -104,4 +106,16 @@ export async function logout(accessToken: string): Promise<void> {
       },
     },
   );
+}
+
+export async function requestPasswordReset(
+  data: PasswordResetRequest,
+): Promise<void> {
+  await authApi.post<ApiResponse<void>>("/password-reset/request", data);
+}
+
+export async function confirmPasswordReset(
+  data: PasswordResetConfirmRequest,
+): Promise<void> {
+  await authApi.post<ApiResponse<void>>("/password-reset/confirm", data);
 }

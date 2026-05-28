@@ -133,8 +133,8 @@ export default function LoginPage() {
         카카오로 로그인
       </button>
 
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-500">
+      <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-500">
+        <p>
           <Link
             href="/signup"
             className="text-primary-500 font-medium hover:underline"
@@ -142,6 +142,10 @@ export default function LoginPage() {
             회원가입
           </Link>
         </p>
+        <span className="text-gray-300">|</span>
+        <Link href="/forgot-password" className="hover:text-gray-800">
+          비밀번호 재설정
+        </Link>
       </div>
     </>
   );

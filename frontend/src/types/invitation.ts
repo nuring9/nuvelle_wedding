@@ -28,6 +28,8 @@ export interface PublicInvitation {
   groomPhone: string | null;
   bridePhone: string | null;
   contactEnabled: boolean;
+  groomIntroduction: string | null;
+  brideIntroduction: string | null;
   groomFatherName: string | null;
   groomMotherName: string | null;
   brideFatherName: string | null;

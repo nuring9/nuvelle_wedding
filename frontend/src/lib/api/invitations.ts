@@ -44,6 +44,8 @@ export interface UpdateInvitationRequest {
   groomPhone?: string;
   bridePhone?: string;
   contactEnabled?: boolean;
+  groomIntroduction?: string;
+  brideIntroduction?: string;
   groomFatherName?: string;
   groomMotherName?: string;
   brideFatherName?: string;
@@ -93,6 +95,8 @@ export interface InvitationResponse {
   groomPhone: string | null;
   bridePhone: string | null;
   contactEnabled: boolean;
+  groomIntroduction: string | null;
+  brideIntroduction: string | null;
   groomFatherName: string | null;
   groomMotherName: string | null;
   brideFatherName: string | null;
