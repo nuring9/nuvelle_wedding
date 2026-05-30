@@ -1,0 +1,64 @@
+# 1. Spring 관련 표준 설정
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+
+  sql:
+    init:
+      mode: never
+
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc:
+          time_zone: Asia/Seoul
+
+# 2. 커스텀 설정
+app:
+  frontend-url: ${FRONTEND_URL}
+  base-url: ${FRONTEND_URL}
+  cors:
+    allowed-origins:
+      - ${FRONTEND_URL}
+
+# 3. 로깅 설정
+logging:
+  level:
+    com.nuvelle: INFO
+    org.hibernate.SQL: WARN
+
+# 4. AWS S3 설정
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+# 5. Google AI Gemini 설정
+gemini:
+  api-key: ${GEMINI_API_KEY}
+  model: gemini-2.5-flash
+
+# 6. 카카오 OAuth 설정
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}
+  client-secret: ${KAKAO_CLIENT_SECRET}
+  redirect-uri: ${KAKAO_REDIRECT_URI}

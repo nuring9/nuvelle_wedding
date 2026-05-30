@@ -35,12 +35,14 @@ backend/build/
 backend/.gradle/
 backend/gradle-app.setting
 backend/target/
-backend/.env
-backend/.env.*
 
 # Env
 .env
 .env.*
+frontend/.env
+frontend/.env.*
+backend/.env
+backend/.env.*
 backend/src/main/resources/application-secret.yml
 backend/src/main/resources/application-local.yml
 
@@ -87,11 +89,14 @@ env.txt
 CLAUDE.md
 
 
+
 # Spring profile config with secrets
 backend/src/main/resources/application-dev.yml
+backend/src/main/resources/application-dev.yaml
 backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-local.yaml
 backend/src/main/resources/application-secret.yml
-backend/src/main/resources/application-prod.yml
+backend/src/main/resources/application-secret.yaml
 
 
 # Docker local override
