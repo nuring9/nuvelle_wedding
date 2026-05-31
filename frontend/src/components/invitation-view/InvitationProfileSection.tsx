@@ -12,7 +12,7 @@ export default function InvitationProfileSection({
   }
 
   return (
-    <section className="section-padding section-alt-bg">
+    <section className="section-padding">
       <h2 className="text-xs tracking-widest text-gray-400 mb-8 uppercase text-center">
         About Us
       </h2>

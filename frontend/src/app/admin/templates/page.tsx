@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
+import { useDialog } from "@/components/common/DialogProvider";
 import {
   getAdminTemplates,
   createAdminTemplate,
@@ -26,6 +27,7 @@ const emptyForm: AdminTemplateRequest = {
 export default function AdminTemplatesPage() {
   const router = useRouter();
   const { accessToken } = useAuthStore();
+  const { confirm } = useDialog();
 
   const [templates, setTemplates] = useState<AdminTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -84,10 +86,7 @@ export default function AdminTemplatesPage() {
     };
   }, [accessToken]);
 
-  const handleImageUpload = async (
-    file: File,
-    directory: string,
-  ) => {
+  const handleImageUpload = async (file: File, directory: string) => {
     if (!accessToken) return;
 
     try {
@@ -141,7 +140,7 @@ export default function AdminTemplatesPage() {
 
   const handleDelete = async (templateId: number) => {
     if (!accessToken) return;
-    if (!confirm("이 템플릿을 삭제하시겠습니까?")) return;
+    if (!(await confirm("이 템플릿을 삭제하시겠습니까?"))) return;
     try {
       await deleteAdminTemplate(templateId, accessToken);
       fetchTemplates();
@@ -262,9 +261,7 @@ export default function AdminTemplatesPage() {
                 </button>
                 <span
                   className={`text-sm ${
-                    form.thumbnailUrl
-                      ? "text-sky-700"
-                      : "text-neutral-400"
+                    form.thumbnailUrl ? "text-sky-700" : "text-neutral-400"
                   }`}
                 >
                   {isUploadingThumbnail
@@ -276,7 +273,7 @@ export default function AdminTemplatesPage() {
               </div>
             </div>
             <input
-              placeholder="테마 키"
+              placeholder="테마 스타일 (classic / sunshine / floral / nature / gold / dark)"
               value={form.themeKey ?? ""}
               onChange={(e) => setForm({ ...form, themeKey: e.target.value })}
               className="input-base"

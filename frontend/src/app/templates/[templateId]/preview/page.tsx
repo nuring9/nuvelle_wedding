@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/common/Header";
@@ -9,8 +11,8 @@ function getTemplateDescription(slug: string, name: string) {
   const descriptions: Record<string, string> = {
     "classic-white":
       "순백의 여백과 단정한 구성이 돋보이는 클래식한 청첩장입니다. 차분하고 우아한 분위기로 예식의 품격을 전해보세요.",
-    "modern-minimal":
-      "불필요한 장식을 덜어낸 미니멀한 디자인입니다. 깔끔한 정보 전달과 세련된 인상을 원하는 분께 잘 어울립니다.",
+    "bright-sunshine":
+      "밝은 햇살처럼 화사하고 따뜻한 분위기를 담은 템플릿입니다. 산뜻하고 기분 좋은 예식의 설렘을 자연스럽게 전해보세요.",
     "romantic-floral":
       "부드러운 플라워 무드로 따뜻하고 로맨틱한 분위기를 담았습니다. 사랑스러운 예식 감성을 자연스럽게 전해보세요.",
     "natural-garden":

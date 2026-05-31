@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
+import { useDialog } from "@/components/common/DialogProvider";
 import {
   getMyInvitations,
   deleteInvitation,
@@ -16,6 +17,7 @@ import {
 export default function InvitationsPage() {
   const router = useRouter();
   const { hasHydrated, isAuthenticated, accessToken } = useAuthStore();
+  const { alert, confirm } = useDialog();
   const [invitations, setInvitations] = useState<InvitationSummaryResponse[]>(
     [],
   );
@@ -47,12 +49,12 @@ export default function InvitationsPage() {
 
   const handleDelete = async (id: number) => {
     if (!accessToken) return;
-    if (!confirm("청첩장을 삭제하시겠습니까?")) return;
+    if (!(await confirm("청첩장을 삭제하시겠습니까?"))) return;
     try {
       await deleteInvitation(id, accessToken);
       setInvitations((prev) => prev.filter((inv) => inv.id !== id));
     } catch {
-      alert("삭제에 실패했습니다.");
+      await alert("삭제에 실패했습니다.");
     }
   };
 

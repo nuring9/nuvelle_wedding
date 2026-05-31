@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/authStore";
+import { useDialog } from "@/components/common/DialogProvider";
 import {
   getAdminBgms,
   createAdminBgm,
@@ -18,10 +19,9 @@ const emptyForm: AdminBgmRequest = {
   sortOrder: 0,
 };
 
-const MOOD_OPTIONS = ["잔잔한", "밝은", "감성적인", "로맨틱한", "청아한"];
-
 export default function AdminBgmsPage() {
   const { accessToken } = useAuthStore();
+  const { confirm } = useDialog();
 
   const [bgms, setBgms] = useState<AdminBgm[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +29,10 @@ export default function AdminBgmsPage() {
   const [form, setForm] = useState<AdminBgmRequest>(emptyForm);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  // 수정 관련 상태
+  const [editingBgm, setEditingBgm] = useState<AdminBgm | null>(null);
+  const [editForm, setEditForm] = useState<AdminBgmRequest>(emptyForm);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -38,20 +42,15 @@ export default function AdminBgmsPage() {
     getAdminBgms(accessToken)
       .then((data) => {
         if (ignore) return;
-
         setBgms(data);
         setError(null);
       })
       .catch((err: unknown) => {
         if (ignore) return;
-
-        if (err instanceof Error) {
-          setError(err.message);
-        }
+        if (err instanceof Error) setError(err.message);
       })
       .finally(() => {
         if (ignore) return;
-
         setIsLoading(false);
       });
 
@@ -62,42 +61,30 @@ export default function AdminBgmsPage() {
 
   const refreshBgms = async () => {
     if (!accessToken) return;
-
     try {
       const data = await getAdminBgms(accessToken);
-
       setBgms(data);
       setError(null);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
+      if (err instanceof Error) setError(err.message);
     }
   };
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!accessToken) return;
-
     try {
       await createAdminBgm(form, accessToken);
-
       setForm(emptyForm);
       setShowForm(false);
-
       await refreshBgms();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
+      if (err instanceof Error) setError(err.message);
     }
   };
 
-  // bgm 수정
   const handleToggleActive = async (bgm: AdminBgm) => {
     if (!accessToken) return;
-
     try {
       await updateAdminBgm(
         bgm.id,
@@ -110,31 +97,47 @@ export default function AdminBgmsPage() {
         },
         accessToken,
       );
-
       await refreshBgms();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
+      if (err instanceof Error) setError(err.message);
     }
   };
 
   const handleDelete = async (bgmId: number) => {
     if (!accessToken) return;
-    if (!confirm("이 BGM을 삭제하시겠습니까?")) return;
-
+    if (!(await confirm("이 BGM을 삭제하시겠습니까?"))) return;
     setDeletingId(bgmId);
-
     try {
       await deleteAdminBgm(bgmId, accessToken);
-
       await refreshBgms();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
+      if (err instanceof Error) setError(err.message);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleEditOpen = (bgm: AdminBgm) => {
+    setEditingBgm(bgm);
+    setEditForm({
+      title: bgm.title,
+      fileUrl: bgm.fileUrl,
+      mood: bgm.mood ?? "",
+      isActive: bgm.isActive,
+      sortOrder: bgm.sortOrder,
+    });
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!accessToken || !editingBgm) return;
+    try {
+      await updateAdminBgm(editingBgm.id, editForm, accessToken);
+      setEditingBgm(null);
+      setEditForm(emptyForm);
+      await refreshBgms();
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
     }
   };
 
@@ -156,9 +159,11 @@ export default function AdminBgmsPage() {
             총 {bgms.length}개 · 활성 {bgms.filter((b) => b.isActive).length}개
           </p>
         </div>
-
         <button
-          onClick={() => setShowForm((v) => !v)}
+          onClick={() => {
+            setShowForm((v) => !v);
+            setEditingBgm(null);
+          }}
           className="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
         >
           {showForm ? "취소" : "+ BGM 추가"}
@@ -177,104 +182,49 @@ export default function AdminBgmsPage() {
           onSubmit={handleSubmit}
           className="space-y-4 rounded-xl border border-primary-100 bg-white p-6"
         >
-          <h2 className="text-sm font-semibold text-neutral-700">
-            새 BGM 등록
-          </h2>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-xs font-medium text-neutral-500">
-                제목 *
-              </label>
-              <input
-                type="text"
-                required
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="예: It's Your Day"
-                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-xs font-medium text-neutral-500">
-                분위기
-              </label>
-              <select
-                value={form.mood ?? ""}
-                onChange={(e) => setForm({ ...form, mood: e.target.value })}
-                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
-              >
-                <option value="">선택 안 함</option>
-                {MOOD_OPTIONS.map((mood) => (
-                  <option key={mood} value={mood}>
-                    {mood}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs font-medium text-neutral-500">
-                S3 파일 URL *
-              </label>
-              <input
-                type="url"
-                required
-                value={form.fileUrl}
-                onChange={(e) => setForm({ ...form, fileUrl: e.target.value })}
-                placeholder="https://버킷명.s3.ap-northeast-2.amazonaws.com/bgm/..."
-                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-xs font-medium text-neutral-500">
-                정렬 순서
-              </label>
-              <input
-                type="number"
-                value={form.sortOrder ?? 0}
-                onChange={(e) =>
-                  setForm({ ...form, sortOrder: Number(e.target.value) })
-                }
-                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
-              />
-            </div>
-
-            <div className="flex items-center gap-2 pt-5">
-              <input
-                type="checkbox"
-                id="isActive"
-                checked={form.isActive ?? true}
-                onChange={(e) =>
-                  setForm({ ...form, isActive: e.target.checked })
-                }
-                className="h-4 w-4 rounded border-neutral-300 text-primary-500"
-              />
-              <label htmlFor="isActive" className="text-sm text-neutral-600">
-                활성화
-              </label>
-            </div>
-          </div>
-
+          <h2 className="text-sm font-semibold text-neutral-700">새 BGM 등록</h2>
+          <BgmFormFields form={form} setForm={setForm} />
           <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
-              onClick={() => {
-                setShowForm(false);
-                setForm(emptyForm);
-              }}
+              onClick={() => { setShowForm(false); setForm(emptyForm); }}
               className="rounded-lg border border-neutral-200 px-4 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50"
             >
               취소
             </button>
-
             <button
               type="submit"
               className="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
             >
               등록
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* 수정 폼 */}
+      {editingBgm && (
+        <form
+          onSubmit={handleEditSubmit}
+          className="space-y-4 rounded-xl border border-amber-100 bg-white p-6"
+        >
+          <h2 className="text-sm font-semibold text-neutral-700">
+            BGM 수정 — <span className="text-primary-500">{editingBgm.title}</span>
+          </h2>
+          <BgmFormFields form={editForm} setForm={setEditForm} />
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => { setEditingBgm(null); setEditForm(emptyForm); }}
+              className="rounded-lg border border-neutral-200 px-4 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50"
+            >
+              취소
+            </button>
+            <button
+              type="submit"
+              className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-600"
+            >
+              수정 완료
             </button>
           </div>
         </form>
@@ -293,42 +243,20 @@ export default function AdminBgmsPage() {
           <table className="w-full text-sm">
             <thead className="border-b border-neutral-100 bg-neutral-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">
-                  순서
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">
-                  제목
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">
-                  분위기
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">
-                  상태
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">
-                  미리듣기
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-neutral-400">
-                  관리
-                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">순서</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">제목</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">분위기</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">상태</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-neutral-400">미리듣기</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-neutral-400">관리</th>
               </tr>
             </thead>
-
             <tbody className="divide-y divide-neutral-50">
               {bgms.map((bgm) => (
-                <tr
-                  key={bgm.id}
-                  className="transition-colors hover:bg-neutral-50"
-                >
-                  <td className="px-4 py-3 text-neutral-400">
-                    {bgm.sortOrder}
-                  </td>
-                  <td className="px-4 py-3 font-medium text-neutral-800">
-                    {bgm.title}
-                  </td>
-                  <td className="px-4 py-3 text-neutral-500">
-                    {bgm.mood ?? "-"}
-                  </td>
+                <tr key={bgm.id} className="transition-colors hover:bg-neutral-50">
+                  <td className="px-4 py-3 text-neutral-400">{bgm.sortOrder}</td>
+                  <td className="px-4 py-3 font-medium text-neutral-800">{bgm.title}</td>
+                  <td className="px-4 py-3 text-neutral-500">{bgm.mood ?? "-"}</td>
                   <td className="px-4 py-3">
                     <button
                       type="button"
@@ -345,7 +273,17 @@ export default function AdminBgmsPage() {
                   <td className="px-4 py-3">
                     <audio controls src={bgm.fileUrl} className="h-7 w-40" />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-right space-x-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForm(false);
+                        handleEditOpen(bgm);
+                      }}
+                      className="rounded-lg px-3 py-1.5 text-xs font-medium text-amber-500 transition-colors hover:bg-amber-50"
+                    >
+                      수정
+                    </button>
                     <button
                       onClick={() => handleDelete(bgm.id)}
                       disabled={deletingId === bgm.id}
@@ -360,6 +298,75 @@ export default function AdminBgmsPage() {
           </table>
         </div>
       )}
+    </div>
+  );
+}
+
+// 추가/수정 폼 공통 필드 컴포넌트
+function BgmFormFields({
+  form,
+  setForm,
+}: {
+  form: AdminBgmRequest;
+  setForm: React.Dispatch<React.SetStateAction<AdminBgmRequest>>;
+}) {
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <label className="mb-1 block text-xs font-medium text-neutral-500">제목 *</label>
+        <input
+          type="text"
+          required
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          placeholder="예: It's Your Day"
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-xs font-medium text-neutral-500">분위기</label>
+        <input
+          type="text"
+          value={form.mood ?? ""}
+          onChange={(e) => setForm({ ...form, mood: e.target.value })}
+          placeholder="예: 잔잔한, 로맨틱한"
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
+        />
+      </div>
+
+      <div className="sm:col-span-2">
+        <label className="mb-1 block text-xs font-medium text-neutral-500">S3 파일 URL *</label>
+        <input
+          type="url"
+          required
+          value={form.fileUrl}
+          onChange={(e) => setForm({ ...form, fileUrl: e.target.value })}
+          placeholder="https://버킷명.s3.ap-northeast-2.amazonaws.com/bgm/..."
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-xs font-medium text-neutral-500">정렬 순서</label>
+        <input
+          type="number"
+          value={form.sortOrder ?? 0}
+          onChange={(e) => setForm({ ...form, sortOrder: Number(e.target.value) })}
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none"
+        />
+      </div>
+
+      <div className="flex items-center gap-2 pt-5">
+        <input
+          type="checkbox"
+          id="isActive"
+          checked={form.isActive ?? true}
+          onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+          className="h-4 w-4 rounded border-neutral-300 text-primary-500"
+        />
+        <label htmlFor="isActive" className="text-sm text-neutral-600">활성화</label>
+      </div>
     </div>
   );
 }

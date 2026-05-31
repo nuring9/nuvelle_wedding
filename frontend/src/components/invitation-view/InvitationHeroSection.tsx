@@ -96,7 +96,8 @@ export default function InvitationHeroSection({
             src={invitation.mainImageUrl}
             alt="웨딩 메인 사진"
             fill
-            sizes="(max-width: 768px) 100vw, 420px"
+            sizes="430px"
+            quality={90}
             className="object-cover"
             style={{
               objectPosition: invitation.mainImagePosition ?? "50% 50%",

@@ -65,6 +65,7 @@ interface SortablePreviewSectionProps {
   invitation: PublicInvitation;
   readOnlyInteractions?: boolean;
   disabled?: boolean;
+  isAlt?: boolean;
   mainImagePositionEditable?: boolean;
   onMainImagePositionChange?: (position: string) => void;
 }
@@ -90,6 +91,7 @@ function SortablePreviewSection({
   invitation,
   readOnlyInteractions = false,
   disabled = false,
+  isAlt = false,
   mainImagePositionEditable = false,
   onMainImagePositionChange,
 }: SortablePreviewSectionProps) {
@@ -108,7 +110,8 @@ function SortablePreviewSection({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  };
+    ...(isAlt ? { "--section-bg": "var(--invite-section-alt)" } : {}),
+  } as React.CSSProperties;
 
   const dragHandleProps = disabled ? {} : { ...attributes, ...listeners };
   const isHeroPositionTarget = sectionId === "hero" && mainImagePositionEditable;
@@ -200,20 +203,27 @@ export default function InvitationSectionRenderer({
   if (!editable) {
     return (
       <>
-        {visibleOrder.map((sectionId) => {
+        {visibleOrder.map((sectionId, index) => {
           const SectionComponent = sectionMap[sectionId];
+          const isAlt = index % 2 === 1;
+
+          const altStyle = isAlt
+            ? ({ "--section-bg": "var(--invite-section-alt)" } as React.CSSProperties)
+            : {};
 
           if (sectionId === "guestPhoto" && readOnlyInteractions) {
             return (
-              <InvitationGuestPhotoSection
-                key={sectionId}
-                invitation={invitation}
-                readOnly
-              />
+              <div key={sectionId} style={altStyle}>
+                <InvitationGuestPhotoSection invitation={invitation} readOnly />
+              </div>
             );
           }
 
-          return <SectionComponent key={sectionId} invitation={invitation} />;
+          return (
+            <div key={sectionId} style={altStyle}>
+              <SectionComponent invitation={invitation} />
+            </div>
+          );
         })}
       </>
     );
@@ -229,13 +239,14 @@ export default function InvitationSectionRenderer({
         items={visibleOrder}
         strategy={verticalListSortingStrategy}
       >
-        {visibleOrder.map((sectionId) => (
+        {visibleOrder.map((sectionId, index) => (
           <SortablePreviewSection
             key={sectionId}
             sectionId={sectionId}
             invitation={invitation}
             readOnlyInteractions={readOnlyInteractions}
             disabled={disableSectionDrag}
+            isAlt={index % 2 === 1}
             mainImagePositionEditable={mainImagePositionEditable}
             onMainImagePositionChange={onMainImagePositionChange}
           />

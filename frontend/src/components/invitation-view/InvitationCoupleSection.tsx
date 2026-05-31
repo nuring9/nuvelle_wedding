@@ -53,12 +53,12 @@ export default function InvitationCoupleSection({
   const showContact = invitation.contactEnabled;
 
   return (
-    <section className="section-padding section-alt-bg text-center">
-      <div className="flex justify-center items-center gap-12">
+    <section className="section-padding text-center">
+      <div className="flex justify-center items-center gap-6">
         {/* 신랑 측 */}
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center gap-1 min-w-0">
           {invitation.parentsEnabled && invitation.groomFatherName && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 whitespace-nowrap">
               {invitation.groomFatherName} · {invitation.groomMotherName}의 아들
             </p>
           )}
@@ -72,12 +72,25 @@ export default function InvitationCoupleSection({
           />
         </div>
 
-        <span className="text-primary-400 text-xl">♥</span>
+        <span
+          className="select-none"
+          style={{
+            fontFamily: "Georgia, 'Times New Roman', serif",
+            fontSize: "2rem",
+            fontWeight: 300,
+            fontStyle: "italic",
+            color: "var(--invite-primary)",
+            opacity: 0.3,
+            lineHeight: 1,
+          }}
+        >
+          &amp;
+        </span>
 
         {/* 신부 측 */}
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center gap-1 min-w-0">
           {invitation.parentsEnabled && invitation.brideFatherName && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 whitespace-nowrap">
               {invitation.brideFatherName} · {invitation.brideMotherName}의 딸
             </p>
           )}

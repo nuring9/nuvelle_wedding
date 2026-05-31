@@ -56,7 +56,7 @@ export default function InvitationInterviewSection({
   if (items.length === 0) return null;
 
   return (
-    <section className="section-padding section-alt-bg">
+    <section className="section-padding">
       <h2 className="text-xs tracking-widest text-gray-400 mb-3 uppercase text-center">
         Interview
       </h2>

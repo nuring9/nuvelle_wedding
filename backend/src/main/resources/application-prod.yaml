@@ -18,7 +18,7 @@ spring:
   jpa:
     defer-datasource-initialization: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
@@ -34,6 +34,7 @@ app:
   cors:
     allowed-origins:
       - ${FRONTEND_URL}
+      - https://www.nuvelle-wedding.site
 
 # 3. 로깅 설정
 logging:

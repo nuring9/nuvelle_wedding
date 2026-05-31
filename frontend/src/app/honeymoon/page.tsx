@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/stores/authStore";
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
+import { useDialog } from "@/components/common/DialogProvider";
 import HoneymoonPlanCard from "@/components/honeymoon/HoneymoonPlanCard";
 import { getMyPlans, deletePlan } from "@/lib/api/honeymoon";
 import type { HoneymoonPlanSummaryResponse } from "@/types/honeymoon";
@@ -13,6 +14,7 @@ import type { HoneymoonPlanSummaryResponse } from "@/types/honeymoon";
 export default function HoneymoonPage() {
   const router = useRouter();
   const { hasHydrated, isAuthenticated, accessToken } = useAuthStore();
+  const { alert, confirm } = useDialog();
   const [plans, setPlans] = useState<HoneymoonPlanSummaryResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,12 +43,12 @@ export default function HoneymoonPage() {
 
   const handleDelete = async (planId: number) => {
     if (!accessToken) return;
-    if (!confirm("플랜을 삭제하시겠습니까?")) return;
+    if (!(await confirm("플랜을 삭제하시겠습니까?"))) return;
     try {
       await deletePlan(planId, accessToken);
       setPlans((prev) => prev.filter((p) => p.id !== planId));
     } catch {
-      alert("삭제에 실패했습니다.");
+      await alert("삭제에 실패했습니다.");
     }
   };
 

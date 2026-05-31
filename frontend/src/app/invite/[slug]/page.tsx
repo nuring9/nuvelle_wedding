@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -13,7 +15,7 @@ interface InvitePageProps {
 
 const INVITATION_THEMES = [
   "classic",
-  "minimal",
+  "sunshine",
   "floral",
   "nature",
   "gold",
@@ -95,7 +97,9 @@ export default async function InvitePage({ params }: InvitePageProps) {
           className="invitation-container invitation-themed"
           data-invitation-theme={theme}
           data-invitation-font={font}
-          {...(["fade", "slide", "zoom"].includes(invitation.animationType ?? "")
+          {...(["fade", "slide", "zoom"].includes(
+            invitation.animationType ?? "",
+          )
             ? { "data-anim": invitation.animationType! }
             : {})}
         >

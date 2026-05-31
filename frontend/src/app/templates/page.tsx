@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Suspense } from "react";
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";

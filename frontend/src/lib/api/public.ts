@@ -8,20 +8,27 @@ import type {
   RsvpResponse,
 } from "@/types/invitation";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+function getBaseUrl() {
+  if (typeof window === "undefined") {
+    return process.env.API_URL || "http://localhost:8080";
+  }
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+}
 
-const publicApi = axios.create({
-  baseURL: `${BASE_URL}/api/public/invitations`,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+function createPublicApi() {
+  return axios.create({
+    baseURL: `${getBaseUrl()}/api/public/invitations`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
 
 // 공개 청첩장 조회
 export async function getPublicInvitation(
   slug: string,
 ): Promise<PublicInvitation> {
-  const res = await publicApi.get<ApiResponse<PublicInvitation>>(`/${slug}`);
+  const res = await createPublicApi().get<ApiResponse<PublicInvitation>>(`/${slug}`);
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "청첩장을 불러오지 못했습니다.");
   }
@@ -33,7 +40,7 @@ export async function submitRsvp(
   slug: string,
   data: RsvpRequest,
 ): Promise<RsvpResponse> {
-  const res = await publicApi.post<ApiResponse<RsvpResponse>>(
+  const res = await createPublicApi().post<ApiResponse<RsvpResponse>>(
     `/${slug}/rsvp`,
     data,
   );
@@ -48,7 +55,7 @@ export async function submitGuestbook(
   slug: string,
   data: GuestbookRequest,
 ): Promise<GuestbookResponse> {
-  const res = await publicApi.post<ApiResponse<GuestbookResponse>>(
+  const res = await createPublicApi().post<ApiResponse<GuestbookResponse>>(
     `/${slug}/guestbook`,
     data,
   );
@@ -62,7 +69,7 @@ export async function submitGuestbook(
 export async function getGuestbookList(
   slug: string,
 ): Promise<GuestbookResponse[]> {
-  const res = await publicApi.get<ApiResponse<GuestbookResponse[]>>(
+  const res = await createPublicApi().get<ApiResponse<GuestbookResponse[]>>(
     `/${slug}/guestbook`,
   );
   if (!res.data.success || !res.data.data) {

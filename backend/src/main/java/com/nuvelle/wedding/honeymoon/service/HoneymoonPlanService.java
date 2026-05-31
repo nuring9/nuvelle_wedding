@@ -11,6 +11,7 @@ import com.nuvelle.wedding.honeymoon.ai.HoneymoonPromptBuilder;
 import com.nuvelle.wedding.honeymoon.dto.*;
 import com.nuvelle.wedding.honeymoon.entity.HoneymoonPlan;
 import com.nuvelle.wedding.honeymoon.entity.HoneymoonPlanDay;
+import com.nuvelle.wedding.honeymoon.repository.HoneymoonChatMessageRepository;
 import com.nuvelle.wedding.honeymoon.repository.HoneymoonPlanDayRepository;
 import com.nuvelle.wedding.honeymoon.repository.HoneymoonPlanRepository;
 import com.nuvelle.wedding.user.entity.User;
@@ -31,6 +32,7 @@ public class HoneymoonPlanService {
 
     private final HoneymoonPlanRepository planRepository;
     private final HoneymoonPlanDayRepository planDayRepository;
+    private final HoneymoonChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final GeminiClient geminiClient;
     private final HoneymoonPromptBuilder promptBuilder;
@@ -223,6 +225,7 @@ public class HoneymoonPlanService {
             throw new CustomException(ErrorCode.PLAN_ACCESS_DENIED);
         }
 
+        chatMessageRepository.deleteAllByPlanId(planId);
         planRepository.delete(plan);
     }
 

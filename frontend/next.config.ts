@@ -5,14 +5,11 @@ const nextConfig: NextConfig = {
     TZ: "Asia/Seoul",
   },
   images: {
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "**.amazonaws.com",
-      },
-      {
-        protocol: "http",
-        hostname: "localhost",
       },
       {
         protocol: "https",

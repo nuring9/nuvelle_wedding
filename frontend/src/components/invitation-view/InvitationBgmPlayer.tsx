@@ -52,7 +52,13 @@ export default function InvitationBgmPlayer({
 
   return (
     <div className={className}>
-      <audio ref={audioRef} src={bgmUrl} loop />
+      <audio
+        ref={audioRef}
+        src={bgmUrl}
+        loop
+        controlsList="nodownload"
+        onContextMenu={(e) => e.preventDefault()}
+      />
 
       <button
         type="button"

@@ -51,10 +51,10 @@ INSERT IGNORE INTO templates (
  true, 1, NOW(), NOW()),
 
 -- 2번 템플릿 데이터
-(2, '모던 미니멀', 'modern-minimal',
+(2, '브라이트 선샤인', 'bright-sunshine',
  NULL,
  NULL,
- 'minimal', 'standard',
+ 'sunshine', 'standard',
  true, 2, NOW(), NOW()),
 
 -- 3번 템플릿 데이터

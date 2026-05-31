@@ -9,6 +9,7 @@ import {
   withdrawAdminUser,
 } from "@/lib/api/admin";
 import { useAuthStore } from "@/stores/authStore";
+import { useDialog } from "@/components/common/DialogProvider";
 import type { AdminUser, UserRole, UserStatus } from "@/types/admin";
 
 const statusLabel: Record<UserStatus, string> = {
@@ -33,6 +34,7 @@ function formatDate(value: string | null) {
 
 export default function AdminUsersPage() {
   const { accessToken, user } = useAuthStore();
+  const { alert, confirm } = useDialog();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [keyword, setKeyword] = useState("");
@@ -97,7 +99,7 @@ export default function AdminUsersPage() {
       setUsers((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
       if (selectedUser?.id === updated.id) await refreshSelectedUser(updated.id);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "회원 상태 변경에 실패했습니다.");
+      await alert(err instanceof Error ? err.message : "회원 상태 변경에 실패했습니다.");
     }
   };
 
@@ -109,20 +111,20 @@ export default function AdminUsersPage() {
       setUsers((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
       if (selectedUser?.id === updated.id) await refreshSelectedUser(updated.id);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "회원 권한 변경에 실패했습니다.");
+      await alert(err instanceof Error ? err.message : "회원 권한 변경에 실패했습니다.");
     }
   };
 
   const handleWithdraw = async (targetUser: AdminUser) => {
     if (!accessToken) return;
-    if (!confirm(`${targetUser.email} 회원을 탈퇴 처리하시겠습니까?`)) return;
+    if (!(await confirm(`${targetUser.email} 회원을 탈퇴 처리하시겠습니까?`))) return;
 
     try {
       const updated = await withdrawAdminUser(targetUser.id, accessToken);
       setUsers((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
       if (selectedUser?.id === updated.id) await refreshSelectedUser(updated.id);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "회원 탈퇴 처리에 실패했습니다.");
+      await alert(err instanceof Error ? err.message : "회원 탈퇴 처리에 실패했습니다.");
     }
   };
 
@@ -133,7 +135,7 @@ export default function AdminUsersPage() {
       const detail = await getAdminUser(userId, accessToken);
       setSelectedUser(detail);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "회원 상세 정보를 불러오지 못했습니다.");
+      await alert(err instanceof Error ? err.message : "회원 상세 정보를 불러오지 못했습니다.");
     }
   };
 

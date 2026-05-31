@@ -2,6 +2,8 @@
 
 import InputField from "@/components/common/InputField";
 import TextareaField from "@/components/common/TextareaField";
+import DatePicker from "@/components/common/DatePicker";
+import TimePicker from "@/components/common/TimePicker";
 import type { UpdateInvitationRequest } from "@/lib/api/invitations";
 import InvitationMapForm from "./InvitationMapForm";
 
@@ -19,19 +21,15 @@ export default function InvitationWeddingInfoForm({
       <h3 className="text-sm font-semibold text-gray-800">예식 정보</h3>
 
       <div className="grid grid-cols-2 gap-3">
-        <InputField
+        <DatePicker
           label="예식 날짜"
-          // 브라우저 기본 날짜 입력 UI 사용
-          type="date"
           value={data.weddingDate ?? ""}
-          onChange={(e) => onChange({ weddingDate: e.target.value })}
+          onChange={(v) => onChange({ weddingDate: v })}
         />
-        <InputField
+        <TimePicker
           label="예식 시간"
-          // 브라우저 기본 시간 입력 UI 사용
-          type="time"
           value={data.weddingTime ?? ""}
-          onChange={(e) => onChange({ weddingTime: e.target.value })}
+          onChange={(v) => onChange({ weddingTime: v })}
         />
       </div>
 
@@ -42,12 +40,7 @@ export default function InvitationWeddingInfoForm({
         onChange={(e) => onChange({ venueName: e.target.value })}
       />
 
-      <InputField
-        label="주소"
-        placeholder="예: 서울시 강남구 테헤란로 123"
-        value={data.venueAddress ?? ""}
-        onChange={(e) => onChange({ venueAddress: e.target.value })}
-      />
+      <InvitationMapForm data={data} onChange={onChange} />
 
       <InputField
         label="상세 위치"
@@ -63,10 +56,6 @@ export default function InvitationWeddingInfoForm({
         onChange={(e) => onChange({ transportInfo: e.target.value })}
         rows={4}
       />
-
-      <div className="pt-2">
-        <InvitationMapForm data={data} onChange={onChange} />
-      </div>
     </div>
   );
 }

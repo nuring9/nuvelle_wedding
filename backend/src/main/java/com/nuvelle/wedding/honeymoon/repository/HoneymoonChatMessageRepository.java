@@ -16,4 +16,6 @@ public interface HoneymoonChatMessageRepository
     List<HoneymoonChatMessage> findTop10ByPlanIdOrderByCreatedAtDesc(Long planId);
 
     Optional<HoneymoonChatMessage> findByIdAndPlanId(Long id, Long planId);
+
+    void deleteAllByPlanId(Long planId);
 }

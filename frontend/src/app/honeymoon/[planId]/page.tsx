@@ -8,6 +8,7 @@ import HoneymoonDestinationImage from "@/components/honeymoon/HoneymoonDestinati
 import HoneymoonPdfTemplate from "@/components/honeymoon/HoneymoonPdfTemplate";
 import { searchDestinationImages } from "@/lib/api/unsplash";
 import { useAuthStore } from "@/stores/authStore";
+import { useDialog } from "@/components/common/DialogProvider";
 import Header from "@/components/common/Header";
 import HoneymoonPlanDayCard from "@/components/honeymoon/HoneymoonPlanDayCard";
 import HoneymoonDayEditModal from "@/components/honeymoon/HoneymoonDayEditModal";
@@ -23,6 +24,7 @@ export default function HoneymoonPlanDetailPage() {
   const router = useRouter();
   const planId = Number(params.planId);
   const { hasHydrated, isAuthenticated, accessToken } = useAuthStore();
+  const { alert } = useDialog();
 
   const [plan, setPlan] = useState<HoneymoonPlanResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -195,7 +197,7 @@ export default function HoneymoonPlanDetailPage() {
       pdf.save(`${plan.destination}-신혼여행-일정.pdf`);
     } catch (err) {
       console.error("PDF 내보내기 실패:", err);
-      alert("PDF 내보내기에 실패했습니다. 다시 시도해주세요.");
+      await alert("PDF 내보내기에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsExportingPdf(false);
     }
