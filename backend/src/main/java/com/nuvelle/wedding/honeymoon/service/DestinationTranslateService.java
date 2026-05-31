@@ -3,6 +3,7 @@ package com.nuvelle.wedding.honeymoon.service;
 import com.nuvelle.wedding.auth.security.CustomUserDetails;
 import com.nuvelle.wedding.global.exception.CustomException;
 import com.nuvelle.wedding.global.exception.ErrorCode;
+import org.springframework.dao.DataIntegrityViolationException;
 import com.nuvelle.wedding.honeymoon.ai.GeminiClient;
 import com.nuvelle.wedding.honeymoon.entity.DestinationTranslationCache;
 import com.nuvelle.wedding.honeymoon.repository.DestinationTranslationCacheRepository;
@@ -36,13 +37,17 @@ public class DestinationTranslateService {
 
         String englishQuery = translateWithGemini(normalizedDestination);
 
-        cacheRepository.save(
-                DestinationTranslationCache.builder()
-                        .user(user)
-                        .sourceText(normalizedDestination)
-                        .englishQuery(englishQuery)
-                        .build()
-        );
+        try {
+            cacheRepository.save(
+                    DestinationTranslationCache.builder()
+                            .user(user)
+                            .sourceText(normalizedDestination)
+                            .englishQuery(englishQuery)
+                            .build()
+            );
+        } catch (DataIntegrityViolationException e) {
+            // 동시 요청으로 인한 중복 insert 무시 — 이미 캐시된 값 그대로 사용
+        }
 
         return englishQuery;
     }
