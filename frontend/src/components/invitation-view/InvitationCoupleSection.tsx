@@ -62,7 +62,7 @@ export default function InvitationCoupleSection({
               {invitation.groomFatherName} · {invitation.groomMotherName}의 아들
             </p>
           )}
-          <p className="text-lg font-medium text-gray-800">
+          <p className="text-xl font-serif font-medium text-gray-800 tracking-wide">
             {invitation.groomName}
           </p>
           <ContactLink
@@ -94,7 +94,7 @@ export default function InvitationCoupleSection({
               {invitation.brideFatherName} · {invitation.brideMotherName}의 딸
             </p>
           )}
-          <p className="text-lg font-medium text-gray-800">
+          <p className="text-xl font-serif font-medium text-gray-800 tracking-wide">
             {invitation.brideName}
           </p>
           <ContactLink
