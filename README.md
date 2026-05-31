@@ -8,6 +8,12 @@ Nuvelle Wedding은 사용자가 청첩장 템플릿을 선택하고, 예식 정�
 
 <br />
 
+## 배포 주소
+
+- Service: https://nuvelle-wedding.site/
+
+<br />
+
 ## 프로젝트 소개
 
 Nuvelle Wedding은 모바일 환경에서 예비 부부가 간편하게 청첩장을 만들고 공유할 수 있도록 돕는 웹 서비스입니다.
@@ -144,7 +150,7 @@ Nuvelle Wedding은 모바일 환경에서 예비 부부가 간편하게 청첩�
 
 `Java 21` `Spring Boot 4` `Spring Web MVC` `Spring Security`  
 `Spring Data JPA` `MySQL` `Redis` `JWT` `Lombok`  
-`AWS S3` `Spring Mail` `WebFlux` `Gemini API`
+`AWS S3` `Gemini API`
 
 ### Infra / Deployment
 
