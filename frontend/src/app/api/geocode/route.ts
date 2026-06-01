@@ -14,17 +14,34 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const res = await fetch(
+  const headers = { Authorization: `KakaoAK ${restKey}` };
+
+  // 1차: 주소 검색
+  const addressRes = await fetch(
     `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(address)}`,
-    { headers: { Authorization: `KakaoAK ${restKey}` } },
+    { headers },
   );
 
-  if (!res.ok) {
+  if (addressRes.ok) {
+    const addressJson = await addressRes.json();
+    const doc = addressJson.documents?.[0];
+    if (doc) {
+      return NextResponse.json({ lat: parseFloat(doc.y), lng: parseFloat(doc.x) });
+    }
+  }
+
+  // 2차: 키워드 검색 (건물명/장소명)
+  const keywordRes = await fetch(
+    `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(address)}`,
+    { headers },
+  );
+
+  if (!keywordRes.ok) {
     return NextResponse.json({ error: "Kakao API error" }, { status: 502 });
   }
 
-  const json = await res.json();
-  const doc = json.documents?.[0];
+  const keywordJson = await keywordRes.json();
+  const doc = keywordJson.documents?.[0];
 
   if (!doc) {
     return NextResponse.json({ error: "No result" }, { status: 404 });
