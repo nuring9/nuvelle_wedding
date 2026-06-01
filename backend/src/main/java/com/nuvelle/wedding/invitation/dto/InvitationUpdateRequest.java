@@ -76,6 +76,11 @@ public class InvitationUpdateRequest {
     // 게스트 사진 업로드
     private Boolean guestPhotoEnabled;
 
+    // 포토 배너
+    private Boolean photoBannerEnabled;
+    private String photoBannerUrl;
+    private String photoBannerPosition;
+
     // 섹션 순서
     private List<String> sectionOrder;
 }

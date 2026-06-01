@@ -187,6 +187,18 @@ public class InvitationService {
                         ? request.getGuestPhotoEnabled()
                         : invitation.isGuestPhotoEnabled(),
 
+                request.getPhotoBannerEnabled() != null
+                        ? request.getPhotoBannerEnabled()
+                        : invitation.isPhotoBannerEnabled(),
+
+                request.getPhotoBannerUrl() != null
+                        ? request.getPhotoBannerUrl()
+                        : invitation.getPhotoBannerUrl(),
+
+                request.getPhotoBannerPosition() != null
+                        ? request.getPhotoBannerPosition()
+                        : invitation.getPhotoBannerPosition(),
+
                 sectionOrder
         );
 
@@ -248,6 +260,22 @@ public class InvitationService {
                 InvitationGallery.builder().invitation(invitation).imageUrl(imageUrl).sortOrder(nextOrder).build();
 
         galleryRepository.save(gallery);
+
+        return GalleryImageResponse.from(gallery);
+    }
+
+    // 갤러리 이미지 위치 수정
+    @Transactional
+    public GalleryImageResponse updateGalleryImagePosition(Long invitationId, Long imageId, String objectPosition, CustomUserDetails userDetails) {
+        Invitation invitation =
+                invitationRepository.findById(invitationId).orElseThrow(() -> new CustomException(ErrorCode.INVITATION_NOT_FOUND));
+
+        validateOwner(invitation, userDetails.getUserId());
+
+        InvitationGallery gallery =
+                galleryRepository.findByIdAndInvitationId(imageId, invitationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        gallery.updateObjectPosition(objectPosition);
 
         return GalleryImageResponse.from(gallery);
     }

@@ -7,19 +7,26 @@ import { uploadFile, deleteFile } from "@/lib/api/file";
 import {
   addGalleryImage,
   deleteGalleryImage,
+  updateGalleryImagePosition,
   type GalleryImageResponse,
+  type UpdateInvitationRequest,
 } from "@/lib/api/invitations";
+import { GALLERY_LAYOUT_OPTIONS } from "@/constants/invitation";
 
 interface InvitationGalleryFormProps {
   invitationId: number;
   galleries: GalleryImageResponse[];
   onGalleriesChange: (galleries: GalleryImageResponse[]) => void;
+  data: UpdateInvitationRequest;
+  onChange: (data: Partial<UpdateInvitationRequest>) => void;
 }
 
 export default function InvitationGalleryForm({
   invitationId,
   galleries,
   onGalleriesChange,
+  data,
+  onChange,
 }: InvitationGalleryFormProps) {
   const { accessToken } = useAuthStore();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,6 +60,16 @@ export default function InvitationGalleryForm({
     } finally {
       setIsUploading(false);
       if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const handlePositionChange = async (imageId: number, position: string) => {
+    if (!accessToken) return;
+    try {
+      const updated = await updateGalleryImagePosition(invitationId, imageId, position, accessToken);
+      onGalleriesChange(galleries.map((g) => (g.id === imageId ? updated : g)));
+    } catch {
+      setError("위치 변경에 실패했습니다.");
     }
   };
 
@@ -91,26 +108,48 @@ export default function InvitationGalleryForm({
               fill
               sizes="(max-width: 768px) 33vw, 140px"
               className="object-cover"
+              style={{ objectPosition: image.objectPosition ?? "center" }}
             />
-            <button
-              type="button"
-              onClick={() => handleDelete(image.id)}
-              className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-            >
-              <svg
-                className="w-5 h-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* 호버 오버레이 */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-between p-1.5">
+              {/* 위치 버튼 */}
+              <div className="flex gap-1">
+                {(["top", "center", "bottom"] as const).map((pos) => (
+                  <button
+                    key={pos}
+                    type="button"
+                    onClick={() => handlePositionChange(image.id, pos)}
+                    className={`text-[10px] px-1.5 py-0.5 rounded font-medium transition-colors ${
+                      (image.objectPosition ?? "center") === pos
+                        ? "bg-white text-gray-800"
+                        : "bg-white/30 text-white hover:bg-white/60"
+                    }`}
+                  >
+                    {pos === "top" ? "위" : pos === "center" ? "중" : "아래"}
+                  </button>
+                ))}
+              </div>
+              {/* 삭제 버튼 */}
+              <button
+                type="button"
+                onClick={() => handleDelete(image.id)}
+                className="self-end"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-            </button>
+                <svg
+                  className="w-5 h-5 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         ))}
 
@@ -164,6 +203,36 @@ export default function InvitationGalleryForm({
       </div>
 
       <p className="text-xs text-gray-400">여러 장 선택 가능 · 최대 10MB</p>
+
+      {/* 갤러리 레이아웃 */}
+      <div className="flex flex-col gap-3 pt-2">
+        <h3 className="text-sm font-semibold text-gray-800">갤러리 레이아웃</h3>
+        <div className="flex flex-col gap-2">
+          {GALLERY_LAYOUT_OPTIONS.map((layout) => (
+            <button
+              key={layout.key}
+              type="button"
+              onClick={() => onChange({ galleryLayout: layout.key })}
+              className={`flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+                data.galleryLayout === layout.key
+                  ? "border-primary-500 bg-primary-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              <span className="text-2xl">{layout.icon}</span>
+              <div className="flex flex-col gap-0.5 flex-1">
+                <p className="text-sm font-medium text-gray-800">{layout.label}</p>
+                <p className="text-xs text-gray-400">{layout.description}</p>
+              </div>
+              {data.galleryLayout === layout.key && (
+                <svg className="w-4 h-4 text-primary-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <input
         ref={inputRef}

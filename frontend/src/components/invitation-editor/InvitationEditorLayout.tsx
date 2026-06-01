@@ -10,6 +10,7 @@ import InvitationParentsInfoForm from "./InvitationParentsInfoForm";
 import InvitationGreetingForm from "./InvitationGreetingForm";
 import InvitationWeddingInfoForm from "./InvitationWeddingInfoForm";
 import InvitationGalleryForm from "./InvitationGalleryForm";
+import InvitationPhotoBannerForm from "./InvitationPhotoBannerForm";
 import InvitationAccountForm from "./InvitationAccountForm";
 import InvitationSectionToggleForm from "./InvitationSectionToggleForm";
 import InvitationPublishPanel from "./InvitationPublishPanel";
@@ -40,6 +41,7 @@ type TabKey =
   | "greeting"
   | "wedding"
   | "gallery"
+  | "photoBanner"
   | "account"
   | "theme"
   | "interview"
@@ -55,6 +57,7 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "greeting", label: "인사말" },
   { key: "wedding", label: "예식 정보" },
   { key: "gallery", label: "갤러리" },
+  { key: "photoBanner", label: "포토 배너" },
   { key: "account", label: "계좌번호" },
   { key: "interview", label: "웨딩 인터뷰" },
   { key: "theme", label: "테마/폰트" },
@@ -106,6 +109,9 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     remittanceLink: invitation.remittanceLink ?? "",
     interviewEnabled: invitation.interviewEnabled ?? false,
     guestPhotoEnabled: invitation.guestPhotoEnabled ?? false,
+    photoBannerEnabled: invitation.photoBannerEnabled ?? false,
+    photoBannerUrl: invitation.photoBannerUrl ?? "",
+    photoBannerPosition: invitation.photoBannerPosition ?? "50% 50%",
     sectionOrder: invitation.sectionOrder ?? [],
   };
 }
@@ -132,6 +138,8 @@ export default function InvitationEditorLayout({
   );
   const [activeTab, setActiveTab] = useState<TabKey>("basic");
   const [isMainImagePositionMode, setIsMainImagePositionMode] =
+    useState(false);
+  const [isPhotoBannerPositionMode, setIsPhotoBannerPositionMode] =
     useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishLoading, setIsPublishLoading] = useState(false);
@@ -257,6 +265,17 @@ export default function InvitationEditorLayout({
             invitationId={invitation.id}
             galleries={galleries}
             onGalleriesChange={setGalleries}
+            data={formData}
+            onChange={handleChange}
+          />
+        );
+      case "photoBanner":
+        return (
+          <InvitationPhotoBannerForm
+            data={formData}
+            onChange={handleChange}
+            isPositionMode={isPhotoBannerPositionMode}
+            onPositionModeChange={setIsPhotoBannerPositionMode}
           />
         );
       case "account":
@@ -446,6 +465,10 @@ export default function InvitationEditorLayout({
           isMainImagePositionMode={isMainImagePositionMode}
           onMainImagePositionChange={(mainImagePosition) =>
             handleChange({ mainImagePosition })
+          }
+          isPhotoBannerPositionMode={isPhotoBannerPositionMode}
+          onPhotoBannerPositionChange={(photoBannerPosition) =>
+            handleChange({ photoBannerPosition })
           }
           onSectionOrderChange={(sectionOrder) =>
             handleChange({ sectionOrder })

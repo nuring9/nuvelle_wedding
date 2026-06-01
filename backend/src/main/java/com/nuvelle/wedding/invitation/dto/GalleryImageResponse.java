@@ -11,12 +11,14 @@ public class GalleryImageResponse {
     private Long id;
     private String imageUrl;
     private int sortOrder;
+    private String objectPosition;
 
     public static GalleryImageResponse from(InvitationGallery gallery) {
         return GalleryImageResponse.builder()
                 .id(gallery.getId())
                 .imageUrl(gallery.getImageUrl())
                 .sortOrder(gallery.getSortOrder())
+                .objectPosition(gallery.getObjectPosition())
                 .build();
     }
 }

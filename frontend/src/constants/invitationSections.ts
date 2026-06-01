@@ -7,6 +7,7 @@ export type InvitationSectionId =
   | "dday"
   | "interview"
   | "gallery"
+  | "photoBanner"
   | "map"
   | "account"
   | "rsvp"
@@ -22,7 +23,8 @@ export type InvitationSectionEnabledKey =
   | "accountEnabled"
   | "ddayEnabled"
   | "interviewEnabled"
-  | "guestPhotoEnabled";
+  | "guestPhotoEnabled"
+  | "photoBannerEnabled";
 
 // 섹션 하나의 설정 구조.
 export interface InvitationSectionConfig {
@@ -41,6 +43,7 @@ export const INVITATION_SECTIONS: InvitationSectionConfig[] = [
   { id: "dday", label: "D-day", enabledKey: "ddayEnabled" },
   { id: "interview", label: "웨딩 인터뷰", enabledKey: "interviewEnabled" },
   { id: "gallery", label: "갤러리", enabledKey: "galleryEnabled" },
+  { id: "photoBanner", label: "포토 배너", enabledKey: "photoBannerEnabled" },
   { id: "map", label: "오시는 길" },
   { id: "account", label: "계좌번호", enabledKey: "accountEnabled" },
   { id: "rsvp", label: "RSVP 참석 여부", enabledKey: "rsvpEnabled" },

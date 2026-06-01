@@ -95,6 +95,18 @@ public class InvitationController {
         return ResponseEntity.ok(ApiResponse.success("이미지가 추가되었습니다.", response));
     }
 
+    // 갤러리 이미지 위치 수정
+    @PatchMapping("/{invitationId}/gallery/{imageId}/position")
+    public ResponseEntity<ApiResponse<GalleryImageResponse>> updateGalleryImagePosition(
+            @PathVariable Long invitationId,
+            @PathVariable Long imageId,
+            @RequestBody GalleryPositionRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        GalleryImageResponse response = invitationService.updateGalleryImagePosition(
+                invitationId, imageId, request.getObjectPosition(), userDetails);
+        return ResponseEntity.ok(ApiResponse.success("위치가 변경되었습니다.", response));
+    }
+
     // 갤러리 이미지 삭제
     @DeleteMapping("/{invitationId}/gallery/{imageId}")
     public ResponseEntity<ApiResponse<Void>> deleteGalleryImage(
@@ -110,5 +122,11 @@ public class InvitationController {
     @Setter
     static class GalleryAddRequest {
         private String imageUrl;
+    }
+
+    @Getter
+    @Setter
+    static class GalleryPositionRequest {
+        private String objectPosition;
     }
 }

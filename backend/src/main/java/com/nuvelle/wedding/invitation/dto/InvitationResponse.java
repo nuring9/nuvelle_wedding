@@ -67,6 +67,9 @@ public class InvitationResponse {
     private boolean ddayEnabled;
     private boolean interviewEnabled; // 웨딩 인터뷰 섹션 표시 여부
     private boolean guestPhotoEnabled; // 게스트 사진 섹션 표시 여부
+    private boolean photoBannerEnabled;
+    private String photoBannerUrl;
+    private String photoBannerPosition;
 
     // 스타일
     private String theme;
@@ -133,6 +136,9 @@ public class InvitationResponse {
                 .ddayEnabled(invitation.isDdayEnabled())
                 .interviewEnabled(invitation.isInterviewEnabled())
                 .guestPhotoEnabled(invitation.isGuestPhotoEnabled())
+                .photoBannerEnabled(invitation.isPhotoBannerEnabled())
+                .photoBannerUrl(invitation.getPhotoBannerUrl())
+                .photoBannerPosition(invitation.getPhotoBannerPosition())
                 .theme(invitation.getTheme())
                 .fontFamily(invitation.getFontFamily())
                 .galleryLayout(invitation.getGalleryLayout())

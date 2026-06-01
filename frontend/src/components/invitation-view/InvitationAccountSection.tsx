@@ -20,7 +20,7 @@ export default function InvitationAccountSection({
     <section className="section-padding section-tone-account">
       <div className="mb-8 text-center">
         <p className="text-xs tracking-widest text-gray-400">마음 전하실 곳</p>
-        <p className="mt-3 text-sm leading-7 text-gray-500">
+        <p className="mt-3 text-xs leading-loose text-gray-600">
           축하의 마음을 전하고 싶으신 분들을 위해
           <br /> 계좌 정보를 안내드립니다.
         </p>

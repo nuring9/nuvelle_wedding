@@ -2,7 +2,6 @@
 
 import {
   FONT_OPTIONS,
-  GALLERY_LAYOUT_OPTIONS,
   THEME_OPTIONS,
 } from "@/constants/invitation";
 import type { UpdateInvitationRequest } from "@/lib/api/invitations";
@@ -106,41 +105,6 @@ export default function InvitationThemeForm({
         </div>
       </div>
 
-      {/* 갤러리 레이아웃 선택 */}
-      <div className="flex flex-col gap-4">
-        <h3 className="text-sm font-semibold text-gray-800">갤러리 레이아웃</h3>
-        <div className="flex flex-col gap-2">
-          {GALLERY_LAYOUT_OPTIONS.map((layout) => (
-            <button
-              key={layout.key}
-              type="button"
-              onClick={() => onChange({ galleryLayout: layout.key })}
-              className={`flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${
-                data.galleryLayout === layout.key
-                  ? "border-primary-500 bg-primary-50"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              <span className="text-2xl">{layout.icon}</span>
-              <div className="flex flex-col gap-0.5 flex-1">
-                <p className="text-sm font-medium text-gray-800">
-                  {layout.label}
-                </p>
-                <p className="text-xs text-gray-400">{layout.description}</p>
-              </div>
-              {data.galleryLayout === layout.key && (
-                <svg
-                  className="w-4 h-4 text-primary-500 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

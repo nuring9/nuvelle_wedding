@@ -22,6 +22,7 @@ export interface GalleryImageResponse {
   id: number;
   imageUrl: string;
   sortOrder: number;
+  objectPosition: string;
 }
 
 // 계좌
@@ -77,6 +78,9 @@ export interface UpdateInvitationRequest {
   remittanceLink?: string;
   interviewEnabled?: boolean;
   guestPhotoEnabled?: boolean;
+  photoBannerEnabled?: boolean;
+  photoBannerUrl?: string;
+  photoBannerPosition?: string;
   sectionOrder?: string[];
 }
 
@@ -130,6 +134,9 @@ export interface InvitationResponse {
   remittanceLink: string | null;
   interviewEnabled: boolean;
   guestPhotoEnabled: boolean;
+  photoBannerEnabled: boolean;
+  photoBannerUrl: string | null;
+  photoBannerPosition: string | null;
   galleries: GalleryImageResponse[];
   publicUrl: string | null;
   publishedAt: string | null;
@@ -261,6 +268,24 @@ export async function addGalleryImage(
   );
   if (!res.data.success || !res.data.data) {
     throw new Error(res.data.message || "이미지 추가에 실패했습니다.");
+  }
+  return res.data.data;
+}
+
+// 갤러리 이미지 위치 수정
+export async function updateGalleryImagePosition(
+  invitationId: number,
+  imageId: number,
+  objectPosition: string,
+  accessToken: string,
+): Promise<GalleryImageResponse> {
+  const api = getAuthApi(accessToken);
+  const res = await api.patch<ApiResponse<GalleryImageResponse>>(
+    `/${invitationId}/gallery/${imageId}/position`,
+    { objectPosition },
+  );
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "위치 변경에 실패했습니다.");
   }
   return res.data.data;
 }

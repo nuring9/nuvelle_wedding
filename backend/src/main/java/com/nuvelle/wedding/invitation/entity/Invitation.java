@@ -157,6 +157,15 @@ public class Invitation {
     @Column(name = "guest_photo_enabled", nullable = false)
     private boolean guestPhotoEnabled = false;
 
+    @Column(name = "photo_banner_enabled", nullable = false)
+    private boolean photoBannerEnabled = false;
+
+    @Column(name = "photo_banner_url", length = 500)
+    private String photoBannerUrl;
+
+    @Column(name = "photo_banner_position", length = 20)
+    private String photoBannerPosition;
+
     // 스타일
     @Column(name = "theme", length = 50)
     private String theme;
@@ -237,6 +246,9 @@ public class Invitation {
                        String remittanceLink,
                        boolean interviewEnabled,
                        boolean guestPhotoEnabled,
+                       boolean photoBannerEnabled,
+                       String photoBannerUrl,
+                       String photoBannerPosition,
                        List<String> sectionOrder) {
         this.title = title;
         this.mainImageUrl = mainImageUrl;
@@ -283,6 +295,9 @@ public class Invitation {
         this.remittanceLink = remittanceLink;
         this.interviewEnabled = interviewEnabled;
         this.guestPhotoEnabled = guestPhotoEnabled;
+        this.photoBannerEnabled = photoBannerEnabled;
+        this.photoBannerUrl = photoBannerUrl;
+        this.photoBannerPosition = photoBannerPosition;
         this.sectionOrder = sectionOrder == null ? List.of() : sectionOrder;
 
     }
@@ -328,6 +343,9 @@ public class Invitation {
         this.ddayEnabled = master.ddayEnabled;
         this.interviewEnabled = master.interviewEnabled;
         this.guestPhotoEnabled = master.guestPhotoEnabled;
+        this.photoBannerEnabled = master.photoBannerEnabled;
+        this.photoBannerUrl = master.photoBannerUrl;
+        this.photoBannerPosition = master.photoBannerPosition;
         this.groomPhone = master.groomPhone;
         this.bridePhone = master.bridePhone;
         this.contactEnabled = master.contactEnabled;

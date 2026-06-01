@@ -89,20 +89,14 @@ export const FONT_OPTIONS: FontOption[] = [
 export const GALLERY_LAYOUT_OPTIONS: GalleryLayoutOption[] = [
   {
     key: "grid",
-    label: "그리드",
+    label: "그리드형",
     description: "3열 정방형 그리드",
     icon: "⊞",
   },
   {
-    key: "masonry",
-    label: "매소너리",
-    description: "다양한 크기의 벽돌형 배열",
-    icon: "⊟",
-  },
-  {
     key: "slider",
-    label: "슬라이더",
-    description: "좌우로 넘기는 슬라이드",
+    label: "슬라이드형",
+    description: "한 장씩 넘기는 와이드 슬라이드",
     icon: "▷",
   },
 ];

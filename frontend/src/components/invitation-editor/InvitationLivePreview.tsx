@@ -16,6 +16,8 @@ interface InvitationLivePreviewProps {
   galleries: GalleryImageResponse[];
   isMainImagePositionMode?: boolean;
   onMainImagePositionChange?: (position: string) => void;
+  isPhotoBannerPositionMode?: boolean;
+  onPhotoBannerPositionChange?: (position: string) => void;
   onSectionOrderChange?: (sectionOrder: InvitationSectionId[]) => void;
 }
 
@@ -72,6 +74,9 @@ function toPreviewInvitation(
     remittanceLink: formData.remittanceLink ?? null,
     interviewEnabled: formData.interviewEnabled ?? false,
     guestPhotoEnabled: formData.guestPhotoEnabled ?? false,
+    photoBannerEnabled: formData.photoBannerEnabled ?? false,
+    photoBannerUrl: formData.photoBannerUrl ?? null,
+    photoBannerPosition: formData.photoBannerPosition ?? "50% 50%",
     galleries,
     sectionOrder: formData.sectionOrder ?? invitation.sectionOrder ?? [],
   };
@@ -83,6 +88,8 @@ export default function InvitationLivePreview({
   galleries,
   isMainImagePositionMode = false,
   onMainImagePositionChange,
+  isPhotoBannerPositionMode = false,
+  onPhotoBannerPositionChange,
   onSectionOrderChange,
 }: InvitationLivePreviewProps) {
   const previewInvitation = toPreviewInvitation(
@@ -109,9 +116,11 @@ export default function InvitationLivePreview({
           <InvitationSectionRenderer
             invitation={previewInvitation}
             editable
-            disableSectionDrag={isMainImagePositionMode}
+            disableSectionDrag={isMainImagePositionMode || isPhotoBannerPositionMode}
             mainImagePositionEditable={isMainImagePositionMode}
             onMainImagePositionChange={onMainImagePositionChange}
+            photoBannerPositionEditable={isPhotoBannerPositionMode}
+            onPhotoBannerPositionChange={onPhotoBannerPositionChange}
             onOrderChange={onSectionOrderChange}
           />
         </div>

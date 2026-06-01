@@ -12,10 +12,14 @@ export default function InvitationGallerySection({
   invitation,
 }: InvitationGallerySectionProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [slideIndex, setSlideIndex] = useState(0);
 
   if (!invitation.galleryEnabled || invitation.galleries.length === 0) {
     return null;
   }
+
+  const layout = invitation.galleryLayout ?? "grid";
+  const galleries = invitation.galleries;
 
   return (
     <section className="section-padding">
@@ -23,24 +27,77 @@ export default function InvitationGallerySection({
         Gallery
       </h2>
 
-      {/* 그리드 갤러리 */}
-      <div className="grid grid-cols-3 gap-1">
-        {invitation.galleries.map((image) => (
-          <button
-            key={image.id}
-            onClick={() => setSelectedImage(image.imageUrl)}
-            className="relative aspect-square bg-gray-100 overflow-hidden"
+      {layout === "slider" ? (
+        /* 슬라이드형 */
+        <div className="relative">
+          <div
+            className="relative w-full bg-gray-100 overflow-hidden rounded-xl cursor-pointer"
+            onClick={() => setSelectedImage(galleries[slideIndex].imageUrl)}
           >
             <Image
-              src={image.imageUrl}
+              src={galleries[slideIndex].imageUrl}
               alt="갤러리 사진"
-              fill
-              sizes="33vw"
-              className="object-cover hover:scale-105 transition-transform duration-300"
+              width={800}
+              height={800}
+              sizes="100vw"
+              className="w-full h-auto"
             />
-          </button>
-        ))}
-      </div>
+          </div>
+
+          {/* 이전/다음 버튼 */}
+          {galleries.length > 1 && (
+            <>
+              <button
+                onClick={() => setSlideIndex((i) => (i - 1 + galleries.length) % galleries.length)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 text-white flex items-center justify-center hover:bg-black/50 transition-colors"
+              >
+                ‹
+              </button>
+              <button
+                onClick={() => setSlideIndex((i) => (i + 1) % galleries.length)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 text-white flex items-center justify-center hover:bg-black/50 transition-colors"
+              >
+                ›
+              </button>
+            </>
+          )}
+
+          {/* 인디케이터 */}
+          {galleries.length > 1 && (
+            <div className="flex justify-center gap-1.5 mt-3">
+              {galleries.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSlideIndex(i)}
+                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                    i === slideIndex ? "bg-gray-600" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        /* 그리드형 (기본) */
+        <div className="grid grid-cols-3 gap-1">
+          {galleries.map((image) => (
+            <button
+              key={image.id}
+              onClick={() => setSelectedImage(image.imageUrl)}
+              className="relative aspect-square bg-gray-100 overflow-hidden"
+            >
+              <Image
+                src={image.imageUrl}
+                alt="갤러리 사진"
+                fill
+                sizes="33vw"
+                className="object-cover hover:scale-105 transition-transform duration-300"
+                style={{ objectPosition: image.objectPosition ?? "center" }}
+              />
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* 이미지 뷰어 모달 */}
       {selectedImage && (

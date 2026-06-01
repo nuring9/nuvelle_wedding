@@ -59,6 +59,11 @@ export default function InvitationSectionToggleForm({
       label: "게스트 사진",
       description: "하객 사진 업로드 섹션 표시",
     },
+    {
+      key: "photoBannerEnabled" as const,
+      label: "포토 배너",
+      description: "원하는 위치에 사진을 배너로 삽입",
+    },
   ];
 
   return (

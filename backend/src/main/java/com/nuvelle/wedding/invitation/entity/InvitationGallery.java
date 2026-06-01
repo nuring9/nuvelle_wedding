@@ -30,6 +30,9 @@ public class InvitationGallery {
     @Column(name = "sort_order", nullable = false)
     private int sortOrder;
 
+    @Column(name = "object_position", nullable = false, length = 20)
+    private String objectPosition = "center";
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -39,5 +42,10 @@ public class InvitationGallery {
         this.invitation = invitation;
         this.imageUrl = imageUrl;
         this.sortOrder = sortOrder;
+        this.objectPosition = "center";
+    }
+
+    public void updateObjectPosition(String objectPosition) {
+        this.objectPosition = objectPosition;
     }
 }

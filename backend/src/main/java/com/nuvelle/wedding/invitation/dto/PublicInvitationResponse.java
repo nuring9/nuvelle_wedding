@@ -88,6 +88,11 @@ public class PublicInvitationResponse {
     // 게스트 사진 업로드
     private boolean guestPhotoEnabled;
 
+    // 포토 배너
+    private boolean photoBannerEnabled;
+    private String photoBannerUrl;
+    private String photoBannerPosition;
+
     // 갤러리
     private List<GalleryImageResponse> galleries;
 
@@ -143,6 +148,9 @@ public class PublicInvitationResponse {
                 .remittanceLink(invitation.getRemittanceLink())
                 .interviewEnabled(invitation.isInterviewEnabled())
                 .guestPhotoEnabled(invitation.isGuestPhotoEnabled())
+                .photoBannerEnabled(invitation.isPhotoBannerEnabled())
+                .photoBannerUrl(invitation.getPhotoBannerUrl())
+                .photoBannerPosition(invitation.getPhotoBannerPosition())
                 .galleries(invitation.getGalleries().stream()
                         .map(GalleryImageResponse::from)
                         .collect(Collectors.toList()))

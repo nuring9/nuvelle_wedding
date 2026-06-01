@@ -36,6 +36,7 @@ import InvitationGuestPhotoSection from "./InvitationGuestPhotoSection";
 import InvitationHeroSection from "./InvitationHeroSection";
 import InvitationInterviewSection from "./InvitationInterviewSection";
 import InvitationMapKakaoSection from "./InvitationMapKakaoSection";
+import InvitationPhotoBannerSection from "./InvitationPhotoBannerSection";
 import InvitationQrSection from "./InvitationQrSection";
 import InvitationRsvpSection from "./InvitationRsvpSection";
 import InvitationWeddingInfoSection from "./InvitationWeddingInfoSection";
@@ -47,6 +48,8 @@ interface InvitationSectionRendererProps {
   disableSectionDrag?: boolean;
   mainImagePositionEditable?: boolean;
   onMainImagePositionChange?: (position: string) => void;
+  photoBannerPositionEditable?: boolean;
+  onPhotoBannerPositionChange?: (position: string) => void;
   onOrderChange?: (sectionOrder: InvitationSectionId[]) => void;
 }
 
@@ -68,6 +71,8 @@ interface SortablePreviewSectionProps {
   isAlt?: boolean;
   mainImagePositionEditable?: boolean;
   onMainImagePositionChange?: (position: string) => void;
+  photoBannerPositionEditable?: boolean;
+  onPhotoBannerPositionChange?: (position: string) => void;
 }
 
 const sectionMap = {
@@ -78,6 +83,7 @@ const sectionMap = {
   dday: InvitationDdaySection,
   interview: InvitationInterviewSection,
   gallery: InvitationGallerySection,
+  photoBanner: InvitationPhotoBannerSection,
   map: InvitationMapKakaoSection,
   account: InvitationAccountSection,
   rsvp: InvitationRsvpSection,
@@ -94,6 +100,8 @@ function SortablePreviewSection({
   isAlt = false,
   mainImagePositionEditable = false,
   onMainImagePositionChange,
+  photoBannerPositionEditable = false,
+  onPhotoBannerPositionChange,
 }: SortablePreviewSectionProps) {
   const {
     attributes,
@@ -115,6 +123,7 @@ function SortablePreviewSection({
 
   const dragHandleProps = disabled ? {} : { ...attributes, ...listeners };
   const isHeroPositionTarget = sectionId === "hero" && mainImagePositionEditable;
+  const isPhotoBannerTarget = sectionId === "photoBanner" && photoBannerPositionEditable;
   const isGuestPhotoReadOnly =
     sectionId === "guestPhoto" && readOnlyInteractions;
   const renderedSection = isHeroPositionTarget ? (
@@ -122,6 +131,12 @@ function SortablePreviewSection({
       invitation={invitation}
       editableMainImagePosition
       onMainImagePositionChange={onMainImagePositionChange}
+    />
+  ) : isPhotoBannerTarget ? (
+    <InvitationPhotoBannerSection
+      invitation={invitation}
+      editablePosition
+      onPositionChange={onPhotoBannerPositionChange}
     />
   ) : isGuestPhotoReadOnly ? (
     <InvitationGuestPhotoSection invitation={invitation} readOnly />
@@ -163,6 +178,8 @@ export default function InvitationSectionRenderer({
   disableSectionDrag = false,
   mainImagePositionEditable = false,
   onMainImagePositionChange,
+  photoBannerPositionEditable = false,
+  onPhotoBannerPositionChange,
   onOrderChange,
 }: InvitationSectionRendererProps) {
   const order = normalizeInvitationSectionOrder(invitation.sectionOrder);
@@ -249,6 +266,8 @@ export default function InvitationSectionRenderer({
             isAlt={index % 2 === 1}
             mainImagePositionEditable={mainImagePositionEditable}
             onMainImagePositionChange={onMainImagePositionChange}
+            photoBannerPositionEditable={photoBannerPositionEditable}
+            onPhotoBannerPositionChange={onPhotoBannerPositionChange}
           />
         ))}
       </SortableContext>

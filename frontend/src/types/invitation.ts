@@ -2,6 +2,7 @@ export interface GalleryImage {
   id: number;
   imageUrl: string;
   sortOrder: number;
+  objectPosition: string;
 }
 
 // 계좌
@@ -63,6 +64,9 @@ export interface PublicInvitation {
   remittanceLink: string | null;
   interviewEnabled: boolean;
   guestPhotoEnabled: boolean;
+  photoBannerEnabled: boolean;
+  photoBannerUrl: string | null;
+  photoBannerPosition: string | null;
   galleries: GalleryImage[];
   sectionOrder: string[];
 }
