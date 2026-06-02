@@ -1,6 +1,5 @@
 import type { ApiResponse } from "@/types/auth";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+import { apiClient } from "./apiClient";
 
 export interface FileUploadResponse {
   url: string;
@@ -8,7 +7,6 @@ export interface FileUploadResponse {
   size: number;
 }
 
-// 파일 업로드
 export async function uploadFile(
   file: File,
   directory: string,
@@ -17,43 +15,34 @@ export async function uploadFile(
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(
-    `${BASE_URL}/api/files/upload?directory=${encodeURIComponent(directory)}`,
+  const res = await apiClient.post<ApiResponse<FileUploadResponse>>(
+    `/api/files/upload?directory=${encodeURIComponent(directory)}`,
+    formData,
     {
-      method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
       },
-      body: formData,
     },
   );
 
-  const json: ApiResponse<FileUploadResponse> = await res.json();
-
-  if (!json.success || !json.data) {
-    throw new Error(json.message || "파일 업로드에 실패했습니다.");
+  if (!res.data.success || !res.data.data) {
+    throw new Error(res.data.message || "파일 업로드에 실패했습니다.");
   }
 
-  return json.data;
+  return res.data.data;
 }
 
-// 파일 삭제
 export async function deleteFile(
   fileUrl: string,
   accessToken: string,
 ): Promise<void> {
-  const res = await fetch(`${BASE_URL}/api/files`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({ fileUrl }),
+  const res = await apiClient.delete<ApiResponse<null>>(`/api/files`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    data: { fileUrl },
   });
 
-  const json: ApiResponse<null> = await res.json();
-
-  if (!json.success) {
-    throw new Error(json.message || "파일 삭제에 실패했습니다.");
+  if (!res.data.success) {
+    throw new Error(res.data.message || "파일 삭제에 실패했습니다.");
   }
 }

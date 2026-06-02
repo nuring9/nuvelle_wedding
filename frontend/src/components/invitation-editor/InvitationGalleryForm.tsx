@@ -114,18 +114,25 @@ export default function InvitationGalleryForm({
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-between p-1.5">
               {/* 위치 버튼 */}
               <div className="flex gap-1">
-                {(["top", "center", "bottom"] as const).map((pos) => (
+                {(
+                  [
+                    { value: "top", label: "위" },
+                    { value: "center 30%", label: "중상" },
+                    { value: "center", label: "중" },
+                    { value: "bottom", label: "아래" },
+                  ] as const
+                ).map(({ value, label }) => (
                   <button
-                    key={pos}
+                    key={value}
                     type="button"
-                    onClick={() => handlePositionChange(image.id, pos)}
+                    onClick={() => handlePositionChange(image.id, value)}
                     className={`text-[10px] px-1.5 py-0.5 rounded font-medium transition-colors ${
-                      (image.objectPosition ?? "center") === pos
+                      (image.objectPosition ?? "center") === value
                         ? "bg-white text-gray-800"
                         : "bg-white/30 text-white hover:bg-white/60"
                     }`}
                   >
-                    {pos === "top" ? "위" : pos === "center" ? "중" : "아래"}
+                    {label}
                   </button>
                 ))}
               </div>
