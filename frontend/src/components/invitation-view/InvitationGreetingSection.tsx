@@ -14,7 +14,7 @@ export default function InvitationGreetingSection({
       <h2 className="text-xs tracking-widest text-gray-400 uppercase mb-3">
         Greeting
       </h2>
-      <div className="w-6 h-px bg-gray-200 mx-auto mb-5" />
+
       <p className="text-sm text-gray-600 leading-loose whitespace-pre-line">
         {invitation.greetingText}
       </p>

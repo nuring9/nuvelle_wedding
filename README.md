@@ -36,6 +36,7 @@ Nuvelle Wedding은 모바일 환경에서 예비 부부가 간편하게 청첩�
 - JWT 기반 인증 처리
 - Access Token / Refresh Token 발급
 - Refresh Token 기반 토큰 재발급
+- Axios Interceptor 기반 Access Token 자동 갱신
 - 카카오 소셜 로그인
 - 비밀번호 재설정 요청 및 변경
 - 비밀번호 암호화 저장
@@ -48,8 +49,9 @@ Nuvelle Wedding은 모바일 환경에서 예비 부부가 간편하게 청첩�
 - 템플릿 단건 조회
 - 템플릿 카드 UI 구성
 - 템플릿 미리보기 화면 구성
-- 템플릿 선택 후 청첩장 제작 화면 이동
+- 템플릿 선택 후 청첩장 제작 화면 이동 (테마 자동 적용)
 - 관리자 템플릿 등록, 수정, 삭제
+- 관리자 템플릿 소개 문구 관리
 - 관리자 마스터 청첩장 연결
 
 ### 청첩장 제작 기능
@@ -66,6 +68,7 @@ Nuvelle Wedding은 모바일 환경에서 예비 부부가 간편하게 청첩�
 - 계좌 정보 입력
 - 인터뷰 문답 입력
 - 지도 섹션 설정
+- 폰트 선택 (Pretendard, 노토 세리프, 나눔스퀘어라운드)
 - BGM 설정
 - 애니메이션 설정
 - QR 코드 영역 구성
@@ -317,8 +320,9 @@ Nuvelle-Wedding
 | POST   | `/api/invitations/{invitationId}/publish`           | 청첩장 발행         |
 | POST   | `/api/invitations/{invitationId}/private`           | 청첩장 비공개 전환  |
 | DELETE | `/api/invitations/{invitationId}`                   | 청첩장 삭제         |
-| POST   | `/api/invitations/{invitationId}/gallery`           | 갤러리 이미지 추가  |
-| DELETE | `/api/invitations/{invitationId}/gallery/{imageId}` | 갤러리 이미지 삭제  |
+| POST   | `/api/invitations/{invitationId}/gallery`                        | 갤러리 이미지 추가       |
+| PATCH  | `/api/invitations/{invitationId}/gallery/{imageId}/position`     | 갤러리 이미지 위치 수정  |
+| DELETE | `/api/invitations/{invitationId}/gallery/{imageId}`              | 갤러리 이미지 삭제       |
 
 ### Public Invitation
 
@@ -507,6 +511,7 @@ GEMINI_API_KEY=
 
 - JWT 기반 인증 구조를 적용해 로그인 상태를 유지할 수 있도록 구성했습니다.
 - Access Token과 Refresh Token을 분리해 토큰 재발급 흐름을 설계했습니다.
+- Axios Interceptor를 활용해 Access Token 만료 시 자동으로 재발급하고 원래 요청을 재시도하도록 구성했습니다.
 - 비밀번호는 평문으로 저장하지 않고 암호화하여 저장하도록 구성했습니다.
 - 카카오 로그인을 통해 소셜 인증 흐름을 지원하도록 구성했습니다.
 - 프론트엔드에서는 Zustand를 활용해 인증 상태를 전역에서 관리할 수 있도록 했습니다.

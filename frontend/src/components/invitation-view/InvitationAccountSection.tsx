@@ -49,7 +49,7 @@ function AccountItem({
         <div className="pb-4 px-2">
           <div className="flex items-center justify-between gap-4">
             <div className="flex min-w-0 flex-col gap-1">
-              <p className="text-xs text-gray-400">
+              <p className="account-bank-info text-xs text-gray-400">
                 {bankName}
                 {accountHolder && <> · 예금주: {accountHolder}</>}
               </p>

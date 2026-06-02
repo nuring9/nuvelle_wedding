@@ -105,7 +105,7 @@ export default function InvitationLivePreview({
   const font = previewInvitation.fontFamily || "noto-sans";
 
   return (
-    <aside className="hidden xl:flex h-full w-[420px] shrink-0 items-center justify-center border-l border-gray-100 bg-gray-50 px-8 py-6">
+    <aside className="hidden lg:flex h-full w-[420px] shrink-0 items-center justify-center border-l border-gray-100 bg-gray-50 px-8 py-6">
       <div className="editor-phone-frame">
         <div className="editor-phone-speaker" />
         <InvitationAnimationOverlay

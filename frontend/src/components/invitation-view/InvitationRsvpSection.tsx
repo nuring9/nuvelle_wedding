@@ -7,10 +7,12 @@ import type { PublicInvitation, RsvpRequest } from "@/types/invitation";
 
 interface InvitationRsvpSectionProps {
   invitation: PublicInvitation;
+  isDark?: boolean;
 }
 
 export default function InvitationRsvpSection({
   invitation,
+  isDark = false,
 }: InvitationRsvpSectionProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,7 +62,7 @@ export default function InvitationRsvpSection({
               <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
-          <RsvpForm onSubmit={handleSubmit} isLoading={isLoading} />
+          <RsvpForm onSubmit={handleSubmit} isLoading={isLoading} isDark={isDark} />
         </div>
       )}
     </section>

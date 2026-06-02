@@ -125,6 +125,7 @@ function SortablePreviewSection({
     transform: CSS.Transform.toString(transform),
     transition,
     ...(isAlt ? { "--section-bg": "var(--invite-section-alt)" } : {}),
+    background: "var(--section-bg, var(--invite-bg))",
   } as React.CSSProperties;
 
   const dragHandleProps = disabled ? {} : { ...attributes, ...listeners };
@@ -148,6 +149,8 @@ function SortablePreviewSection({
     <InvitationGuestPhotoSection invitation={invitation} readOnly />
   ) : sectionId === "interview" ? (
     <InvitationInterviewSection invitation={invitation} interviewVersion={interviewVersion} />
+  ) : sectionId === "rsvp" ? (
+    <InvitationRsvpSection invitation={invitation} isDark={invitation.theme === "dark"} />
   ) : (
     (() => {
       const SectionComponent = sectionMap[sectionId];
@@ -158,16 +161,17 @@ function SortablePreviewSection({
   return (
     <div
       ref={setNodeRef}
-      style={style}
+      style={{ ...style, background: "var(--section-bg, var(--invite-bg))" }}
       className={`relative outline outline-1 outline-transparent hover:outline-primary-200 ${
-        isDragging ? "z-20 opacity-70" : ""
+        isDragging ? "z-20" : ""
       }`}
     >
+      {isDragging && <div className="absolute inset-0 bg-white/30 z-10 pointer-events-none" />}
       {!disabled && (
         <button
           type="button"
           aria-label="섹션 순서 변경"
-          className="absolute right-2 top-2 z-20 cursor-grab rounded-full bg-white/90 px-2 py-1 text-[10px] font-medium text-gray-500 shadow-sm active:cursor-grabbing"
+          className="absolute right-2 top-2 z-20 cursor-grab drag-handle-btn rounded-full bg-black/20 px-2 py-1 text-[10px] font-semibold text-white shadow active:cursor-grabbing"
           {...dragHandleProps}
         >
           드래그
@@ -249,6 +253,14 @@ export default function InvitationSectionRenderer({
             return (
               <div key={sectionId} style={altStyle}>
                 <InvitationInterviewSection invitation={invitation} interviewVersion={interviewVersion} />
+              </div>
+            );
+          }
+
+          if (sectionId === "rsvp") {
+            return (
+              <div key={sectionId} style={altStyle}>
+                <InvitationRsvpSection invitation={invitation} isDark={invitation.theme === "dark"} />
               </div>
             );
           }

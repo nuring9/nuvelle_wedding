@@ -80,7 +80,7 @@ export default function InvitationCoupleSection({
             fontWeight: 300,
             fontStyle: "italic",
             color: "var(--invite-primary)",
-            opacity: 0.3,
+            opacity: 0.6,
             lineHeight: 1,
           }}
         >

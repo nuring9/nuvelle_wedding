@@ -56,15 +56,15 @@ export const THEME_OPTIONS: ThemeOption[] = [
   {
     key: "gold",
     label: "엘레강스 골드",
-    primaryColor: "#b45309",
-    bgColor: "#fffbeb",
+    primaryColor: "#d4af37",
+    bgColor: "#fafaf8",
     description:
       "은은한 빛과 기품이 느껴지는 클래식 골드 테마 분위기에 맞춰 예식 정보를 자연스럽게 담을 수 있는 청첩장 템플릿입니다.",
   },
   {
     key: "dark",
     label: "심플 블랙",
-    primaryColor: "#f9fafb",
+    primaryColor: "#e2e8f0",
     bgColor: "#111827",
     description:
       "감각적이고 세련된 모던 다크 테마 분위기에 맞춰 예식 정보를 자연스럽게 담을 수 있는 청첩장 템플릿입니다.",
