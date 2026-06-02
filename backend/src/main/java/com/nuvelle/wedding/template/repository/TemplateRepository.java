@@ -30,4 +30,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT t FROM Template t WHERE t.id = :id")
     Optional<Template> findByIdForUpdate(@Param("id") Long id);
+
+    @Query("SELECT t FROM Template t WHERE t.masterInvitation.id = :masterInvitationId")
+    Optional<Template> findByMasterInvitationId(@Param("masterInvitationId") Long masterInvitationId);
 }

@@ -75,11 +75,29 @@ export default async function InvitePage({ params }: InvitePageProps) {
   const { slug } = await params;
 
   let invitation;
+  let isNotPublished = false;
 
   try {
     invitation = await getPublicInvitation(slug);
-  } catch {
-    notFound();
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "";
+    if (message.includes("PRIVATE") || message.includes("DRAFT") || message.includes("비공개") || message.includes("발행")) {
+      isNotPublished = true;
+    } else {
+      notFound();
+    }
+  }
+
+  if (isNotPublished || !invitation) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-gray-50">
+        <span className="text-5xl mb-6">💌</span>
+        <h1 className="text-xl font-semibold text-gray-800 mb-3">아직 준비 중인 청첩장이에요</h1>
+        <p className="text-sm text-gray-500 leading-relaxed">
+          청첩장 발행이 완료되면<br />이 페이지에서 확인하실 수 있어요.
+        </p>
+      </div>
+    );
   }
 
   const theme = getInvitationTheme(invitation.theme);

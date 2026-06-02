@@ -67,11 +67,15 @@ export default function InvitationPublishPanel({
       invitation.groomName && invitation.brideName
         ? `${invitation.groomName} ♥ ${invitation.brideName} 결혼합니다`
         : "청첩장을 전해드립니다";
+    const description = [
+      invitation.weddingDate ? invitation.weddingDate.replace(/-/g, ".") : null,
+      invitation.venueName ?? null,
+    ].filter(Boolean).join(" | ") || "소중한 분들을 초대합니다";
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
         title,
-        description: "청첩장 보러가기",
+        description,
         imageUrl: invitation.mainImageUrl ?? "",
         link: { mobileWebUrl: invitation.publicUrl, webUrl: invitation.publicUrl },
       },

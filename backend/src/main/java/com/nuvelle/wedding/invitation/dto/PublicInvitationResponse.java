@@ -105,7 +105,13 @@ public class PublicInvitationResponse {
     // 섹션 순서
     private List<String> sectionOrder;
 
+    private String publicUrl;
+
     public static PublicInvitationResponse from(Invitation invitation) {
+        return from(invitation, null);
+    }
+
+    public static PublicInvitationResponse from(Invitation invitation, String baseUrl) {
         return PublicInvitationResponse.builder()
                 .id(invitation.getId())
                 .slug(invitation.getSlug())
@@ -163,6 +169,7 @@ public class PublicInvitationResponse {
                         .map(GalleryImageResponse::from)
                         .collect(Collectors.toList()))
                 .sectionOrder(invitation.getSectionOrder() == null ? List.of() : invitation.getSectionOrder())
+                .publicUrl(baseUrl != null ? baseUrl + "/invite/" + invitation.getSlug() : null)
                 .build();
     }
     private static List<InvitationAccountResponse> toAccountResponses(Invitation invitation) {

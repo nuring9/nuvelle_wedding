@@ -213,6 +213,13 @@ public class InvitationService {
         }
         invitation.updateBgm(bgm);
 
+        // 마스터 청첩장이면 메인 이미지를 템플릿 썸네일에도 반영
+        if (invitation.isTemplateMaster() && request.getMainImageUrl() != null) {
+            templateRepository.findByMasterInvitationId(invitationId).ifPresent(template ->
+                template.updateThumbnailUrl(request.getMainImageUrl())
+            );
+        }
+
         return InvitationResponse.from(invitation, baseUrl);
     }
 

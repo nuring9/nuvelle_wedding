@@ -93,4 +93,8 @@ public class Template {
     public void updateMasterInvitation(Invitation masterInvitation) {
         this.masterInvitation = masterInvitation;
     }
+
+    public void updateThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 }
