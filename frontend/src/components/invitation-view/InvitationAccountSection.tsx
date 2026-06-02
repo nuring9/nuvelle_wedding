@@ -53,7 +53,7 @@ function AccountItem({
                 {bankName}
                 {accountHolder && <> · 예금주: {accountHolder}</>}
               </p>
-              <p className="break-all text-sm font-medium text-gray-700">
+              <p className="break-all text-xs font-medium text-gray-700">
                 {accountNumber}
               </p>
             </div>

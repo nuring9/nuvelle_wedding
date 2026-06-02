@@ -22,7 +22,7 @@ export default function InvitationInterviewSection({
   const [interview, setInterview] = useState<WeddingInterviewResponse | null>(
     null,
   );
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (!invitation.interviewEnabled) return;
@@ -64,7 +64,7 @@ export default function InvitationInterviewSection({
       </h2>
 
       <p className="mb-8 text-center text-sm leading-relaxed text-gray-500">
-        서로에게 전하는 작은 이야기
+        우리의 작은 이야기
       </p>
 
       <div className="card-base divide-y divide-gray-100 overflow-hidden">
@@ -97,7 +97,7 @@ export default function InvitationInterviewSection({
 
               {isOpen && (
                 <div className="interview-answer px-5 pb-5 pt-4">
-                  <p className="pl-8 text-xs leading-7 text-gray-600">
+                  <p className="text-xs leading-7 text-gray-600 text-center">
                     {item.answer}
                   </p>
                 </div>

@@ -49,11 +49,13 @@ export default function RsvpForm({
           setForm((prev) => ({ ...prev, guestName: e.target.value }))
         }
         required
+        className="text-xs py-2"
+        labelClassName="text-xs font-normal"
       />
 
       {/* 참석 여부 선택 */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs text-gray-400 tracking-wide">참석 여부</label>
+        <label className="text-[11px] text-gray-400 tracking-wide">참석 여부</label>
         <div className="flex gap-1.5">
           {[
             { value: "ATTENDING", label: "참석" },
@@ -85,7 +87,7 @@ export default function RsvpForm({
       {/* 참석 상태일 때만 인원 선택 영역 보여줌 */}
       {form.attendanceStatus === "ATTENDING" && (
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs text-gray-400 tracking-wide">참석 인원</label>
+          <label className="text-[11px] text-gray-400 tracking-wide">참석 인원</label>
           <div className="flex items-center gap-2.5">
             <button
               type="button"
@@ -125,6 +127,8 @@ export default function RsvpForm({
         onChange={(e) =>
           setForm((prev) => ({ ...prev, phone: e.target.value }))
         }
+        className="text-xs py-2"
+        labelClassName="text-xs font-normal"
       />
 
       <InputField
@@ -134,6 +138,8 @@ export default function RsvpForm({
         onChange={(e) =>
           setForm((prev) => ({ ...prev, message: e.target.value }))
         }
+        className="text-xs py-2"
+        labelClassName="text-xs font-normal"
       />
 
       <PrimaryButton

@@ -28,7 +28,7 @@ export default function InvitationWeddingInfoSection({
       </h2>
 
       {formattedDate && (
-        <p className="text-xl font-serif text-gray-800 mb-2">{formattedDate}</p>
+        <p className="text-xl text-gray-800 mb-2">{formattedDate}</p>
       )}
 
       {formattedTime && (

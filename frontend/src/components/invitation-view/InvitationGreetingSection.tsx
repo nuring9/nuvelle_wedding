@@ -11,11 +11,13 @@ export default function InvitationGreetingSection({
 
   return (
     <section className="section-padding text-center">
-      <div className="w-8 h-px bg-gray-200 mx-auto mb-8" />
-      <p className="text-sm text-gray-600 leading-loose whitespace-pre-line font-serif">
+      <h2 className="text-xs tracking-widest text-gray-400 uppercase mb-3">
+        Greeting
+      </h2>
+      <div className="w-6 h-px bg-gray-200 mx-auto mb-5" />
+      <p className="text-sm text-gray-600 leading-loose whitespace-pre-line">
         {invitation.greetingText}
       </p>
-      <div className="w-8 h-px bg-gray-200 mx-auto mt-8" />
     </section>
   );
 }

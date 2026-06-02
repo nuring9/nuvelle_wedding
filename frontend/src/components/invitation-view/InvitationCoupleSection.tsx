@@ -62,7 +62,7 @@ export default function InvitationCoupleSection({
               {[invitation.groomFatherName, invitation.groomMotherName].filter(Boolean).join(" · ")}의 아들
             </p>
           )}
-          <p className="text-xl font-serif font-medium text-gray-800 tracking-wide">
+          <p className="text-xl font-medium text-gray-800 tracking-wide">
             {invitation.groomName}
           </p>
           <ContactLink
@@ -94,7 +94,7 @@ export default function InvitationCoupleSection({
               {[invitation.brideFatherName, invitation.brideMotherName].filter(Boolean).join(" · ")}의 딸
             </p>
           )}
-          <p className="text-xl font-serif font-medium text-gray-800 tracking-wide">
+          <p className="text-xl font-medium text-gray-800 tracking-wide">
             {invitation.brideName}
           </p>
           <ContactLink

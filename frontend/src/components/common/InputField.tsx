@@ -5,15 +5,16 @@ import { forwardRef } from "react";
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  hint?: string; // 안내 문구
+  hint?: string;
+  labelClassName?: string;
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, error, hint, className = "", ...props }, ref) => {
+  ({ label, error, hint, className = "", labelClassName = "", ...props }, ref) => {
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label className="text-sm font-medium text-gray-700">
+          <label className={`text-sm font-medium text-gray-700 ${labelClassName}`}>
             {label}
             {props.required && <span className="text-red-400 ml-1">*</span>}
           </label>
