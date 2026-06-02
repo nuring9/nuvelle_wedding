@@ -79,13 +79,8 @@ export default async function InvitePage({ params }: InvitePageProps) {
 
   try {
     invitation = await getPublicInvitation(slug);
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "";
-    if (message.includes("PRIVATE") || message.includes("DRAFT") || message.includes("비공개") || message.includes("발행")) {
-      isNotPublished = true;
-    } else {
-      notFound();
-    }
+  } catch {
+    isNotPublished = true;
   }
 
   if (isNotPublished || !invitation) {
