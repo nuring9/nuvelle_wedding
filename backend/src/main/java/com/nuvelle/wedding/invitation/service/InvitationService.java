@@ -199,6 +199,14 @@ public class InvitationService {
                         ? request.getPhotoBannerPosition()
                         : invitation.getPhotoBannerPosition(),
 
+                request.getCalendarEnabled() != null
+                        ? request.getCalendarEnabled()
+                        : invitation.isCalendarEnabled(),
+
+                request.getQrEnabled() != null
+                        ? request.getQrEnabled()
+                        : invitation.isQrEnabled(),
+
                 sectionOrder
         );
 

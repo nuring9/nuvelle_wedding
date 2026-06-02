@@ -160,6 +160,12 @@ public class Invitation {
     @Column(name = "photo_banner_enabled", nullable = false)
     private boolean photoBannerEnabled = false;
 
+    @Column(name = "calendar_enabled", nullable = false)
+    private boolean calendarEnabled = true;
+
+    @Column(name = "qr_enabled", nullable = false)
+    private boolean qrEnabled = true;
+
     @Column(name = "photo_banner_url", length = 500)
     private String photoBannerUrl;
 
@@ -249,6 +255,8 @@ public class Invitation {
                        boolean photoBannerEnabled,
                        String photoBannerUrl,
                        String photoBannerPosition,
+                       boolean calendarEnabled,
+                       boolean qrEnabled,
                        List<String> sectionOrder) {
         this.title = title;
         this.mainImageUrl = mainImageUrl;
@@ -298,6 +306,8 @@ public class Invitation {
         this.photoBannerEnabled = photoBannerEnabled;
         this.photoBannerUrl = photoBannerUrl;
         this.photoBannerPosition = photoBannerPosition;
+        this.calendarEnabled = calendarEnabled;
+        this.qrEnabled = qrEnabled;
         this.sectionOrder = sectionOrder == null ? List.of() : sectionOrder;
 
     }
@@ -346,6 +356,8 @@ public class Invitation {
         this.photoBannerEnabled = master.photoBannerEnabled;
         this.photoBannerUrl = master.photoBannerUrl;
         this.photoBannerPosition = master.photoBannerPosition;
+        this.calendarEnabled = master.calendarEnabled;
+        this.qrEnabled = master.qrEnabled;
         this.groomPhone = master.groomPhone;
         this.bridePhone = master.bridePhone;
         this.contactEnabled = master.contactEnabled;

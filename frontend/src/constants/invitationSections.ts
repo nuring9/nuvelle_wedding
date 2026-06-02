@@ -4,6 +4,7 @@ export type InvitationSectionId =
   | "couple"
   | "greeting"
   | "weddingInfo"
+  | "calendar"
   | "dday"
   | "interview"
   | "gallery"
@@ -24,7 +25,9 @@ export type InvitationSectionEnabledKey =
   | "ddayEnabled"
   | "interviewEnabled"
   | "guestPhotoEnabled"
-  | "photoBannerEnabled";
+  | "photoBannerEnabled"
+  | "calendarEnabled"
+  | "qrEnabled";
 
 // 섹션 하나의 설정 구조.
 export interface InvitationSectionConfig {
@@ -41,15 +44,16 @@ export const INVITATION_SECTIONS: InvitationSectionConfig[] = [
   { id: "greeting", label: "인사말" },
   { id: "weddingInfo", label: "예식 정보" },
   { id: "dday", label: "D-day", enabledKey: "ddayEnabled" },
+  { id: "calendar", label: "달력", enabledKey: "calendarEnabled" },
   { id: "interview", label: "웨딩 인터뷰", enabledKey: "interviewEnabled" },
   { id: "gallery", label: "갤러리", enabledKey: "galleryEnabled" },
-  { id: "photoBanner", label: "포토 배너", enabledKey: "photoBannerEnabled" },
-  { id: "map", label: "오시는 길" },
   { id: "account", label: "계좌번호", enabledKey: "accountEnabled" },
   { id: "rsvp", label: "RSVP 참석 여부", enabledKey: "rsvpEnabled" },
+  { id: "photoBanner", label: "포토 배너", enabledKey: "photoBannerEnabled" },
   { id: "guestbook", label: "방명록", enabledKey: "guestbookEnabled" },
   { id: "guestPhoto", label: "게스트 사진", enabledKey: "guestPhotoEnabled" },
-  { id: "qr", label: "QR 코드" },
+  { id: "map", label: "오시는 길" },
+  { id: "qr", label: "QR 코드", enabledKey: "qrEnabled" },
 ];
 
 // 기본 섹션 순서. INVITATION_SECTIONS 배열에서 id만

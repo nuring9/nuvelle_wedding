@@ -10,6 +10,7 @@ import {
   useSensors,
   type DragEndEvent,
 } from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
@@ -27,6 +28,7 @@ import {
 import type { PublicInvitation } from "@/types/invitation";
 
 import InvitationAccountSection from "./InvitationAccountSection";
+import InvitationCalendarSection from "./InvitationCalendarSection";
 import InvitationCoupleSection from "./InvitationCoupleSection";
 import InvitationDdaySection from "./InvitationDdaySection";
 import InvitationGallerySection from "./InvitationGallerySection";
@@ -51,6 +53,7 @@ interface InvitationSectionRendererProps {
   photoBannerPositionEditable?: boolean;
   onPhotoBannerPositionChange?: (position: string) => void;
   onOrderChange?: (sectionOrder: InvitationSectionId[]) => void;
+  interviewVersion?: number;
 }
 
 // Mirrors the null-return conditions inside each section component.
@@ -73,6 +76,7 @@ interface SortablePreviewSectionProps {
   onMainImagePositionChange?: (position: string) => void;
   photoBannerPositionEditable?: boolean;
   onPhotoBannerPositionChange?: (position: string) => void;
+  interviewVersion?: number;
 }
 
 const sectionMap = {
@@ -80,6 +84,7 @@ const sectionMap = {
   couple: InvitationCoupleSection,
   greeting: InvitationGreetingSection,
   weddingInfo: InvitationWeddingInfoSection,
+  calendar: InvitationCalendarSection,
   dday: InvitationDdaySection,
   interview: InvitationInterviewSection,
   gallery: InvitationGallerySection,
@@ -102,6 +107,7 @@ function SortablePreviewSection({
   onMainImagePositionChange,
   photoBannerPositionEditable = false,
   onPhotoBannerPositionChange,
+  interviewVersion = 0,
 }: SortablePreviewSectionProps) {
   const {
     attributes,
@@ -140,6 +146,8 @@ function SortablePreviewSection({
     />
   ) : isGuestPhotoReadOnly ? (
     <InvitationGuestPhotoSection invitation={invitation} readOnly />
+  ) : sectionId === "interview" ? (
+    <InvitationInterviewSection invitation={invitation} interviewVersion={interviewVersion} />
   ) : (
     (() => {
       const SectionComponent = sectionMap[sectionId];
@@ -181,6 +189,7 @@ export default function InvitationSectionRenderer({
   photoBannerPositionEditable = false,
   onPhotoBannerPositionChange,
   onOrderChange,
+  interviewVersion = 0,
 }: InvitationSectionRendererProps) {
   const order = normalizeInvitationSectionOrder(invitation.sectionOrder);
 
@@ -236,6 +245,14 @@ export default function InvitationSectionRenderer({
             );
           }
 
+          if (sectionId === "interview") {
+            return (
+              <div key={sectionId} style={altStyle}>
+                <InvitationInterviewSection invitation={invitation} interviewVersion={interviewVersion} />
+              </div>
+            );
+          }
+
           return (
             <div key={sectionId} style={altStyle}>
               <SectionComponent invitation={invitation} />
@@ -250,6 +267,7 @@ export default function InvitationSectionRenderer({
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      modifiers={[restrictToVerticalAxis]}
       onDragEnd={handleDragEnd}
     >
       <SortableContext
@@ -268,6 +286,7 @@ export default function InvitationSectionRenderer({
             onMainImagePositionChange={onMainImagePositionChange}
             photoBannerPositionEditable={photoBannerPositionEditable}
             onPhotoBannerPositionChange={onPhotoBannerPositionChange}
+            interviewVersion={interviewVersion}
           />
         ))}
       </SortableContext>

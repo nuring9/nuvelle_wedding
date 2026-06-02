@@ -8,8 +8,8 @@ interface InvitationAnimationOverlayProps {
   contained?: boolean;
 }
 
-const PARTICLE_COUNT = 18;
-const GOLD_SPARKLE_COUNT = 9;
+const PARTICLE_COUNT = 12;
+const GOLD_SPARKLE_COUNT = 7;
 const ENTRANCE_TYPES = ["fade", "slide", "zoom"] as const;
 const PARTICLE_TYPES = [
   "sparkle",

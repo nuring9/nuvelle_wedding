@@ -102,20 +102,22 @@ export default function InvitationGallerySection({
       {/* 이미지 뷰어 모달 */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-white flex items-center justify-center"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative w-full max-w-sm aspect-square">
+          <div className="relative w-full max-w-sm" style={{ maxHeight: "90vh" }}>
             <Image
               src={selectedImage}
               alt="갤러리 사진 확대"
-              fill
+              width={800}
+              height={800}
               sizes="(max-width: 640px) 100vw, 384px"
-              className="object-contain"
+              className="w-full h-auto object-contain"
+              style={{ maxHeight: "90vh" }}
             />
           </div>
           <button
-            className="absolute top-4 right-4 text-white"
+            className="absolute top-4 right-4 text-gray-700"
             onClick={() => setSelectedImage(null)}
           >
             <svg

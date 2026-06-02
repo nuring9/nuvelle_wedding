@@ -81,6 +81,8 @@ export interface UpdateInvitationRequest {
   photoBannerEnabled?: boolean;
   photoBannerUrl?: string;
   photoBannerPosition?: string;
+  calendarEnabled?: boolean;
+  qrEnabled?: boolean;
   sectionOrder?: string[];
 }
 
@@ -137,6 +139,8 @@ export interface InvitationResponse {
   photoBannerEnabled: boolean;
   photoBannerUrl: string | null;
   photoBannerPosition: string | null;
+  calendarEnabled: boolean;
+  qrEnabled: boolean;
   galleries: GalleryImageResponse[];
   publicUrl: string | null;
   publishedAt: string | null;

@@ -57,9 +57,9 @@ export default function InvitationCoupleSection({
       <div className="flex justify-center items-center gap-6">
         {/* 신랑 측 */}
         <div className="flex flex-col items-center gap-1 min-w-0">
-          {invitation.parentsEnabled && invitation.groomFatherName && (
+          {invitation.parentsEnabled && (invitation.groomFatherName || invitation.groomMotherName) && (
             <p className="text-xs text-gray-400 whitespace-nowrap">
-              {invitation.groomFatherName} · {invitation.groomMotherName}의 아들
+              {[invitation.groomFatherName, invitation.groomMotherName].filter(Boolean).join(" · ")}의 아들
             </p>
           )}
           <p className="text-xl font-serif font-medium text-gray-800 tracking-wide">
@@ -89,9 +89,9 @@ export default function InvitationCoupleSection({
 
         {/* 신부 측 */}
         <div className="flex flex-col items-center gap-1 min-w-0">
-          {invitation.parentsEnabled && invitation.brideFatherName && (
+          {invitation.parentsEnabled && (invitation.brideFatherName || invitation.brideMotherName) && (
             <p className="text-xs text-gray-400 whitespace-nowrap">
-              {invitation.brideFatherName} · {invitation.brideMotherName}의 딸
+              {[invitation.brideFatherName, invitation.brideMotherName].filter(Boolean).join(" · ")}의 딸
             </p>
           )}
           <p className="text-xl font-serif font-medium text-gray-800 tracking-wide">

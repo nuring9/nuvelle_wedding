@@ -16,6 +16,8 @@ export default function InvitationQrSection({
 
   const publicUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/invite/${invitation.slug}`;
 
+  if (!invitation.qrEnabled) return null;
+
   useEffect(() => {
     if (!canvasRef.current) return;
 

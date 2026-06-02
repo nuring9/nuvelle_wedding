@@ -67,6 +67,8 @@ export interface PublicInvitation {
   photoBannerEnabled: boolean;
   photoBannerUrl: string | null;
   photoBannerPosition: string | null;
+  calendarEnabled: boolean;
+  qrEnabled: boolean;
   galleries: GalleryImage[];
   sectionOrder: string[];
 }

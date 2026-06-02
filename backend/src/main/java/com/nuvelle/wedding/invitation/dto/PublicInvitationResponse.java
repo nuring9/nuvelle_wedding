@@ -93,6 +93,12 @@ public class PublicInvitationResponse {
     private String photoBannerUrl;
     private String photoBannerPosition;
 
+    // 달력
+    private boolean calendarEnabled;
+
+    // QR 코드
+    private boolean qrEnabled;
+
     // 갤러리
     private List<GalleryImageResponse> galleries;
 
@@ -151,6 +157,8 @@ public class PublicInvitationResponse {
                 .photoBannerEnabled(invitation.isPhotoBannerEnabled())
                 .photoBannerUrl(invitation.getPhotoBannerUrl())
                 .photoBannerPosition(invitation.getPhotoBannerPosition())
+                .calendarEnabled(invitation.isCalendarEnabled())
+                .qrEnabled(invitation.isQrEnabled())
                 .galleries(invitation.getGalleries().stream()
                         .map(GalleryImageResponse::from)
                         .collect(Collectors.toList()))

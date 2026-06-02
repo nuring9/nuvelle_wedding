@@ -19,6 +19,8 @@ import InvitationInterviewForm from "./InvitationInterviewForm";
 import InvitationAdvancedForm from "./InvitationAdvancedForm";
 import InvitationAnimationForm from "./InvitationAnimationForm";
 import InvitationLivePreview from "./InvitationLivePreview";
+import InvitationCalendarSection from "@/components/invitation-view/InvitationCalendarSection";
+import ToggleSwitch from "@/components/common/ToggleSwitch";
 import {
   updateInvitation,
   publishInvitation,
@@ -37,9 +39,9 @@ interface InvitationEditorLayoutProps {
 type TabKey =
   | "basic"
   | "couple"
-  | "parents"
   | "greeting"
   | "wedding"
+  | "calendar"
   | "gallery"
   | "photoBanner"
   | "account"
@@ -53,13 +55,13 @@ type TabKey =
 const TABS: { key: TabKey; label: string }[] = [
   { key: "basic", label: "메인 사진" },
   { key: "couple", label: "신랑·신부" },
-  { key: "parents", label: "부모님" },
   { key: "greeting", label: "인사말" },
   { key: "wedding", label: "예식 정보" },
+  { key: "calendar", label: "달력" },
+  { key: "interview", label: "웨딩 인터뷰" },
   { key: "gallery", label: "갤러리" },
   { key: "photoBanner", label: "포토 배너" },
   { key: "account", label: "계좌번호" },
-  { key: "interview", label: "웨딩 인터뷰" },
   { key: "theme", label: "테마/폰트" },
   { key: "advanced", label: "BGM" },
   { key: "animation", label: "애니메이션" },
@@ -112,6 +114,8 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     photoBannerEnabled: invitation.photoBannerEnabled ?? false,
     photoBannerUrl: invitation.photoBannerUrl ?? "",
     photoBannerPosition: invitation.photoBannerPosition ?? "50% 50%",
+    calendarEnabled: invitation.calendarEnabled ?? true,
+    qrEnabled: invitation.qrEnabled ?? true,
     sectionOrder: invitation.sectionOrder ?? [],
   };
 }
@@ -145,6 +149,7 @@ export default function InvitationEditorLayout({
   const [isPublishLoading, setIsPublishLoading] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [interviewVersion, setInterviewVersion] = useState(0);
 
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentThemeLabel =
@@ -245,11 +250,20 @@ export default function InvitationEditorLayout({
         );
       case "couple":
         return (
-          <InvitationCoupleInfoForm data={formData} onChange={handleChange} />
-        );
-      case "parents":
-        return (
-          <InvitationParentsInfoForm data={formData} onChange={handleChange} />
+          <div className="flex flex-col gap-8">
+            <InvitationCoupleInfoForm data={formData} onChange={handleChange} />
+            <div className="border-t border-gray-100 pt-6 flex flex-col gap-5">
+              <ToggleSwitch
+                checked={formData.parentsEnabled ?? true}
+                onChange={(checked) => handleChange({ parentsEnabled: checked })}
+                label="부모님 정보 표시"
+                description="신랑·신부 부모님 성함을 청첩장에 표시합니다."
+              />
+              {(formData.parentsEnabled ?? true) && (
+                <InvitationParentsInfoForm data={formData} onChange={handleChange} />
+              )}
+            </div>
+          </div>
         );
       case "greeting":
         return (
@@ -258,6 +272,38 @@ export default function InvitationEditorLayout({
       case "wedding":
         return (
           <InvitationWeddingInfoForm data={formData} onChange={handleChange} />
+        );
+      case "calendar":
+        return (
+          <div className="flex flex-col gap-6">
+            <h3 className="text-sm font-semibold text-gray-800">달력</h3>
+            <ToggleSwitch
+              checked={formData.calendarEnabled ?? true}
+              onChange={(checked) => handleChange({ calendarEnabled: checked })}
+              label="달력 표시"
+              description="예식 날짜 달력 섹션을 청첩장에 표시합니다."
+            />
+            {formData.weddingDate ? (
+              <div className="rounded-xl border border-gray-100 bg-gray-50 overflow-hidden">
+                <InvitationCalendarSection
+                  invitation={{
+                    id: invitation.id,
+                    slug: invitation.slug,
+                    templateId: String(invitation.templateId),
+                    themeKey: invitation.theme ?? null,
+                    weddingDate: formData.weddingDate ?? null,
+                    weddingTime: formData.weddingTime ?? null,
+                    calendarEnabled: true,
+                    accounts: [],
+                    galleries: [],
+                    sectionOrder: [],
+                  } as unknown as Parameters<typeof InvitationCalendarSection>[0]["invitation"]}
+                />
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 text-center py-6">예식 정보 탭에서 날짜를 입력하면 달력 미리보기가 표시됩니다.</p>
+            )}
+          </div>
         );
       case "gallery":
         return (
@@ -308,7 +354,10 @@ export default function InvitationEditorLayout({
         return (
           <InvitationInterviewForm
             invitationId={invitation.id}
-            onSaved={() => handleChange({ interviewEnabled: true })}
+            onSaved={() => {
+              handleChange({ interviewEnabled: true });
+              setInterviewVersion((v) => v + 1);
+            }}
           />
         );
       case "advanced":
@@ -473,6 +522,7 @@ export default function InvitationEditorLayout({
           onSectionOrderChange={(sectionOrder) =>
             handleChange({ sectionOrder })
           }
+          interviewVersion={interviewVersion}
         />
       </div>
     </div>

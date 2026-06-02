@@ -19,6 +19,7 @@ interface InvitationLivePreviewProps {
   isPhotoBannerPositionMode?: boolean;
   onPhotoBannerPositionChange?: (position: string) => void;
   onSectionOrderChange?: (sectionOrder: InvitationSectionId[]) => void;
+  interviewVersion?: number;
 }
 
 function toPreviewInvitation(
@@ -77,6 +78,8 @@ function toPreviewInvitation(
     photoBannerEnabled: formData.photoBannerEnabled ?? false,
     photoBannerUrl: formData.photoBannerUrl ?? null,
     photoBannerPosition: formData.photoBannerPosition ?? "50% 50%",
+    calendarEnabled: formData.calendarEnabled ?? true,
+    qrEnabled: formData.qrEnabled ?? true,
     galleries,
     sectionOrder: formData.sectionOrder ?? invitation.sectionOrder ?? [],
   };
@@ -91,6 +94,7 @@ export default function InvitationLivePreview({
   isPhotoBannerPositionMode = false,
   onPhotoBannerPositionChange,
   onSectionOrderChange,
+  interviewVersion = 0,
 }: InvitationLivePreviewProps) {
   const previewInvitation = toPreviewInvitation(
     invitation,
@@ -104,15 +108,15 @@ export default function InvitationLivePreview({
     <aside className="hidden xl:flex h-full w-[420px] shrink-0 items-center justify-center border-l border-gray-100 bg-gray-50 px-8 py-6">
       <div className="editor-phone-frame">
         <div className="editor-phone-speaker" />
+        <InvitationAnimationOverlay
+          animationType={previewInvitation.animationType}
+          contained
+        />
         <div
           className="editor-phone-screen invitation-themed"
           data-invitation-theme={theme}
           data-invitation-font={font}
         >
-          <InvitationAnimationOverlay
-            animationType={previewInvitation.animationType}
-          />
-
           <InvitationSectionRenderer
             invitation={previewInvitation}
             editable
@@ -122,6 +126,7 @@ export default function InvitationLivePreview({
             photoBannerPositionEditable={isPhotoBannerPositionMode}
             onPhotoBannerPositionChange={onPhotoBannerPositionChange}
             onOrderChange={onSectionOrderChange}
+            interviewVersion={interviewVersion}
           />
         </div>
       </div>

@@ -81,6 +81,12 @@ public class InvitationUpdateRequest {
     private String photoBannerUrl;
     private String photoBannerPosition;
 
+    // 달력
+    private Boolean calendarEnabled;
+
+    // QR 코드
+    private Boolean qrEnabled;
+
     // 섹션 순서
     private List<String> sectionOrder;
 }

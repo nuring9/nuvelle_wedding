@@ -70,6 +70,8 @@ public class InvitationResponse {
     private boolean photoBannerEnabled;
     private String photoBannerUrl;
     private String photoBannerPosition;
+    private boolean calendarEnabled;
+    private boolean qrEnabled;
 
     // 스타일
     private String theme;
@@ -139,6 +141,8 @@ public class InvitationResponse {
                 .photoBannerEnabled(invitation.isPhotoBannerEnabled())
                 .photoBannerUrl(invitation.getPhotoBannerUrl())
                 .photoBannerPosition(invitation.getPhotoBannerPosition())
+                .calendarEnabled(invitation.isCalendarEnabled())
+                .qrEnabled(invitation.isQrEnabled())
                 .theme(invitation.getTheme())
                 .fontFamily(invitation.getFontFamily())
                 .galleryLayout(invitation.getGalleryLayout())

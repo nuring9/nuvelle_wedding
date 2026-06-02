@@ -7,6 +7,7 @@ import type { PublicInvitation } from "@/types/invitation";
 
 interface InvitationInterviewSectionProps {
   invitation: PublicInvitation;
+  interviewVersion?: number;
 }
 
 interface InterviewItem {
@@ -16,6 +17,7 @@ interface InterviewItem {
 
 export default function InvitationInterviewSection({
   invitation,
+  interviewVersion = 0,
 }: InvitationInterviewSectionProps) {
   const [interview, setInterview] = useState<WeddingInterviewResponse | null>(
     null,
@@ -31,7 +33,7 @@ export default function InvitationInterviewSection({
     };
 
     fetchInterview();
-  }, [invitation.id, invitation.interviewEnabled]);
+  }, [invitation.id, invitation.interviewEnabled, interviewVersion]);
 
   if (!invitation.interviewEnabled || !interview) return null;
 
