@@ -126,11 +126,12 @@ export default function InvitationGuestPhotoSection({
           </svg>
           <span className="text-sm font-medium text-gray-700">사진 남기기</span>
         </div>
-        <span
-          className={`text-gray-400 transition-transform ${isFormOpen ? "rotate-180" : ""}`}
+        <svg
+          className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isFormOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
-          ▼
-        </span>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
 
       {/* 업로드 폼 (접기/펼치기) */}

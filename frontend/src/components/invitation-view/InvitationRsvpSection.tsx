@@ -32,7 +32,7 @@ export default function InvitationRsvpSection({
   };
 
   return (
-    <section className="px-6 section-tone-rsvp">
+    <section className="px-8 section-tone-rsvp">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -45,9 +45,12 @@ export default function InvitationRsvpSection({
           </svg>
           <span className="text-sm font-medium text-gray-800">참석 여부</span>
         </div>
-        <span className={`text-gray-400 text-xs transition-transform ${isOpen ? "rotate-180" : ""}`}>
-          ▼
-        </span>
+        <svg
+          className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
 
       {isOpen && (

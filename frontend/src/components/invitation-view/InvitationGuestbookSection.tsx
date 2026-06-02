@@ -52,7 +52,7 @@ export default function InvitationGuestbookSection({
   };
 
   return (
-    <section className="px-6 section-tone-guestbook">
+    <section className="px-8 section-tone-guestbook">
       {/* 작성 폼 토글 버튼 */}
       <button
         type="button"
@@ -66,9 +66,12 @@ export default function InvitationGuestbookSection({
           </svg>
           <span className="text-sm font-medium text-gray-800">축하 메시지</span>
         </div>
-        <span className={`text-gray-400 text-xs transition-transform ${isOpen ? "rotate-180" : ""}`}>
-          ▼
-        </span>
+        <svg
+          className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
 
       {/* 작성 폼 (접기/펼치기) — 제출 완료 시 자동으로 접힘 */}

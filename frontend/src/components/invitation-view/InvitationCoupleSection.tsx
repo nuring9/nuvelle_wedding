@@ -54,7 +54,7 @@ export default function InvitationCoupleSection({
 
   return (
     <section className="section-padding text-center">
-      <div className="flex justify-center items-center gap-6">
+      <div className="flex justify-center items-center gap-5">
         {/* 신랑 측 */}
         <div className="flex flex-col items-center gap-1 min-w-0">
           {invitation.parentsEnabled && (invitation.groomFatherName || invitation.groomMotherName) && (

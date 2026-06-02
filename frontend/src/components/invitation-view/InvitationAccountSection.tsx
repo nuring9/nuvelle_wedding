@@ -101,7 +101,7 @@ export default function InvitationAccountSection({
         </p>
       </div>
 
-      <div className="flex flex-col border-t border-gray-200">
+      <div className="flex flex-col border-t border-gray-200 mx-6">
         {accounts.map((account, index) => {
           const accountText = `${account.bankName} ${account.accountNumber} ${
             account.accountHolder || ""

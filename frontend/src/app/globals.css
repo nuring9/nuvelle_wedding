@@ -1089,7 +1089,7 @@ select {
 
 /* 공통 섹션 패딩 */
 .section-padding {
-  @apply px-6 py-12;
+  @apply px-8 py-12;
 }
 
 /* 카드 스타일 */
