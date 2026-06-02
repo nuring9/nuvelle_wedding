@@ -6,6 +6,7 @@ export interface AdminTemplate {
   previewImageUrl: string | null;
   themeKey: string | null;
   layoutKey: string | null;
+  description: string | null;
   active: boolean;
   sortOrder: number;
   masterInvitationId: number | null;
@@ -15,11 +16,11 @@ export interface AdminTemplate {
 
 export interface AdminTemplateRequest {
   name: string;
-  slug: string;
   thumbnailUrl?: string | null;
   previewImageUrl?: string | null;
   themeKey?: string | null;
   layoutKey?: string | null;
+  description?: string | null;
   active?: boolean;
   sortOrder?: number;
 }

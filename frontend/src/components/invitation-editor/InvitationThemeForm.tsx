@@ -9,16 +9,18 @@ import type { UpdateInvitationRequest } from "@/lib/api/invitations";
 interface InvitationThemeFormProps {
   data: UpdateInvitationRequest;
   onChange: (data: Partial<UpdateInvitationRequest>) => void;
+  isAdmin?: boolean;
 }
 
 export default function InvitationThemeForm({
   data,
   onChange,
+  isAdmin = false,
 }: InvitationThemeFormProps) {
   return (
     <div className="flex flex-col gap-8">
-      {/* 테마 선택 */}
-      <div className="flex flex-col gap-4">
+      {/* 테마 선택 - 어드민만 */}
+      {isAdmin && <div className="flex flex-col gap-4">
         <h3 className="text-sm font-semibold text-gray-800">테마</h3>
         <div className="grid grid-cols-2 gap-3">
           {THEME_OPTIONS.map((theme) => (
@@ -63,7 +65,7 @@ export default function InvitationThemeForm({
             </button>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* 폰트 선택 */}
       <div className="flex flex-col gap-4">

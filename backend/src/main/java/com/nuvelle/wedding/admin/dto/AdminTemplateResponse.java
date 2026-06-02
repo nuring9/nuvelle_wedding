@@ -16,6 +16,7 @@ public class AdminTemplateResponse {
     private String previewImageUrl;
     private String themeKey;
     private String layoutKey;
+    private String description;
     private boolean active;
     private int sortOrder;
     private Long masterInvitationId;
@@ -31,6 +32,7 @@ public class AdminTemplateResponse {
                 .previewImageUrl(template.getPreviewImageUrl())
                 .themeKey(template.getThemeKey())
                 .layoutKey(template.getLayoutKey())
+                .description(template.getDescription())
                 .active(template.isActive())
                 .sortOrder(template.getSortOrder())
                 .masterInvitationId(template.getMasterInvitation() != null

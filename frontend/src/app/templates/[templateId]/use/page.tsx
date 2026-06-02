@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import { createInvitation } from "@/lib/api/invitations";
+import { getTemplate } from "@/lib/api/templates";
 
 export default function TemplateUsePage() {
   const router = useRouter();
@@ -25,7 +26,11 @@ export default function TemplateUsePage() {
 
     const create = async () => {
       try {
-        const invitation = await createInvitation({ templateId }, accessToken);
+        const template = await getTemplate(templateId);
+        const invitation = await createInvitation(
+          { templateId, theme: template.themeKey ?? undefined },
+          accessToken,
+        );
         router.replace(`/invitations/${invitation.id}/edit`);
       } catch (err: unknown) {
         if (err instanceof Error) {

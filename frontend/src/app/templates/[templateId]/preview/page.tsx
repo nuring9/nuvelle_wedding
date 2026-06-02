@@ -7,27 +7,6 @@ import TemplatePreviewHero from "@/components/template/TemplatePreviewHero";
 import TemplateSelectButton from "@/components/template/TemplateSelectButton";
 import { getTemplate } from "@/lib/api/templates";
 
-function getTemplateDescription(slug: string, name: string) {
-  const descriptions: Record<string, string> = {
-    "classic-white":
-      "순백의 여백과 단정한 구성이 돋보이는 클래식한 청첩장입니다. 차분하고 우아한 분위기로 예식의 품격을 전해보세요.",
-    "bright-sunshine":
-      "밝은 햇살처럼 화사하고 따뜻한 분위기를 담은 템플릿입니다. 산뜻하고 기분 좋은 예식의 설렘을 자연스럽게 전해보세요.",
-    "romantic-floral":
-      "부드러운 플라워 무드로 따뜻하고 로맨틱한 분위기를 담았습니다. 사랑스러운 예식 감성을 자연스럽게 전해보세요.",
-    "natural-garden":
-      "싱그러운 정원 감성을 담은 내추럴한 템플릿입니다. 편안하고 따뜻한 분위기의 야외 예식에도 잘 어울립니다.",
-    "elegance-gold":
-      "은은한 골드 포인트로 고급스러운 분위기를 완성한 템플릿입니다. 격식 있고 특별한 예식 안내에 잘 어울립니다.",
-    "simple-black":
-      "블랙 컬러의 절제된 무드가 돋보이는 모던한 템플릿입니다. 시크하고 감각적인 청첩장을 만들고 싶을 때 추천합니다.",
-  };
-
-  return (
-    descriptions[slug] ??
-    `${name}의 분위기에 맞춰 예식 정보를 자연스럽게 담을 수 있는 청첩장 템플릿입니다.`
-  );
-}
 
 interface TemplatePreviewPageProps {
   params: Promise<{ templateId: string }>;
@@ -92,7 +71,7 @@ export default async function TemplatePreviewPage({
                 {template.name}
               </h1>
               <p className="text-sm text-gray-500 leading-relaxed mb-8">
-                {getTemplateDescription(template.slug, template.name)}
+                {template.description ?? `${template.name}의 분위기에 맞춰 예식 정보를 자연스럽게 담을 수 있는 청첩장 템플릿입니다.`}
               </p>
 
               {/* 템플릿 특징 */}

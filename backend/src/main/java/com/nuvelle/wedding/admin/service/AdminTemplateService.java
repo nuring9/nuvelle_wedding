@@ -50,13 +50,15 @@ public class AdminTemplateService {
 
     @Transactional
     public AdminTemplateResponse createTemplate(AdminTemplateRequest request) {
+        String slug = generateTemplateSlug(request.getThemeKey(), request.getName());
         Template template = Template.builder()
                 .name(request.getName())
-                .slug(request.getSlug())
+                .slug(slug)
                 .thumbnailUrl(request.getThumbnailUrl())
                 .previewImageUrl(request.getPreviewImageUrl())
                 .themeKey(request.getThemeKey())
                 .layoutKey(request.getLayoutKey())
+                .description(request.getDescription())
                 .isActive(request.getActive() != null ? request.getActive() : true)
                 .sortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0)
                 .build();
@@ -68,17 +70,27 @@ public class AdminTemplateService {
     public AdminTemplateResponse updateTemplate(Long templateId, AdminTemplateRequest request) {
         Template template = templateRepository.findById(templateId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEMPLATE_NOT_FOUND));
+        String slug = generateTemplateSlug(request.getThemeKey(), request.getName());
         template.update(
                 request.getName(),
-                request.getSlug(),
+                slug,
                 request.getThumbnailUrl(),
                 request.getPreviewImageUrl(),
                 request.getThemeKey(),
                 request.getLayoutKey(),
+                request.getDescription(),
                 request.getActive() != null ? request.getActive() : template.isActive(),
                 request.getSortOrder() != null ? request.getSortOrder() : template.getSortOrder()
         );
         return AdminTemplateResponse.from(template);
+    }
+
+    private String generateTemplateSlug(String themeKey, String name) {
+        if (themeKey != null && !themeKey.isBlank()) {
+            return themeKey;
+        }
+        // themeKey 없으면 이름을 소문자+하이픈으로 변환
+        return name.toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("^-|-$", "");
     }
 
     @Transactional

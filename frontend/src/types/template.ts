@@ -8,6 +8,7 @@ export interface Template {
   previewImageUrl: string | null;
   themeKey: string | null;
   layoutKey: string | null;
+  description: string | null;
   sortOrder: number;
   masterInvitation: PublicInvitation | null;
   createdAt: string;

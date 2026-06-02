@@ -40,6 +40,9 @@ public class Template {
     @Column(name = "theme_key", length = 50)
     private String themeKey;
 
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
     @Column(name = "layout_key", length = 50)
     private String layoutKey;
 
@@ -62,25 +65,27 @@ public class Template {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Template(String name, String slug, String thumbnailUrl, String previewImageUrl, String themeKey, String layoutKey, boolean isActive, int sortOrder){
+    public Template(String name, String slug, String thumbnailUrl, String previewImageUrl, String themeKey, String layoutKey, String description, boolean isActive, int sortOrder){
         this.name = name;
         this.slug = slug;
         this.thumbnailUrl = thumbnailUrl;
         this.previewImageUrl = previewImageUrl;
         this.themeKey = themeKey;
         this.layoutKey = layoutKey;
+        this.description = description;
         this.isActive = isActive;
         this.sortOrder = sortOrder;
     }
 
     public void update(String name, String slug, String thumbnailUrl, String previewImageUrl,
-                       String themeKey, String layoutKey, boolean isActive, int sortOrder) {
+                       String themeKey, String layoutKey, String description, boolean isActive, int sortOrder) {
         this.name = name;
         this.slug = slug;
         this.thumbnailUrl = thumbnailUrl;
         this.previewImageUrl = previewImageUrl;
         this.themeKey = themeKey;
         this.layoutKey = layoutKey;
+        this.description = description;
         this.isActive = isActive;
         this.sortOrder = sortOrder;
     }

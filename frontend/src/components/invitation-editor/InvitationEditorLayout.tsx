@@ -62,7 +62,7 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "gallery", label: "갤러리" },
   { key: "photoBanner", label: "포토 배너" },
   { key: "account", label: "계좌번호" },
-  { key: "theme", label: "테마/폰트" },
+  { key: "theme", label: "폰트" },
   { key: "advanced", label: "BGM" },
   { key: "animation", label: "애니메이션" },
   { key: "section", label: "섹션 설정" },
@@ -156,7 +156,9 @@ export default function InvitationEditorLayout({
     THEME_OPTIONS.find((theme) => theme.key === formData.theme)?.label ??
     invitation.templateName;
   const visibleTabs = isTemplateMasterEditor
-    ? TABS.filter((tab) => tab.key !== "publish")
+    ? TABS.filter((tab) => tab.key !== "publish").map((tab) =>
+        tab.key === "theme" ? { ...tab, label: "테마/폰트" } : tab
+      )
     : TABS;
 
   const handleSave = useCallback(
@@ -340,7 +342,7 @@ export default function InvitationEditorLayout({
           />
         );
       case "theme":
-        return <InvitationThemeForm data={formData} onChange={handleChange} />;
+        return <InvitationThemeForm data={formData} onChange={handleChange} isAdmin={isTemplateMasterEditor} />;
       case "publish":
         return (
           <InvitationPublishPanel

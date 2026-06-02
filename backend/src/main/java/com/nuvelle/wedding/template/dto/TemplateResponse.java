@@ -18,6 +18,7 @@ public class TemplateResponse {
     private String previewImageUrl;
     private String themeKey;
     private String layoutKey;
+    private String description;
     private int sortOrder;
     private PublicInvitationResponse masterInvitation;
     private LocalDateTime createdAt;
@@ -31,6 +32,7 @@ public class TemplateResponse {
                 .previewImageUrl(template.getPreviewImageUrl())
                 .themeKey(template.getThemeKey())
                 .layoutKey(template.getLayoutKey())
+                .description(template.getDescription())
                 .sortOrder(template.getSortOrder())
                 .masterInvitation(template.getMasterInvitation() != null
                         ? PublicInvitationResponse.from(template.getMasterInvitation())

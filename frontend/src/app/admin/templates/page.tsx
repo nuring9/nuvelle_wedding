@@ -12,14 +12,15 @@ import {
 } from "@/lib/api/admin";
 import { uploadFile } from "@/lib/api/file";
 import type { AdminTemplate, AdminTemplateRequest } from "@/types/admin";
+import { THEME_OPTIONS } from "@/constants/invitation";
 
 // 새 템플릿 생성 폼의 초기값
 const emptyForm: AdminTemplateRequest = {
   name: "",
-  slug: "",
   thumbnailUrl: "",
   themeKey: "",
   layoutKey: "",
+  description: "",
   active: true,
   sortOrder: 0,
 };
@@ -128,10 +129,10 @@ export default function AdminTemplatesPage() {
     setEditingId(template.id);
     setForm({
       name: template.name,
-      slug: template.slug,
       thumbnailUrl: template.thumbnailUrl ?? "",
       themeKey: template.themeKey ?? "",
       layoutKey: template.layoutKey ?? "",
+      description: template.description ?? (THEME_OPTIONS.find((t) => t.key === template.themeKey)?.description ?? ""),
       active: template.active,
       sortOrder: template.sortOrder,
     });
@@ -215,89 +216,95 @@ export default function AdminTemplatesPage() {
           <h2 className="mb-4 text-lg font-semibold text-neutral-900">
             {editingId !== null ? "템플릿 수정" : "새 템플릿 추가"}
           </h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <input
-              placeholder="이름"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="input-base"
-            />
-            <input
-              placeholder="슬러그 (예: classic-white)"
-              value={form.slug}
-              onChange={(e) => setForm({ ...form, slug: e.target.value })}
-              className="input-base"
-            />
-            <div className="space-y-2">
-              <input
-                placeholder="썸네일 URL"
-                value={form.thumbnailUrl ?? ""}
-                onChange={(e) =>
-                  setForm({ ...form, thumbnailUrl: e.target.value })
-                }
-                className="input-base"
-              />
-              <input
-                ref={thumbnailInputRef}
-                type="file"
-                accept="image/*"
-                disabled={isUploadingThumbnail}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  handleImageUpload(file, "templates/thumbnail");
-                  e.target.value = "";
-                }}
-                className="hidden"
-              />
+          <div className="flex flex-col gap-3">
+            {/* 행 1: 이름 + 테마 키 */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2">
+                <span className="text-sm text-neutral-500 whitespace-nowrap">템플릿 이름</span>
+                <div className="w-px h-4 bg-gray-200 mx-1" />
+                <input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="flex-1 outline-none text-sm text-neutral-900"
+                />
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2">
+                <span className="text-sm text-neutral-500 whitespace-nowrap">테마 키</span>
+                <div className="w-px h-4 bg-gray-200 mx-1" />
+                <input
+                  value={form.themeKey ?? ""}
+                  onChange={(e) => {
+                    const key = e.target.value;
+                    const matched = THEME_OPTIONS.find((t) => t.key === key);
+                    setForm({
+                      ...form,
+                      themeKey: key,
+                      description: matched ? matched.description : form.description,
+                    });
+                  }}
+                  className="w-28 outline-none text-sm text-neutral-900"
+                />
+              </div>
+            </div>
+            {/* 행 2: 썸네일 + 정렬순서 + 활성화 */}
+            <div className="grid grid-cols-2 gap-3">
               <div className="flex items-center gap-3">
+                <input
+                  ref={thumbnailInputRef}
+                  type="file"
+                  accept="image/*"
+                  disabled={isUploadingThumbnail}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    handleImageUpload(file, "templates/thumbnail");
+                    e.target.value = "";
+                  }}
+                  className="hidden"
+                />
                 <button
                   type="button"
                   disabled={isUploadingThumbnail}
                   onClick={() => thumbnailInputRef.current?.click()}
-                  className="rounded-lg bg-primary-50 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-lg bg-primary-50 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60 whitespace-nowrap"
                 >
-                  파일 선택
+                  썸네일 업로드
                 </button>
-                <span
-                  className={`text-sm ${
-                    form.thumbnailUrl ? "text-sky-700" : "text-neutral-400"
-                  }`}
-                >
-                  {isUploadingThumbnail
-                    ? "업로드 중..."
-                    : form.thumbnailUrl
-                      ? "이미지 등록됨"
-                      : "이미지 없음"}
+                <span className={`text-sm ${form.thumbnailUrl ? "text-sky-700" : "text-neutral-400"}`}>
+                  {isUploadingThumbnail ? "업로드 중..." : form.thumbnailUrl ? "등록됨" : "없음"}
                 </span>
               </div>
+              <div className="flex items-center gap-2 ml-auto">
+                <label className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm text-neutral-700 whitespace-nowrap">
+                  <span className="text-neutral-500">순서</span>
+                  <input
+                    type="number"
+                    value={form.sortOrder}
+                    onChange={(e) => setForm({ ...form, sortOrder: Number(e.target.value) })}
+                    className="w-8 text-center outline-none text-sm"
+                  />
+                </label>
+                <label className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm text-neutral-700 cursor-pointer whitespace-nowrap">
+                  <input
+                    type="checkbox"
+                    checked={form.active ?? true}
+                    onChange={(e) => setForm({ ...form, active: e.target.checked })}
+                    className="h-4 w-4 accent-neutral-900"
+                  />
+                  활성화
+                </label>
+              </div>
             </div>
-            <input
-              placeholder="테마 스타일 (classic / sunshine / floral / nature / gold / dark)"
-              value={form.themeKey ?? ""}
-              onChange={(e) => setForm({ ...form, themeKey: e.target.value })}
-              className="input-base"
+            {/* 행 3: 소개 문구 */}
+            <textarea
+              placeholder="템플릿 소개 문구 (예: 순백의 여백과 단정한 구성이 돋보이는 클래식한 청첩장입니다.)"
+              value={form.description ?? ""}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              rows={3}
+              className="input-base resize-none"
             />
-            <input
-              type="number"
-              placeholder="정렬 순서"
-              value={form.sortOrder}
-              onChange={(e) =>
-                setForm({ ...form, sortOrder: Number(e.target.value) })
-              }
-              className="input-base"
-            />
-            <label className="flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm text-neutral-700">
-              <input
-                type="checkbox"
-                checked={form.active ?? true}
-                onChange={(e) => setForm({ ...form, active: e.target.checked })}
-                className="h-4 w-4 accent-neutral-900"
-              />
-              활성화
-            </label>
           </div>
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 flex gap-2 justify-end">
             <button
               onClick={handleSubmit}
               className="rounded-lg bg-primary-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-600"

@@ -16,6 +16,7 @@ function getAuthApi(accessToken: string) {
 export interface CreateInvitationRequest {
   templateId: number;
   title?: string;
+  theme?: string;
 }
 
 export interface GalleryImageResponse {
