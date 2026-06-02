@@ -61,15 +61,12 @@ public class InvitationService {
                     .orElse(null);
             if (master != null) {
                 invitation.applyMasterTemplate(master);
-                for (InvitationGallery sourceGallery : master.getGalleries()) {
-                    InvitationGallery copied = InvitationGallery.builder()
-                            .invitation(invitation)
-                            .imageUrl(sourceGallery.getImageUrl())
-                            .sortOrder(sourceGallery.getSortOrder())
-                            .build();
-                    galleryRepository.save(copied);
-                }
             }
+        }
+
+        // 요청에 theme이 있으면 항상 적용 (마스터 복사값보다 우선)
+        if (request.getTheme() != null && !request.getTheme().isBlank()) {
+            invitation.overrideTheme(request.getTheme());
         }
 
         return InvitationResponse.from(invitation, baseUrl);

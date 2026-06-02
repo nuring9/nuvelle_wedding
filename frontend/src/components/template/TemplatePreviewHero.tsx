@@ -25,11 +25,11 @@ export default function TemplatePreviewHero({
       : null;
 
   return (
-    <div className="relative w-full max-w-[430px] mx-auto">
-      <div className="relative aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden shadow-xl">
+    <div className="relative w-[390px] mx-auto">
+      <div className="relative bg-gray-100 rounded-2xl overflow-hidden shadow-xl" style={{ isolation: "isolate", height: "693px" }}>
         {masterInvitation ? (
           <div
-            className="template-master-preview h-full w-full invitation-themed"
+            className="template-master-preview h-full w-full overflow-hidden invitation-themed"
             data-invitation-theme={masterInvitation.theme || "classic"}
             data-invitation-font={masterInvitation.fontFamily || "noto-sans"}
             {...(entranceAnimation ? { "data-anim": entranceAnimation } : {})}

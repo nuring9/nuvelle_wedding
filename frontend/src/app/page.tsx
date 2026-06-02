@@ -7,7 +7,7 @@ export default function HomePage() {
       <main className="min-h-screen flex flex-col items-center justify-center px-6">
         {/* 브랜드 로고 영역 */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl font-display font-semibold text-gray-800 tracking-widest mb-2">
+          <h1 className="text-4xl font-display font-semibold text-gray-800 tracking-widest mb-2" style={{ textIndent: "0.2em" }}>
             Nuvelle
           </h1>
           <p className="text-gray-500 text-sm tracking-wide">

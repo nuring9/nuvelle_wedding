@@ -232,6 +232,7 @@ export default function AdminTemplatesPage() {
                 <span className="text-sm text-neutral-500 whitespace-nowrap">테마 키</span>
                 <div className="w-px h-4 bg-gray-200 mx-1" />
                 <input
+                  placeholder="classic / sunshine / floral / nature / gold / dark"
                   value={form.themeKey ?? ""}
                   onChange={(e) => {
                     const key = e.target.value;

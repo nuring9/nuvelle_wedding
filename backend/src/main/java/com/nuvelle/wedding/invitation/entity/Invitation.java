@@ -340,11 +340,14 @@ public class Invitation {
 
     // 관리자 템플릿 추가
     public void applyMasterTemplate(Invitation master) {
+        // 디자인/설정 값만 복사
         this.theme = master.theme;
         this.fontFamily = master.fontFamily;
         this.galleryLayout = master.galleryLayout;
         this.animationType = master.animationType;
         this.sectionOrder = master.sectionOrder;
+        this.bgm = master.bgm;
+        // 섹션 노출 여부 복사
         this.galleryEnabled = master.galleryEnabled;
         this.rsvpEnabled = master.rsvpEnabled;
         this.guestbookEnabled = master.guestbookEnabled;
@@ -354,20 +357,16 @@ public class Invitation {
         this.interviewEnabled = master.interviewEnabled;
         this.guestPhotoEnabled = master.guestPhotoEnabled;
         this.photoBannerEnabled = master.photoBannerEnabled;
-        this.photoBannerUrl = master.photoBannerUrl;
         this.photoBannerPosition = master.photoBannerPosition;
         this.calendarEnabled = master.calendarEnabled;
         this.qrEnabled = master.qrEnabled;
-        this.groomPhone = master.groomPhone;
-        this.bridePhone = master.bridePhone;
         this.contactEnabled = master.contactEnabled;
-        this.mainImageUrl = master.mainImageUrl;
-        this.mainOverlayText = master.mainOverlayText;
         this.mainImagePosition = master.mainImagePosition;
-        this.greetingText = master.greetingText;
-        this.groomIntroduction = master.groomIntroduction;
-        this.brideIntroduction = master.brideIntroduction;
-        this.bgm = master.bgm;
+        this.mainOverlayText = master.mainOverlayText;
+    }
+
+    public void overrideTheme(String theme) {
+        this.theme = theme;
     }
 
     public boolean isOwnedBy(Long userId) {

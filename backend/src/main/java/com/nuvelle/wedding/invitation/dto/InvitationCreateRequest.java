@@ -10,4 +10,5 @@ public class InvitationCreateRequest {
     private Long templateId;
 
     private String title;
+    private String theme;
 }
