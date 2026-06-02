@@ -119,7 +119,7 @@ export default function MyPage() {
     <div className="min-h-screen bg-neutral-50">
       <Header />
       <main className="mx-auto max-w-screen-lg px-4 pb-20 pt-24">
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="mb-2 text-xs font-medium uppercase tracking-[0.22em] text-primary-600">
               My Page
@@ -151,13 +151,13 @@ export default function MyPage() {
         )}
 
         {!isLoading && !error && (
-          <div className="space-y-8">
+          <div className="space-y-14">
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-neutral-900">
                   내 청첩장 발행 상태
                 </h2>
-                <Link href="/invitations" className="text-sm text-primary-600 hover:underline">
+                <Link href="/invitations" className="btn-primary text-xs px-3 py-1">
                   전체 보기
                 </Link>
               </div>
@@ -167,7 +167,7 @@ export default function MyPage() {
                   아직 발행된 청첩장이 없습니다.
                 </div>
               ) : (
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 grid-cols-3">
                   {publishedInvitations.slice(0, 4).map((invitation) => (
                     <Link
                       key={invitation.id}
@@ -204,7 +204,7 @@ export default function MyPage() {
                 <h2 className="text-lg font-semibold text-neutral-900">
                   확정된 여행 일정
                 </h2>
-                <Link href="/honeymoon" className="text-sm text-primary-600 hover:underline">
+                <Link href="/honeymoon" className="btn-primary text-xs px-3 py-1">
                   전체 보기
                 </Link>
               </div>
@@ -214,7 +214,7 @@ export default function MyPage() {
                   아직 확정된 여행 일정이 없습니다.
                 </div>
               ) : (
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 grid-cols-3">
                   {savedPlans.slice(0, 4).map((plan) => (
                     <Link
                       key={plan.id}

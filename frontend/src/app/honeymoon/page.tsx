@@ -53,9 +53,9 @@ export default function HoneymoonPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      <main className="pt-14 max-w-screen-lg mx-auto px-4 py-8">
+      <main className="pt-14 w-full max-w-screen-lg mx-auto px-4 py-8 grow">
         {/* 페이지 헤더 */}
         <div className="flex items-center justify-between mt-8 mb-8">
           <div>

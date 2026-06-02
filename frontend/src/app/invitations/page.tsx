@@ -77,7 +77,7 @@ export default function InvitationsPage() {
         {/* 페이지 헤더 */}
         <div className="flex items-center justify-between mt-8 mb-8">
           <h1 className="text-xl font-serif text-gray-800">내 청첩장</h1>
-          <Link href="/templates" className="btn-primary text-sm px-4 py-2">
+          <Link href="/templates" className="btn-primary text-xs px-3 py-1.5">
             새로 만들기
           </Link>
         </div>
@@ -132,7 +132,7 @@ export default function InvitationsPage() {
         {!isLoading && !error && invitations.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {invitations.map((invitation) => (
-              <div key={invitation.id} className="card-base overflow-hidden">
+              <div key={invitation.id} className="card-base overflow-hidden flex flex-col">
                 {/* 썸네일 */}
                 <div className="relative aspect-[3/2] bg-gray-100">
                   {invitation.mainImageUrl ? (
@@ -161,7 +161,7 @@ export default function InvitationsPage() {
                 </div>
 
                 {/* 청첩장 정보 */}
-                <div className="p-4">
+                <div className="p-4 flex flex-col flex-1">
                   <p className="text-xs text-gray-400 mb-1">
                     {invitation.templateName}
                   </p>
@@ -177,10 +177,10 @@ export default function InvitationsPage() {
                   )}
 
                   {/* 버튼 */}
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-auto justify-end">
                     <Link
                       href={`/invitations/${invitation.id}/edit`}
-                      className="btn-primary flex-1 text-center text-xs py-2"
+                      className="btn-primary text-center text-xs px-4 py-1.5"
                     >
                       편집
                     </Link>
