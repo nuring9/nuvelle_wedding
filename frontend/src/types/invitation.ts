@@ -56,6 +56,7 @@ export interface PublicInvitation {
   ddayEnabled: boolean;
   theme: string | null;
   fontFamily: string | null;
+  fontSize: string | null;
   galleryLayout: string | null;
   animationType: string | null;
   bgmId: number | null;
