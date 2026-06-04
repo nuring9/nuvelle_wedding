@@ -67,6 +67,7 @@ function toPreviewInvitation(
     ddayEnabled: formData.ddayEnabled ?? false,
     theme: formData.theme ?? null,
     fontFamily: formData.fontFamily ?? null,
+    fontSize: formData.fontSize ?? null,
     galleryLayout: formData.galleryLayout ?? null,
     animationType: formData.animationType ?? null,
     bgmId: formData.bgmId ?? null,
@@ -103,6 +104,7 @@ export default function InvitationLivePreview({
   );
   const theme = previewInvitation.theme || "classic";
   const font = previewInvitation.fontFamily || "noto-sans";
+  const fontSizeAttr = previewInvitation.fontSize === "lg" ? "lg" : "md";
 
   return (
     <aside className="hidden lg:flex h-full w-[420px] shrink-0 items-center justify-center border-l border-gray-100 bg-gray-50 px-8 py-6">
@@ -116,6 +118,7 @@ export default function InvitationLivePreview({
           className="editor-phone-screen invitation-themed"
           data-invitation-theme={theme}
           data-invitation-font={font}
+          data-invitation-font-size={fontSizeAttr}
         >
           <InvitationSectionRenderer
             invitation={previewInvitation}

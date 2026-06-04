@@ -76,6 +76,7 @@ public class InvitationResponse {
     // 스타일
     private String theme;
     private String fontFamily;
+    private String fontSize;
     private String galleryLayout;
     private String animationType;
 
@@ -145,6 +146,7 @@ public class InvitationResponse {
                 .qrEnabled(invitation.isQrEnabled())
                 .theme(invitation.getTheme())
                 .fontFamily(invitation.getFontFamily())
+                .fontSize(invitation.getFontSize())
                 .galleryLayout(invitation.getGalleryLayout())
                 .animationType(invitation.getAnimationType())
                 .bgmId(invitation.getBgm() != null ? invitation.getBgm().getId() : null)

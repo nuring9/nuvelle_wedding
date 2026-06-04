@@ -118,126 +118,174 @@ export default function MyPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Header />
-      <main className="mx-auto max-w-screen-lg px-4 pb-20 pt-24">
-        <div className="mb-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-[0.22em] text-primary-600">
-              My Page
-            </p>
-            <h1 className="font-serif text-3xl font-semibold text-neutral-900">
-              {user?.name}님의 마이페이지
-            </h1>
-            <p className="mt-2 text-sm text-neutral-500">{user?.email}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setIsWithdrawOpen(true)}
-            className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
-          >
-            회원탈퇴
-          </button>
-        </div>
 
+      {/* 프로파일 히어로 */}
+      <div className="bg-white border-b border-neutral-100 pt-14">
+        <div className="mx-auto max-w-screen-lg px-4 py-10">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-5">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-primary-500">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-widest text-primary-500 mb-0.5">
+                  My Page
+                </p>
+                <h1 className="text-2xl font-serif font-semibold text-neutral-900">
+                  {user?.name}님
+                </h1>
+                <p className="text-sm text-neutral-400 mt-0.5">{user?.email}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex gap-6 text-center">
+                <div>
+                  <p className="text-lg font-semibold text-neutral-900">{publishedInvitations.length}</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">청첩장</p>
+                </div>
+                <div className="w-px bg-neutral-100" />
+                <div>
+                  <p className="text-lg font-semibold text-neutral-900">{savedPlans.length}</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">여행 일정</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsWithdrawOpen(true)}
+                className="ml-4 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs text-neutral-400 hover:border-red-200 hover:text-red-500 transition-colors"
+              >
+                회원탈퇴
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main className="mx-auto max-w-screen-lg px-4 pb-20 pt-10">
         {isLoading && (
-          <div className="rounded-lg border border-neutral-200 bg-white p-8 text-center text-sm text-neutral-500">
+          <div className="rounded-xl border border-neutral-200 bg-white p-10 text-center text-sm text-neutral-400">
             마이페이지 정보를 불러오는 중입니다.
           </div>
         )}
 
         {error && (
-          <div className="rounded-lg border border-red-100 bg-red-50 p-5 text-sm text-red-600">
+          <div className="rounded-xl border border-red-100 bg-red-50 p-5 text-sm text-red-600">
             {error}
           </div>
         )}
 
         {!isLoading && !error && (
-          <div className="space-y-14">
+          <div className="space-y-12">
+            {/* 청첩장 섹션 */}
             <section>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  내 청첩장 발행 상태
-                </h2>
-                <Link href="/invitations" className="btn-primary text-xs px-3 py-1">
-                  전체 보기
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <h2 className="text-base font-semibold text-neutral-900">내 청첩장</h2>
+                  <p className="text-xs text-neutral-400 mt-0.5">발행된 청첩장만 표시됩니다</p>
+                </div>
+                <Link
+                  href="/invitations"
+                  className="text-xs font-medium text-primary-600 hover:text-primary-800 transition-colors"
+                >
+                  전체 보기 →
                 </Link>
               </div>
 
               {publishedInvitations.length === 0 ? (
-                <div className="rounded-lg border border-neutral-200 bg-white p-8 text-center text-sm text-neutral-500">
-                  아직 발행된 청첩장이 없습니다.
+                <div className="rounded-xl border border-dashed border-neutral-200 bg-white p-10 text-center">
+                  <p className="text-sm text-neutral-400">아직 발행된 청첩장이 없습니다</p>
+                  <Link
+                    href="/invitations"
+                    className="mt-3 inline-block text-xs font-medium text-primary-600 hover:text-primary-800"
+                  >
+                    청첩장 만들기 →
+                  </Link>
                 </div>
               ) : (
-                <div className="grid gap-4 grid-cols-3">
-                  {publishedInvitations.slice(0, 4).map((invitation) => (
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {publishedInvitations.slice(0, 3).map((invitation) => (
                     <Link
                       key={invitation.id}
                       href={`/invite/${invitation.slug}`}
-                      className="rounded-lg border border-neutral-200 bg-white p-5 shadow-sm transition hover:border-primary-200"
+                      className="group rounded-xl border border-neutral-200 bg-white p-5 shadow-sm transition-all hover:border-primary-300 hover:shadow-md"
                     >
-                      <div className="mb-3 flex items-center justify-between gap-3">
+                      <div className="mb-4 flex items-start justify-between gap-2">
                         <span
                           className={`rounded-full px-2.5 py-1 text-xs font-medium ${invitationStatusClass[invitation.status]}`}
                         >
                           {invitationStatusLabel[invitation.status]}
                         </span>
-                        <span className="text-xs text-neutral-400">
+                        <span className="text-[11px] text-neutral-400">
                           {formatDate(invitation.updatedAt)}
                         </span>
                       </div>
-                      <h3 className="line-clamp-1 font-medium text-neutral-900">
+                      <h3 className="line-clamp-1 font-semibold text-neutral-900 group-hover:text-primary-700 transition-colors">
                         {invitation.title || invitation.templateName}
                       </h3>
                       <p className="mt-2 text-sm text-neutral-500">
                         {invitation.groomName || "신랑"} · {invitation.brideName || "신부"}
                       </p>
-                      <p className="mt-1 text-sm text-neutral-500">
-                        예식일 {formatDate(invitation.weddingDate)}
-                      </p>
+                      <div className="mt-3 pt-3 border-t border-neutral-100">
+                        <p className="text-xs text-neutral-400">
+                          예식일 <span className="text-neutral-600 font-medium">{formatDate(invitation.weddingDate)}</span>
+                        </p>
+                      </div>
                     </Link>
                   ))}
                 </div>
               )}
             </section>
 
+            {/* 여행 일정 섹션 */}
             <section>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  확정된 여행 일정
-                </h2>
-                <Link href="/honeymoon" className="btn-primary text-xs px-3 py-1">
-                  전체 보기
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <h2 className="text-base font-semibold text-neutral-900">확정된 여행 일정</h2>
+                  <p className="text-xs text-neutral-400 mt-0.5">저장 완료된 신혼여행 플랜</p>
+                </div>
+                <Link
+                  href="/honeymoon"
+                  className="text-xs font-medium text-primary-600 hover:text-primary-800 transition-colors"
+                >
+                  전체 보기 →
                 </Link>
               </div>
 
               {savedPlans.length === 0 ? (
-                <div className="rounded-lg border border-neutral-200 bg-white p-8 text-center text-sm text-neutral-500">
-                  아직 확정된 여행 일정이 없습니다.
+                <div className="rounded-xl border border-dashed border-neutral-200 bg-white p-10 text-center">
+                  <p className="text-sm text-neutral-400">아직 확정된 여행 일정이 없습니다</p>
+                  <Link
+                    href="/honeymoon"
+                    className="mt-3 inline-block text-xs font-medium text-primary-600 hover:text-primary-800"
+                  >
+                    신혼여행 플랜 만들기 →
+                  </Link>
                 </div>
               ) : (
-                <div className="grid gap-4 grid-cols-3">
-                  {savedPlans.slice(0, 4).map((plan) => (
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {savedPlans.slice(0, 3).map((plan) => (
                     <Link
                       key={plan.id}
                       href={`/honeymoon/${plan.id}`}
-                      className="rounded-lg border border-neutral-200 bg-white p-5 shadow-sm transition hover:border-primary-200"
+                      className="group rounded-xl border border-neutral-200 bg-white p-5 shadow-sm transition-all hover:border-primary-300 hover:shadow-md"
                     >
-                      <div className="mb-3 flex items-center justify-between gap-3">
-                        <span className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-700">
+                      <div className="mb-4 flex items-start justify-between gap-2">
+                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
                           확정
                         </span>
-                        <span className="text-xs text-neutral-400">
-                          {plan.totalDays}일
-                        </span>
+                        <span className="text-[11px] text-neutral-400">{plan.totalDays}일</span>
                       </div>
-                      <h3 className="font-medium text-neutral-900">
+                      <h3 className="font-semibold text-neutral-900 group-hover:text-primary-700 transition-colors">
                         {plan.destination}
                       </h3>
                       <p className="mt-2 text-sm text-neutral-500">
-                        {formatDate(plan.startDate)} - {formatDate(plan.endDate)}
+                        {formatDate(plan.startDate)} – {formatDate(plan.endDate)}
                       </p>
-                      <p className="mt-1 line-clamp-1 text-sm text-neutral-500">
-                        {plan.travelStyle}
-                      </p>
+                      <div className="mt-3 pt-3 border-t border-neutral-100">
+                        <p className="text-xs text-neutral-400 line-clamp-1">{plan.travelStyle}</p>
+                      </div>
                     </Link>
                   ))}
                 </div>

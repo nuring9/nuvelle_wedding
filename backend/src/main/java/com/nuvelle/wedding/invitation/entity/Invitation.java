@@ -178,6 +178,7 @@ public class Invitation {
 
     @Column(name = "font_family", length = 50)
     private String fontFamily;
+    private String fontSize;
 
     @Column(name = "gallery_layout", length = 50)
     private String galleryLayout;
@@ -246,7 +247,7 @@ public class Invitation {
                        String accountNumber, String accountHolder, List<InvitationAccount> accounts,
                        boolean galleryEnabled, boolean rsvpEnabled,
                        boolean guestbookEnabled, boolean accountEnabled, boolean parentsEnabled, boolean ddayEnabled,
-                       String theme, String fontFamily, String galleryLayout, String animationType,
+                       String theme, String fontFamily, String fontSize, String galleryLayout, String animationType,
                        String groomIntroduction,
                        String brideIntroduction,
                        String remittanceLink,
@@ -296,6 +297,7 @@ public class Invitation {
         this.ddayEnabled = ddayEnabled;
         this.theme = theme;
         this.fontFamily = fontFamily;
+        this.fontSize = fontSize;
         this.galleryLayout = galleryLayout;
         this.animationType = animationType;
         this.groomIntroduction = groomIntroduction;

@@ -97,6 +97,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
 
   const theme = getInvitationTheme(invitation.theme);
   const font = getInvitationFont(invitation.fontFamily);
+  const fontSizeAttr = invitation.fontSize === "lg" ? "lg" : "md";
 
   return (
     <>
@@ -110,6 +111,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
           className="invitation-container invitation-themed"
           data-invitation-theme={theme}
           data-invitation-font={font}
+          data-invitation-font-size={fontSizeAttr}
           {...(["fade", "slide", "zoom"].includes(
             invitation.animationType ?? "",
           )

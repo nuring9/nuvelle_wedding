@@ -169,6 +169,7 @@ public class InvitationService {
 
                 request.getTheme(),
                 request.getFontFamily(),
+                request.getFontSize(),
                 request.getGalleryLayout(),
                 request.getAnimationType(),
 

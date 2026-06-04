@@ -57,6 +57,7 @@ public class InvitationUpdateRequest {
     // 스타일
     private String theme;
     private String fontFamily;
+    private String fontSize;
     private String galleryLayout;
     private String animationType;
 

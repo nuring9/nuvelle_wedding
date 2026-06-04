@@ -49,7 +49,7 @@ export default function HoneymoonPlanCard({
           </div>
           <div className="flex flex-col gap-0.5">
             <p className="text-[10px] text-gray-400 uppercase tracking-wide">예산</p>
-            <p className="text-sm font-medium text-gray-700">{plan.budget}만원</p>
+            <p className="text-sm font-medium text-gray-700">{plan.budget}</p>
           </div>
           {plan.travelStyle && (
             <div className="flex flex-col gap-0.5">

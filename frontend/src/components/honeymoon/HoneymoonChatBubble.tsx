@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown";
 import type { HoneymoonChatMessage } from "@/types/honeymoon";
 
 interface HoneymoonChatBubbleProps {
@@ -32,7 +33,23 @@ export default function HoneymoonChatBubble({
             : "bg-white text-gray-700 rounded-tl-sm shadow-sm border border-gray-100"
         }`}
       >
-        {message.content}
+        {isUser ? (
+          message.content
+        ) : (
+          <ReactMarkdown
+            components={{
+              p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+              strong: ({ children }) => <span className="font-semibold">{children}</span>,
+              h3: ({ children }) => <p className="font-semibold mt-3 mb-1">{children}</p>,
+              ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-1">{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-1">{children}</ol>,
+              li: ({ children }) => <li>{children}</li>,
+              hr: () => <hr className="my-2 border-gray-200" />,
+            }}
+          >
+            {message.content}
+          </ReactMarkdown>
+        )}
         {canCreatePlan && (
           <div className="mt-4 pt-3 border-t border-gray-100">
             <button

@@ -107,6 +107,45 @@ export default function InvitationThemeForm({
         </div>
       </div>
 
+      {/* 폰트 크기 */}
+      <div className="flex flex-col gap-4">
+        <h3 className="text-sm font-semibold text-gray-800">폰트 크기</h3>
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { key: "md", label: "기본", desc: "기본 크기" },
+            { key: "lg", label: "크게", desc: "한 단계 큰 크기" },
+          ] as const).map((size) => {
+            const selected = (data.fontSize ?? "md") === size.key;
+            const fontFamilyStyle = FONT_OPTIONS.find(
+              (f) => f.key === (data.fontFamily ?? "noto-sans")
+            )?.fontFamily;
+            return (
+              <button
+                key={size.key}
+                type="button"
+                onClick={() => onChange({ fontSize: size.key })}
+                className={`flex flex-col items-start p-4 rounded-xl border-2 text-left transition-all ${
+                  selected
+                    ? "border-primary-500 bg-primary-50"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                <p className="text-xs font-medium text-gray-500 mb-2">{size.label}</p>
+                <p
+                  style={{
+                    fontFamily: fontFamilyStyle,
+                    fontSize: size.key === "lg" ? "1.0625rem" : "0.875rem",
+                  }}
+                  className="text-gray-700 leading-snug"
+                >
+                  우리 두 사람이
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
     </div>
   );
 }

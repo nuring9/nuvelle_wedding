@@ -73,6 +73,7 @@ export interface UpdateInvitationRequest {
   ddayEnabled?: boolean;
   theme?: string;
   fontFamily?: string;
+  fontSize?: string;
   galleryLayout?: string;
   animationType?: string;
   bgmId?: number | null;
@@ -129,6 +130,7 @@ export interface InvitationResponse {
   ddayEnabled: boolean;
   theme: string | null;
   fontFamily: string | null;
+  fontSize: string | null;
   galleryLayout: string | null;
   animationType: string | null;
   bgmId: number | null;

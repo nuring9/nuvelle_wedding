@@ -105,6 +105,7 @@ function toFormData(invitation: InvitationResponse): UpdateInvitationRequest {
     ddayEnabled: invitation.ddayEnabled,
     theme: invitation.theme ?? "",
     fontFamily: invitation.fontFamily ?? "",
+    fontSize: invitation.fontSize ?? "md",
     galleryLayout: invitation.galleryLayout ?? "",
     animationType: invitation.animationType ?? "",
     bgmId: invitation.bgmId ?? null,

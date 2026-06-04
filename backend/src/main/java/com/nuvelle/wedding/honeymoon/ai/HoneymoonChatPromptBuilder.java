@@ -18,7 +18,9 @@ public class HoneymoonChatPromptBuilder {
         StringBuilder sb = new StringBuilder();
 
         sb.append("당신은 신혼여행 전문 플래너 AI입니다.\n");
-        sb.append("아래 신혼여행 일정을 기반으로 사용자의 질문에 친절하게 답변해주세요.\n\n");
+        sb.append("아래 신혼여행 일정을 기반으로 사용자의 질문에 친절하게 답변해주세요.\n");
+        sb.append("답변 시 ###, **, *, ---, ``` 등의 마크다운 기호는 절대 사용하지 마세요.\n");
+        sb.append("일정 변경안을 제안할 때는 'Day 1 (날짜):' 형식으로 자연스럽게 작성하세요.\n\n");
 
         // 현재 여행 계획 요약 전달
         sb.append("=== 현재 신혼여행 계획 ===\n");

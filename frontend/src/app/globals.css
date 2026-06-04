@@ -373,6 +373,15 @@ select {
   font-size: 93%;
 }
 
+/* 폰트 크기 한 단계 업 — Tailwind rem 클래스를 직접 오버라이드 */
+[data-invitation-font-size="lg"] .text-xs  { font-size: 0.8125rem !important; }
+[data-invitation-font-size="lg"] .text-sm  { font-size: 1rem      !important; }
+[data-invitation-font-size="lg"] .text-base { font-size: 1.125rem !important; }
+[data-invitation-font-size="lg"] .text-lg  { font-size: 1.25rem   !important; }
+[data-invitation-font-size="lg"] .text-xl  { font-size: 1.5rem    !important; }
+[data-invitation-font-size="lg"] .text-2xl { font-size: 1.75rem   !important; }
+[data-invitation-font-size="lg"] .text-3xl { font-size: 2rem      !important; }
+
 .invitation-themed[data-invitation-font="noto-serif"] .account-bank-info,
 .invitation-themed[data-invitation-font="nanum-round"] .account-bank-info {
   font-size: 10px;

@@ -27,7 +27,8 @@ export default function HoneymoonGenerateForm({
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [budget, setBudget] = useState("");
+  const [budgetAmount, setBudgetAmount] = useState("");
+  const [budgetType, setBudgetType] = useState<"1인" | "총액">("총액");
   const [travelStyles, setTravelStyles] = useState<string[]>([]);
   const [companionStyle, setCompanionStyle] = useState("");
   const [mustInclude, setMustInclude] = useState("");
@@ -59,7 +60,7 @@ export default function HoneymoonGenerateForm({
       setError("도착일은 출발일 이후여야 합니다.");
       return;
     }
-    if (!budget.trim()) {
+    if (!budgetAmount.trim()) {
       setError("예산을 입력해주세요.");
       return;
     }
@@ -67,6 +68,8 @@ export default function HoneymoonGenerateForm({
       setError("여행 스타일을 하나 이상 선택해주세요.");
       return;
     }
+
+    const budget = `${budgetAmount}만원 (${budgetType} 기준)`;
 
     await onSubmit({
       destination,
@@ -118,13 +121,39 @@ export default function HoneymoonGenerateForm({
       </div>
 
       {/* 예산 */}
-      <InputField
-        label="예산"
-        placeholder="예: 200만원, 500만원, $3000"
-        value={budget}
-        onChange={(e) => setBudget(e.target.value)}
-        hint="1인 기준 또는 총액 기준으로 입력해주세요."
-      />
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium text-gray-700">예산</p>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center flex-1 input-base gap-1 px-3">
+            <input
+              type="number"
+              inputMode="numeric"
+              placeholder="예: 100"
+              value={budgetAmount}
+              onChange={(e) => setBudgetAmount(e.target.value)}
+              className="flex-1 outline-none bg-transparent text-sm"
+              min={0}
+            />
+            <span className="text-sm text-gray-500 whitespace-nowrap">만원</span>
+          </div>
+          <div className="flex rounded-xl border border-gray-200 overflow-hidden text-sm font-medium">
+            {(["1인", "총액"] as const).map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => setBudgetType(type)}
+                className={`px-3 py-2 transition-colors ${
+                  budgetType === type
+                    ? "bg-primary-500 text-white"
+                    : "text-gray-500 hover:bg-gray-50"
+                }`}
+              >
+                {type} 기준
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* 여행 스타일 */}
       <div className="flex flex-col gap-3">

@@ -76,7 +76,10 @@ export default function InvitationsPage() {
       <main className="pt-14 max-w-screen-lg mx-auto px-4 py-8">
         {/* 페이지 헤더 */}
         <div className="flex items-center justify-between mt-8 mb-8">
-          <h1 className="text-xl font-serif text-gray-800">내 청첩장</h1>
+          <div>
+            <h1 className="text-xl font-serif text-gray-800">내 청첩장</h1>
+            <p className="text-sm text-gray-400 mt-1">작성 중인 청첩장과 발행된 청첩장을 관리해보세요</p>
+          </div>
           <Link href="/templates" className="btn-primary text-xs px-3 py-1.5">
             새로 만들기
           </Link>
@@ -130,11 +133,11 @@ export default function InvitationsPage() {
 
         {/* 청첩장 목록 */}
         {!isLoading && !error && invitations.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {invitations.map((invitation) => (
               <div key={invitation.id} className="card-base overflow-hidden flex flex-col">
                 {/* 썸네일 */}
-                <div className="relative aspect-[3/2] bg-gray-100">
+                <div className="relative aspect-[3/4] bg-gray-100">
                   {invitation.mainImageUrl ? (
                     <Image
                       src={invitation.mainImageUrl}

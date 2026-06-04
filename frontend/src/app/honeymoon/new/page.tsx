@@ -38,7 +38,7 @@ export default function HoneymoonNewPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="pt-14 max-w-lg mx-auto px-4 py-8">
+      <main className="pt-24 max-w-lg mx-auto px-4 py-8">
         {/* 페이지 헤더 */}
         <div className="mb-8">
           <h1 className="text-xl font-serif text-gray-800 mb-2">
