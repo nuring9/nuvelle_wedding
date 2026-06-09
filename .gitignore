@@ -102,3 +102,7 @@ backend/src/main/resources/application-secret.yaml
 # Docker local override
 docker-compose.override.yml
 docker-compose.local.yml
+
+
+# Build output
+backend/bin/
