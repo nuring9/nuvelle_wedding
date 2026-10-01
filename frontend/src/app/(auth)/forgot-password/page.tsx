@@ -18,7 +18,7 @@ export default function ForgotPasswordPage() {
 
     try {
       await requestPasswordReset({ email });
-      setMessage("입력한 이메일로 비밀번호 재설정 링크를 보냈습니다.");
+      setMessage("입력한 이메일로 가입된 계정이 있다면 비밀번호 재설정 링크를 보내드립니다.");
     } catch (err) {
       setError(
         err instanceof Error
@@ -31,8 +31,8 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-50 px-4 py-16">
-      <section className="w-full max-w-md rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
+    <main className="w-full">
+      <section className="w-full">
         <h1 className="font-serif text-2xl font-semibold text-neutral-900">
           비밀번호 재설정
         </h1>
