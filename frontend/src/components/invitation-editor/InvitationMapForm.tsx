@@ -47,8 +47,11 @@ export default function InvitationMapForm({
     }
     const script = document.createElement("script");
     script.id = "daum-postcode-script";
+    // script.src =
+    //   "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    // 카카오 디벨로퍼스 맵 API변경
     script.src =
-      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+      "https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
     script.async = true;
     script.onload = () => {
       scriptLoaded.current = true;
@@ -71,9 +74,15 @@ export default function InvitationMapForm({
         setIsSearching(false);
 
         if (coords) {
-          onChange({ venueAddress: fullAddress, mapLat: coords.lat, mapLng: coords.lng });
+          onChange({
+            venueAddress: fullAddress,
+            mapLat: coords.lat,
+            mapLng: coords.lng,
+          });
         } else {
-          setGeocodeError("좌표를 자동으로 가져오지 못했습니다. 직접 입력해 주세요.");
+          setGeocodeError(
+            "좌표를 자동으로 가져오지 못했습니다. 직접 입력해 주세요.",
+          );
         }
       },
     }).open();
@@ -110,15 +119,14 @@ export default function InvitationMapForm({
           </p>
         )}
 
-        {geocodeError && (
-          <p className="text-xs text-red-400">{geocodeError}</p>
-        )}
+        {geocodeError && <p className="text-xs text-red-400">{geocodeError}</p>}
       </div>
 
       {/* 좌표 (자동 입력 + 수동 수정 가능) */}
       <div className="flex flex-col gap-2 pt-2">
         <p className="text-xs text-gray-400">
-          주소 검색 시 좌표가 자동으로 입력됩니다. 필요하면 직접 수정할 수 있습니다.
+          주소 검색 시 좌표가 자동으로 입력됩니다. 필요하면 직접 수정할 수
+          있습니다.
         </p>
         <div className="grid grid-cols-2 gap-3">
           <InputField
